@@ -8,33 +8,20 @@ import os.path
 # Read configs from file
 def app_config_read():
     try:
-        global app_config
-        global config_full_path
         app_config = ConfigParser()
         config_path = 'config/'
         config_file = 'config.ini'
         config_full_path = config_path + config_file
         app_config.read(config_full_path)
-        
-        global config_theme, config_color, config_region, config_na_path
-        global config_font_version, config_filter_version, config_eu_path
 
-        config_theme = app_config.get('app', 'theme')
-        config_color = app_config.get('app', 'color')
-        config_region = app_config.get('app', 'region')
-        config_na_path = app_config.get('app', 'napath')
-        config_eu_path = app_config.get('app', 'eupath')
-        config_font_version = app_config.get('app', 'fontversion')
-        config_filter_version = app_config.get('app', 'filterversion')
-
-        return app_config
+        return (app_config, config_full_path)
     except: ""
-app_config_read()
+app_config = app_config_read()
 
 def app_config_write():
     try:
-        with open(config_full_path, 'w') as config_write:
-            app_config.write(config_write)
+        with open(app_config[1], 'w') as config_write:
+            app_config[0].write(config_write)
 
     except: ""
 
@@ -59,7 +46,7 @@ def classic_eu_path():
 
         if (notFound == False):
             print("Client found: "+classicEuPath[0])
-            app_config.set('app', 'eupath', classicEuPath[0])
+            app_config[0].set('app', 'eupath', classicEuPath[0])
             app_config_write()
         else:
             print("Client not found. Please select manually.")
@@ -78,7 +65,7 @@ def classic_na_path():
             na_dir = sValue[0]
             if na_dir[len(na_dir)-1] == "\\":
                 na_dir = na_dir.rstrip(na_dir[-1])
-            app_config.set('app', 'napath', na_dir)
+            app_config[0].set('app', 'napath', na_dir)
             app_config_write()
             
     except:
@@ -89,10 +76,10 @@ def define_region():
         count_region = 0
         app_config_read()
 
-        if config_na_path: count_region += 1
-        if config_eu_path: count_region += 2
+        if app_config[0].get('app', 'napath'): count_region += 1
+        if app_config[0].get('app', 'eupath'): count_region += 2
 
-        app_config.set('app', 'region', str(count_region))
+        app_config[0].set('app', 'region', str(count_region))
         app_config_write()
     except: ""
 
@@ -104,9 +91,9 @@ def check_filter_hash(filter_files):
         if filter == "original":
             filter_path = "assets\\l10n\\enu\\data\\Strings\\aionfilterline.pak"
         elif filter == "enu":
-            filter_path = f"{config_na_path}\\l10n\\{filter}\\data\\Strings\\aionfilterline.pak"
+            filter_path = f"{app_config[0].get('app', 'napath')}\\l10n\\{filter}\\data\\Strings\\aionfilterline.pak"
         else:
-            filter_path = f"{config_eu_path}\\l10n\\{filter}\\data\\Strings\\aionfilterline.pak"
+            filter_path = f"{app_config[0].get('app', 'eupath')}\\l10n\\{filter}\\data\\Strings\\aionfilterline.pak"
 
         if os.path.isfile(filter_path):
             with open(filter_path, 'rb', buffering=0) as f:
@@ -125,7 +112,7 @@ def check_files():
     print(check_hash)
 
 def first_run():
-    if not config_region:
+    if not app_config[0].get('app', 'region'):
         try:
             classic_na_path()
             classic_eu_path()
@@ -228,7 +215,7 @@ class mainTabs(ctk.CTkTabview):
         self.regionRadio = tk.IntVar()
 
         def region_selection():
-            app_config.set('app', 'region', str(self.regionRadio.get()))
+            app_config[0].set('app', 'region', str(self.regionRadio.get()))
             app_config_write()
             if (self.regionRadio.get() == 0):
                 self.naPathLabel.configure(state="disabled")
@@ -296,15 +283,15 @@ class mainTabs(ctk.CTkTabview):
 
         #DEFAULT VALUES
         app_config_read()
-        if config_theme: self.themeButton.set(config_theme) # Modes: "System" (standard), "Dark", "Light"
-        if config_region: self.regionRadio.set(config_region)
-        if config_na_path: self.naPathEntry.insert(0, config_na_path)
-        if config_eu_path: self.euPathEntry.insert(0, config_eu_path)
-        if config_color: self.colorButton.set(config_color)
+        if app_config[0].get('app', 'theme'): self.themeButton.set(app_config[0].get('app', 'theme'))
+        if app_config[0].get('app', 'region'): self.regionRadio.set(app_config[0].get('app', 'region'))
+        if app_config[0].get('app', 'napath'): self.naPathEntry.insert(0, app_config[0].get('app', 'napath'))
+        if app_config[0].get('app', 'eupath'): self.euPathEntry.insert(0, app_config[0].get('app', 'eupath'))
+        if app_config[0].get('app', 'color'): self.colorButton.set(app_config[0].get('app', 'color'))
         region_selection()
 
     def change_theme_event(self, value):
-        app_config.set('app', 'theme', value)
+        app_config[0].set('app', 'theme', value)
         app_config_write()
         ctk.set_appearance_mode(value)
 
@@ -320,8 +307,8 @@ class App(ctk.CTk):
         app_config_read()
 
         # System appearance
-        ctk.set_appearance_mode(config_theme)
-        ctk.set_default_color_theme(config_color.lower())
+        ctk.set_appearance_mode(app_config[0].get('app', 'theme'))
+        ctk.set_default_color_theme(app_config[0].get('app', 'color').lower())
 
         self.tabsView = mainTabs(self, self.change_color_event)
         self.tabsView.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
@@ -332,7 +319,7 @@ class App(ctk.CTk):
 
     def change_color_event(self, color):
         ctk.set_default_color_theme(color.lower())
-        app_config.set('app', 'color', color)
+        app_config[0].set('app', 'color', color)
         app_config_write()
         app_config_read()
         self.reset_current_ui()
