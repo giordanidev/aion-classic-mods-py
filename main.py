@@ -1,13 +1,7 @@
 import tkinter as tk
 import customtkinter as ctk
 from configparser import ConfigParser
-<<<<<<< HEAD
-import winreg
-import hashlib
-import os.path
-=======
 import winreg, hashlib, os, os.path
->>>>>>> 1c498801822d239136201b8580f7956637f4dbca
 
 # Read configs from file
 def app_config_read():
