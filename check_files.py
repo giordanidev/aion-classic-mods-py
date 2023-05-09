@@ -1,5 +1,5 @@
 from configparser import ConfigParser
-import shutil, errno, os.path, hashlib, winreg
+import os, os.path, hashlib, winreg
 
 def app_config_read():
     try:
@@ -71,6 +71,7 @@ def classic_na_path():
 def define_region():
     try:
         count_region = 0
+        check_game_path()
         app_config_read()
 
         if app_config.get('app', 'napath'): count_region += 1
@@ -116,7 +117,8 @@ def check_files_hash(game_lang, game_file_type):
                 check_hash.append(False)
 
         return [check_hash, game_file_type]
-    except: print("ERRO")
+    except Exception as e:
+        print("ERROR -> check_files_hash() :: "+str(e))
 
 def check_files():
     """
@@ -135,9 +137,9 @@ def check_files():
         font_hash = check_files_hash(game_lang, "font") # Get all font pak hashes
         voice_hash = check_files_hash(game_lang, "voice") # Get all voice pak hashes
 
-        print(filter_hash)
-        print(font_hash)
-        print(voice_hash)
+        #print(filter_hash)
+        #print(font_hash)
+        #print(voice_hash)
 
         check_filter_pass = True
         check_font_pass = True
@@ -167,11 +169,10 @@ def check_files():
                     check_voice_pass = False
         
         # Returns the validation + game LANGS
+        print([check_filter_pass, check_font_pass, check_voice_pass, game_lang])
         return [check_filter_pass, check_font_pass, check_voice_pass, game_lang]
     except Exception as e:
-        print("ERROR check_files(): "+str(e))
-
-print(check_files())
+        print("ERROR -> check_files() :: "+str(e))
 
 def check_game_path():
     app_config = app_config_read()[0]
@@ -211,64 +212,58 @@ def check_game_path():
             app_config.set('app', 'eupath', "")
             app_config_write()
 
-def onerror(func, path, exc_info):
-    """
-    Error handler for ``shutil.rmtree``.
-
-    If the error is due to an access error (read only file)
-    it attempts to add write permission and then retries.
-
-    If the error is for another reason it re-raises the error.
-    
-    Usage : ``shutil.rmtree(path, onerror=onerror)``
-    """
-    import stat
-    # Is the error an access error?
-    if not os.access(path, os.W_OK):
-        print("ACCESS ERROR")
-        os.chmod(path, stat.S_IWUSR)
-        func(path)
-    else:
-        raise
-
 def copy_files_exec(game_file_type, langs):
-    game_file_type = get_game_file_type(game_file_type)
+    file_path = get_game_file_type(game_file_type)
+
+    #TODO move all voice from assets to game folder
+
     for lang in langs:
-        assets_path = f"assets\\{game_file_type}"
-        dest_path = get_file_path(lang, game_file_type)
-        try:
-            shutil.copytree(assets_path, dest_path)
-        # Depend what you need here to catch the problem
-        except OSError as exc: 
-            # File already exist
-            if exc.errno == errno.EEXIST:
-                shutil.copy(assets_path, dest_path)
-            # The dirtory does not exist
-            if exc.errno == errno.ENOENT:
-                shutil.copy(assets_path, dest_path)
-            else:
-                raise
+        if lang != "original":
+            assets_path = f"assets\\{file_path}"
+            dest_path = get_file_path(lang, file_path)
+            
+            print(f"ASSETS: {assets_path} DEST: {dest_path}")
+            if not os.path.isdir(os.path.dirname(dest_path)):
+                print(f"MKDIR: {os.path.dirname(dest_path)}")
+                try:
+                    os.makedirs(os.path.dirname(dest_path))
+                except Exception as e:
+                    print("ERROR -> copy_files_exec() -> os.makedirs() :: " +str(e))
+            if os.path.isfile(dest_path):
+                print(f"REMOVE: {dest_path} ISFILE? {os.path.isfile(dest_path)}")
+                try:
+                    os.remove(dest_path)
+                except Exception as e:
+                    print("ERROR -> copy_files_exec() -> os.remove() :: " +str(e))
+            try:
+                print("COPY")
+                os.system(f'copy {assets_path} {dest_path}')
+            except Exception as e:
+                print("ERROR -> copy_files_exec() -> os.system() :: " +str(e))
 
 def copy_files(game_file_type):
-    #try:
         app_config = app_config_read()[0]
         check_files_result = check_files()
         langs = check_files_result[3]
+
+        current_dir = f"{os.getcwd()}\\assets\\sounds\\{game_file_type}"
+        print(os.listdir(current_dir))
+
         print(f"GAME FILE TYPE: {game_file_type}")
+
         if game_file_type == "filter":
-            print(f"APP REGION: {app_config.get('app', 'region')}")
-            if (app_config.get('app', 'region') == "1") or (app_config.get('app', 'region') == "3"):
-                print(f"CHECK FILE NA RESULT: {check_files_result[0]}")
-
+            if (check_files_result[0] == False):
+                check_game_path()
+                copy_files_exec(game_file_type, langs)
+        elif game_file_type == "font":
+            if (check_files_result[1] == False):
+                check_game_path()
+                copy_files_exec(game_file_type, langs)
+        elif game_file_type == "voice":
+            if (check_files_result[2] == False):
                 check_game_path()
                 copy_files_exec(game_file_type, langs)
 
-            if (app_config.get('app', 'region') == "2") or (app_config.get('app', 'region') == "3"):
-                print(f"CHECK FILE EU RESULT: {check_files_result[0]}")
-
-                check_game_path()
-                copy_files_exec(game_file_type, langs)
-
-    #except Exception as e:
-        #print("ERROR: Failed to copy: " +str(e))
-copy_files("filter")
+#copy_files("filter")
+#copy_files("font")
+copy_files("voice")
