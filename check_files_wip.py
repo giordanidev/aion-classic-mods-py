@@ -250,8 +250,17 @@ def copy_files(game_file_type):
         check_files_result = check_files()
         langs = check_files_result[3]
 
+        """
         current_dir = f"{os.getcwd()}\\assets\\sounds\\{game_file_type}"
         print(os.listdir(current_dir))
+
+        if os.path.isdir(os.path.dirname(current_dir)):
+                print(f"REMOVE: {os.path.dirname(current_dir)} ISFILE? {os.path.isfile(current_dir)}")
+                try:
+                    os.remove(os.path.dirname(current_dir))
+                except Exception as e:
+                    print("ERROR -> copy_files_exec() -> os.makedirs() :: " +str(e))
+        """
 
         print(f"GAME FILE TYPE: {game_file_type}")
 
