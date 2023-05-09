@@ -10,7 +10,8 @@ def app_config_read():
         app_config.read(config_full_path)
 
         return (app_config, config_full_path)
-    except: ""
+    except Exception as e:
+        print("ERROR -> app_config_read() :: "+str(e))
 app_config = app_config_read()[0]
 config_full_path = app_config_read()[1]
 
@@ -19,7 +20,8 @@ def app_config_write():
         with open(config_full_path, 'w') as config_write:
             app_config.write(config_write)
 
-    except: ""
+    except Exception as e:
+        print("ERROR -> app_config_write() :: "+str(e))
 
 def classic_eu_path():
     try:
@@ -39,7 +41,8 @@ def classic_eu_path():
                         eu_dir = classic_eu_path[0]
                         not_found = False
 
-            except: "" #print(EnvironmentError)
+            except Exception as e:
+                print("ERROR -> classic_eu_path() :: "+str(e))
 
         if (not_found == False):
             print("Client found: "+eu_dir)
@@ -65,11 +68,10 @@ def classic_na_path():
             app_config.set('app', 'napath', na_dir)
             app_config_write()
             
-    except:
-        print("Client not found. Please select manually.")
+    except Exception as e:
+        print("ERROR -> classic_na_path() :: "+str(e))
 
 def define_region():
-    try:
         count_region = 0
         check_game_path()
         app_config_read()
@@ -79,7 +81,6 @@ def define_region():
 
         app_config.set('app', 'region', str(count_region))
         app_config_write()
-    except: ""
 
 def get_game_file_type(game_file_type):
     if (game_file_type == "filter"):
@@ -93,7 +94,7 @@ def get_game_file_type(game_file_type):
 def get_file_path(lang, game_file_type):
     app_config = app_config_read()[0]
 
-    if lang == "original":
+    if lang == "assets":
         file_path = f"assets\{game_file_type}"
     elif lang == "enu":
         file_path = f"{app_config.get('app', 'napath')}\\l10n\\{lang}\\{game_file_type}"
@@ -127,12 +128,12 @@ def check_files():
     of the versions.
     If any of the files return a False, then all of them will be replaced
     when you call the 'copy_files()' function.
-    If a directory is not found or a HASH does not match the original,
+    If a directory is not found or a HASH does not match the assets' file,
     it returns a boolean "False" statement.
     """
     try:
         app_config = app_config_read()[0]
-        game_lang = ["original", "enu", "eng", "deu", "fra"] # Define all possible game LANG
+        game_lang = ["assets", "enu", "eng", "deu", "fra"] # Define all possible game LANG
         filter_hash = check_files_hash(game_lang, "filter") # Get all filter pak hashes
         font_hash = check_files_hash(game_lang, "font") # Get all font pak hashes
         voice_hash = check_files_hash(game_lang, "voice") # Get all voice pak hashes
@@ -160,7 +161,7 @@ def check_files():
                     
             # Checks if the EU region is eligible for hash validation
             if (app_region == "2") or (app_region == "3"):
-                # Matches original file hash against all EU hashes
+                # Matches assets file hash against all EU hashes
                 if (filter_hash[0][2] != filter_hash[0][0]) or (filter_hash[0][3] != filter_hash[0][0]) or (filter_hash[0][4] != filter_hash[0][0]):
                     check_filter_pass = False
                 if (font_hash[0][2] != font_hash[0][0]) or (font_hash[0][3] != font_hash[0][0]) or (font_hash[0][4] != font_hash[0][0]):
@@ -179,15 +180,15 @@ def check_game_path():
     na_path = app_config.get('app', 'napath')
     eu_path = app_config.get('app', 'eupath')
 
-    print(f"APP CONFIG NA PATH #1: {na_path}")
+    #print(f"APP CONFIG NA PATH #1: {na_path}")
     if not na_path:
         classic_na_path()
         app_config = app_config_read()[0]
         na_path = app_config.get('app', 'napath')
 
-        print(f"APP CONFIG NA PATH #2: {na_path}")
+        #print(f"APP CONFIG NA PATH #2: {na_path}")
         if not na_path:
-            print("COULD'NT FIND NA GAME DIRECTORY.")
+            #print("COULD'NT FIND NA GAME DIRECTORY.")
             return
     if na_path:
         game_path = f"{na_path}\\bin64\\Aion.bin"
@@ -195,15 +196,15 @@ def check_game_path():
             app_config.set('app', 'napath', "")
             app_config_write()
 
-    print(f"APP CONFIG EU PATH #1: {eu_path}")
+    #print(f"APP CONFIG EU PATH #1: {eu_path}")
     if not eu_path:
         classic_eu_path()
         app_config = app_config_read()[0]
         eu_path = app_config.get('app', 'eupath')
 
-        print(f"APP CONFIG EU PATH #2: {eu_path}")
+        #print(f"APP CONFIG EU PATH #2: {eu_path}")
         if not eu_path:
-            print("COULD'NT FIND EU GAME DIRECTORY.")
+            #print("COULD'NT FIND EU GAME DIRECTORY.")
             return
         
     if eu_path:
@@ -218,7 +219,7 @@ def copy_files_exec(game_file_type, langs):
     #TODO move all voice from assets to game folder
 
     for lang in langs:
-        if lang != "original":
+        if lang != "assets":
             assets_path = f"assets\\{file_path}"
             dest_path = get_file_path(lang, file_path)
             
