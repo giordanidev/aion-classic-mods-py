@@ -103,6 +103,9 @@ def get_file_path(lang, game_file_type):
     return file_path
 
 def check_files_hash(game_lang, game_file_type):
+    """
+    Returns the files' Hashes as requested by check_files()
+    """
     try:
         game_file_type = get_game_file_type(game_file_type)
 
