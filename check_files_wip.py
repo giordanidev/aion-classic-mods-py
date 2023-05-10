@@ -12,6 +12,8 @@ def app_config_read():
         return (app_config, config_full_path)
     except Exception as e:
         print("ERROR -> app_config_read() :: "+str(e))
+        return
+    
 app_config = app_config_read()[0]
 config_full_path = app_config_read()[1]
 
@@ -22,6 +24,7 @@ def app_config_write():
 
     except Exception as e:
         print("ERROR -> app_config_write() :: "+str(e))
+        return
 
 def classic_eu_path():
     try:
@@ -43,6 +46,7 @@ def classic_eu_path():
 
             except Exception as e:
                 print("ERROR -> classic_eu_path() :: "+str(e))
+                return
 
         if (not_found == False):
             print("Client found: "+eu_dir)
@@ -53,6 +57,7 @@ def classic_eu_path():
 
     except:
         print("Client not found. Please select manually.")
+        return
 
 def classic_na_path():
     try:
@@ -70,113 +75,7 @@ def classic_na_path():
             
     except Exception as e:
         print("ERROR -> classic_na_path() :: "+str(e))
-
-def define_region():
-        count_region = 0
-        check_game_path()
-        app_config_read()
-
-        if app_config.get('app', 'napath'): count_region += 1
-        if app_config.get('app', 'eupath'): count_region += 2
-
-        app_config.set('app', 'region', str(count_region))
-        app_config_write()
-
-def get_game_file_type(game_file_type):
-    if (game_file_type == "filter"):
-        game_file_type = "Data\\Strings\\aionfilterline.pak"
-    elif (game_file_type == "font"):
-        game_file_type = "textures\\ui\\hit_number.pak"
-    elif (game_file_type == "voice"):
-        game_file_type = "sounds\\voice\\attack\\attack.pak"
-    return game_file_type
-
-def get_file_path(lang, game_file_type):
-    app_config = app_config_read()[0]
-
-    if lang == "assets":
-        file_path = f"assets\{game_file_type}"
-    elif lang == "enu":
-        file_path = f"{app_config.get('app', 'napath')}\\l10n\\{lang}\\{game_file_type}"
-    else:
-        file_path = f"{app_config.get('app', 'eupath')}\\l10n\\{lang}\\{game_file_type}"
-    return file_path
-
-def check_files_hash(game_lang, game_file_type):
-    """
-    Returns the files' Hashes as requested by check_files()
-    """
-    try:
-        game_file_type = get_game_file_type(game_file_type)
-
-        check_hash = []
-        for lang in game_lang:
-            file_path = get_file_path(lang, game_file_type)
-
-            if os.path.isfile(file_path):
-                with open(file_path, 'rb', buffering=0) as f:
-                    hashed = hashlib.file_digest(f, 'sha256').hexdigest()
-                    check_hash.append(hashed)
-            else:
-                check_hash.append(False)
-
-        return [check_hash, game_file_type]
-    except Exception as e:
-        print("ERROR -> check_files_hash() :: "+str(e))
-
-def check_files():
-    """
-    This function returns the HASH of all files that the app can modify
-    depending on the installed game versions and the LANG information
-    of the versions.
-    If any of the files return a False, then all of them will be replaced
-    when you call the 'copy_files()' function.
-    If a directory is not found or a HASH does not match the assets' file,
-    it returns a boolean "False" statement.
-    """
-    try:
-        app_config = app_config_read()[0]
-        game_lang = ["assets", "enu", "eng", "deu", "fra"] # Define all possible game LANG
-        filter_hash = check_files_hash(game_lang, "filter") # Get all filter pak hashes
-        font_hash = check_files_hash(game_lang, "font") # Get all font pak hashes
-        voice_hash = check_files_hash(game_lang, "voice") # Get all voice pak hashes
-
-        #print(filter_hash)
-        #print(font_hash)
-        #print(voice_hash)
-
-        check_filter_pass = True
-        check_font_pass = True
-        check_voice_pass = True
-
-        # Checks if we are missing any Original files in the "assets" folder
-        if (filter_hash[0][0] != False) and (font_hash[0][0] != False) and (voice_hash[0][0] != False):
-            app_region = app_config.get('app', 'region')
-            # Checks if the NA region is eligible for hash validation
-            if (app_region == "1") or (app_region == "3"):
-                # Matches original file hash against all NA hashes
-                if (filter_hash[0][1] != filter_hash[0][0]):
-                    check_filter_pass = False
-                if (font_hash[0][1] != font_hash[0][0]):
-                    check_font_pass = False
-                if (voice_hash[0][1] != voice_hash[0][0]):
-                    check_voice_pass = False
-                    
-            # Checks if the EU region is eligible for hash validation
-            if (app_region == "2") or (app_region == "3"):
-                # Matches assets file hash against all EU hashes
-                if (filter_hash[0][2] != filter_hash[0][0]) or (filter_hash[0][3] != filter_hash[0][0]) or (filter_hash[0][4] != filter_hash[0][0]):
-                    check_filter_pass = False
-                if (font_hash[0][2] != font_hash[0][0]) or (font_hash[0][3] != font_hash[0][0]) or (font_hash[0][4] != font_hash[0][0]):
-                    check_font_pass = False
-                if (voice_hash[0][2] != voice_hash[0][0]) or (voice_hash[0][3] != voice_hash[0][0]) or (voice_hash[0][4] != voice_hash[0][0]):
-                    check_voice_pass = False
-        
-        # Returns the validation + game LANGS
-        print([check_filter_pass, check_font_pass, check_voice_pass, game_lang])
-        return [check_filter_pass, check_font_pass, check_voice_pass, game_lang]
-    except Exception as e:
-        print("ERROR -> check_files() :: "+str(e))
+        return
 
 def check_game_path():
     app_config = app_config_read()[0]
@@ -216,54 +115,160 @@ def check_game_path():
             app_config.set('app', 'eupath', "")
             app_config_write()
 
-def copy_files_exec(game_file_type, langs):
-    file_path = get_game_file_type(game_file_type)
+def define_region():
+        count_region = 0
+        check_game_path()
+        app_config_read()
 
+        if app_config.get('app', 'napath'): count_region += 1
+        if app_config.get('app', 'eupath'): count_region += 2
+
+        app_config.set('app', 'region', str(count_region))
+        app_config_write()
+
+def get_game_file_path(game_file_type):
+    if (game_file_type == "filter"):
+        file_path = "Data\\Strings\\aionfilterline.pak"
+    elif (game_file_type == "font"):
+        file_path = "textures\\ui\\hit_number.pak"
+    elif (game_file_type == "voice"):
+        file_path = "sounds\\voice\\attack\\attack.pak"
+    return file_path
+
+def get_full_file_path(lang, file_path):
+    app_config = app_config_read()[0]
+    na_path = app_config.get('app', 'napath')
+    eu_path = app_config.get('app', 'eupath')
+
+    if lang == "enu":
+        full_file_path = f"{na_path}\\l10n\\{lang}\\{file_path}"
+    elif lang == "eng" or "fra" or "deu":
+        full_file_path = f"{eu_path}\\l10n\\{lang}\\{file_path}"
+    else:
+        print("ERROR -> get_full_file_path() :: Unknown region.")
+        return
+    return full_file_path
+
+def check_files_hash(game_lang, game_file_type):
+    """
+    Returns the files' Hashes as requested by check_files()
+    """
+    try:
+        file_path = get_game_file_path(game_file_type)
+
+        assets_full_file_path = f"assets\{file_path}"
+
+        assets_hash = []
+        check_hash = []
+
+        if os.path.isfile(assets_full_file_path):
+            with open(assets_full_file_path, 'rb', buffering=0) as f:
+                assets_hash.extend([hashlib.file_digest(f, 'sha256').hexdigest(), assets_full_file_path])
+        else:
+            print(f"ERROR -> check_files_hash() :: Missing asset for file type '{game_file_type}'.")
+            return
+
+        for lang in game_lang:
+            full_file_path = get_full_file_path(lang, file_path)
+
+            if os.path.isfile(full_file_path):
+                with open(full_file_path, 'rb', buffering=0) as f:
+                    hashed = hashlib.file_digest(f, 'sha256').hexdigest()
+                    check_hash.extend([[hashed, full_file_path]])
+            else:
+                check_hash.extend([[False, full_file_path]])
+
+        print(f"DEBUG :: check_files_hash() -> assets_hash: {assets_hash} -> check_hash: {check_hash} -> game_file_type: {game_file_type}.")
+        return [assets_hash, check_hash]
+    
+    except Exception as e:
+        print("ERROR -> check_files_hash() :: "+str(e))
+        return
+
+def check_files(game_file_type):
+    """
+    This function returns the HASH of all files that the app can modify
+    depending on the installed game versions and the LANG information
+    of the versions.
+    If any of the files return a False, then all of them will be replaced
+    when you call the 'copy_files()' function.
+    If a directory is not found or a HASH does not match the assets' file,
+    it returns a boolean "False" statement.
+    """
+    try:
+        app_config = app_config_read()[0]
+        app_region = app_config.get('app', 'region')
+        print(f"DEBUG :: check_files() -> app_region: {app_region}.")
+        game_lang = []
+
+        if not app_region in ("1", "2", "3"):
+            print("ERROR -> app_region :: Region is not set.")
+            return
+
+        if app_region  in ("1", "3"):
+            game_lang.append("enu")
+        if app_region in ("2", "3"):
+            game_lang.extend(["eng", "fra", "deu"])
+
+        if game_file_type == "filter":
+            files_hash = check_files_hash(game_lang, "filter") # Get all filter files' hashes
+        elif game_file_type == "font":
+            files_hash = check_files_hash(game_lang, "font") # Get all font files' hashes
+        elif game_file_type == "voice":
+            files_hash = check_files_hash(game_lang, "voice") # Get all voice files' hashes
+        else:
+            print("ERROR -> check_files() :: Unknown file type.")
+            return
+
+        print(f"DEBUG :: check_files() -> files_hash: {files_hash}.")
+        return files_hash
+    
+    except Exception as e:
+        print("ERROR -> check_files() :: "+str(e))
+        return
+
+def copy_files_exec(check_files_result):
+    
     #TODO move all voice from assets to game folder
+    try:
+        assets_result = check_files_result[0]
+        print(f"DEBUG :: copy_files_exec() -> assets_result: {assets_result}.")
+        files_result = check_files_result[1]
+        print(f"DEBUG :: copy_files_exec() -> files_result: {files_result}.")
 
-    for lang in langs:
-        if lang != "assets":
-            assets_path = f"assets\\{file_path}"
-            dest_path = get_file_path(lang, file_path)
-            
-            print(f"ASSETS: {assets_path} DEST: {dest_path}")
-            if not os.path.isdir(os.path.dirname(dest_path)):
-                print(f"MKDIR: {os.path.dirname(dest_path)}")
+        for file in files_result:
+            print(f"DEBUG -> ASSETS: {assets_result[1]} DEST: {file[1]}")
+            if not os.path.isdir(os.path.dirname(file[1])):
+                print(f"DEBUG -> MKDIR: {os.path.dirname(file[1])}")
                 try:
-                    os.makedirs(os.path.dirname(dest_path))
+                    os.makedirs(os.path.dirname(file[1]))
                 except Exception as e:
                     print("ERROR -> copy_files_exec() -> os.makedirs() :: " +str(e))
-            if os.path.isfile(dest_path):
-                print(f"REMOVE: {dest_path} ISFILE? {os.path.isfile(dest_path)}")
+                    return
+            if os.path.isfile(file[1]):
+                print(f"DEBUG -> REMOVE: {file[1]} ISFILE? {os.path.isfile(file[1])}")
                 try:
-                    os.remove(dest_path)
+                    os.remove(file[1])
                 except Exception as e:
                     print("ERROR -> copy_files_exec() -> os.remove() :: " +str(e))
+                    return
             try:
-                print("COPY")
-                os.system(f'copy {assets_path} {dest_path}')
+                print("DEBUG -> COPY")
+                os.system(f'copy {assets_result[1]} {file[1]}')
             except Exception as e:
                 print("ERROR -> copy_files_exec() -> os.system() :: " +str(e))
+                return
+    except Exception as e:
+                print("ERROR -> copy_files_exec() :: " +str(e))
+                return
 
 def copy_files(game_file_type):
-        app_config = app_config_read()[0]
-        check_files_result = check_files()
-        langs = check_files_result[3]
+        print(f"DEBUG -> copy_files() -> GAME FILE TYPE: {game_file_type}")
 
+        check_files_result = check_files(game_file_type) # Returns [[assets_hash, assets_path],[file_hash, file_path]]
+        copy_files_exec(check_files_result)
+        
         """
-        current_dir = f"{os.getcwd()}\\assets\\sounds\\{game_file_type}"
-        print(os.listdir(current_dir))
-
-        if os.path.isdir(os.path.dirname(current_dir)):
-                print(f"REMOVE: {os.path.dirname(current_dir)} ISFILE? {os.path.isfile(current_dir)}")
-                try:
-                    os.remove(os.path.dirname(current_dir))
-                except Exception as e:
-                    print("ERROR -> copy_files_exec() -> os.makedirs() :: " +str(e))
-        """
-
-        print(f"GAME FILE TYPE: {game_file_type}")
-
         if game_file_type == "filter":
             if (check_files_result[0] == False):
                 check_game_path()
@@ -276,6 +281,7 @@ def copy_files(game_file_type):
             if (check_files_result[2] == False):
                 check_game_path()
                 copy_files_exec(game_file_type, langs)
+        """
 
 #copy_files("filter")
 #copy_files("font")
