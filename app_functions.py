@@ -39,7 +39,7 @@ def app_config_write():
 
 def classic_eu_path():
     """
-    This function will attempt to get the instalation path for
+    This function will attempt to get the installation path for
     the AION Classic Europe and save it to the 'config.ini' file.
 
     If it fails it will prompt the user to select a path manually.
@@ -78,7 +78,7 @@ def classic_eu_path():
 
 def classic_na_path():
     """
-    This function will attempt to get the instalation path for
+    This function will attempt to get the installation path for
     the AION Classic North America and save it to the 'config.ini' file.
 
     If it fails it will prompt the user to select a path manually.
@@ -102,7 +102,8 @@ def classic_na_path():
 
 def check_game_path():
     """
-    
+    This function verifies if the client path is correct
+    before trying to download and copy files.
     """
     app_config = app_config_read()[0]
     na_path = app_config.get('app', 'napath')
@@ -130,7 +131,9 @@ def check_game_path():
 
 def define_region():
     """
-    
+    This function defines the region that is used to define
+    which versions of the game will have files replaced on
+    request.
     """
     count_region = 0
     check_game_path()
