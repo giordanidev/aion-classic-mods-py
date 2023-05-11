@@ -1,18 +1,18 @@
 import tkinter as tk
 import customtkinter as ctk
-import winreg, hashlib, os, os.path, app_functions_wip
+import app_functions
 
 # Read configs from file
-load_configs = app_functions_wip.app_config_read()
+load_configs = app_functions.app_config_read()
 app_config = load_configs[0]
 config_full_path = load_configs[0]
 
-app_functions_wip.first_run()
+app_functions.first_run()
 class mainTabs(ctk.CTkTabview):
     def __init__(self, master, change_color_event, **kwargs):
         super().__init__(master=master, **kwargs)
 
-        app_functions_wip.app_config_read()
+        app_functions.app_config_read()
 
         # create tabs
         self.add("App")
@@ -101,7 +101,7 @@ class mainTabs(ctk.CTkTabview):
 
         def region_selection():
             app_config.set('app', 'region', str(self.regionRadio.get()))
-            app_config_write()
+            app_functions.app_config_write()
             if (self.regionRadio.get() == 0):
                 self.naPathLabel.configure(state="disabled")
                 self.naPathEntry.configure(state="disabled")
@@ -167,7 +167,7 @@ class mainTabs(ctk.CTkTabview):
         """
 
         #DEFAULT VALUES
-        app_config_read()
+        app_functions.app_config_read()
         if app_config.get('app', 'theme'): self.themeButton.set(app_config.get('app', 'theme'))
         if app_config.get('app', 'region'): self.regionRadio.set(app_config.get('app', 'region'))
         if app_config.get('app', 'napath'): self.naPathEntry.insert(0, app_config.get('app', 'napath'))
@@ -177,7 +177,7 @@ class mainTabs(ctk.CTkTabview):
 
     def change_theme_event(self, value):
         app_config.set('app', 'theme', value)
-        app_config_write()
+        app_functions.app_config_write()
         ctk.set_appearance_mode(value)
 
 class App(ctk.CTk):
@@ -189,7 +189,7 @@ class App(ctk.CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        app_config_read()
+        app_functions.app_config_read()
 
         # System appearance
         ctk.set_appearance_mode(app_config.get('app', 'theme'))
@@ -205,8 +205,8 @@ class App(ctk.CTk):
     def change_color_event(self, color):
         ctk.set_default_color_theme(color.lower())
         app_config.set('app', 'color', color)
-        app_config_write()
-        app_config_read()
+        app_functions.app_config_write()
+        app_functions.app_config_read()
         self.reset_current_ui()
 
     def reset_current_ui(self):

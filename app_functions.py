@@ -24,8 +24,9 @@ def first_run():
             classic_eu_path()
             define_region()
             check_files()
-
-        except: ""
+        except Exception as e:
+            get_exception(e)
+            return
 
 def app_config_write():
     try:
@@ -37,6 +38,12 @@ def app_config_write():
         return
 
 def classic_eu_path():
+    """
+    This function will attempt to get the instalation path for
+    the AION Classic Europe and save it to the 'config.ini' file.
+
+    If it fails it will prompt the user to select a path manually.
+    """
     try:
         a_reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
         a_key = winreg.OpenKey(a_reg, r'SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall')
@@ -70,6 +77,12 @@ def classic_eu_path():
         return
 
 def classic_na_path():
+    """
+    This function will attempt to get the instalation path for
+    the AION Classic North America and save it to the 'config.ini' file.
+
+    If it fails it will prompt the user to select a path manually.
+    """
     try:
         app_config_read()
         a_reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
@@ -88,6 +101,9 @@ def classic_na_path():
         return
 
 def check_game_path():
+    """
+    
+    """
     app_config = app_config_read()[0]
     na_path = app_config.get('app', 'napath')
     eu_path = app_config.get('app', 'eupath')
@@ -126,6 +142,9 @@ def check_game_path():
             app_config_write()
 
 def define_region():
+    """
+    
+    """
     count_region = 0
     check_game_path()
     app_config_read()
@@ -205,6 +224,10 @@ def get_files_hash(game_lang, game_file_type):
         return
     
 def get_files_hash_exec(all_files):
+    """
+    
+    """
+
     #TODO validate destinations for 'False' if file not found
 
     print(f"DEBUG :: get_files_hash_exec() -> all_files: {all_files} {len(all_files)}.")
@@ -222,6 +245,9 @@ def get_files_hash_exec(all_files):
     return full_hash
 
 def get_game_file_path(game_file_type):
+    """
+    
+    """
     if (game_file_type == "filter"):
         file_path = "data\\Strings"
     elif (game_file_type == "font"):
@@ -234,6 +260,9 @@ def get_game_file_path(game_file_type):
     return file_path
 
 def get_full_file_path(game_lang, file_path):
+    """
+    
+    """
     app_config = app_config_read()[0]
     na_path = app_config.get('app', 'napath')
     eu_path = app_config.get('app', 'eupath')
@@ -251,6 +280,9 @@ def get_full_file_path(game_lang, file_path):
     return full_file_path
         
 def get_all_files(file_path):
+    """
+    
+    """
     all_game_files = []
     print(f"DEBUG :: get_all_files() -> file_path: {file_path} {len(file_path)}.")
     for path in file_path:
@@ -264,42 +296,24 @@ def get_all_files(file_path):
     return all_game_files
 
 def copy_files(game_file_type):
-        print(f"DEBUG -> copy_files() -> GAME FILE TYPE: {game_file_type}")
+    """
 
-        check_files_result = check_files(game_file_type) # Returns [[[[assets_hash, assets_path]]],[[lang[[file_hash, file_path]]]]
-        asset_files_hash = check_files_result[0]
-        game_files_hash = check_files_result[1]
+    """
+    print(f"DEBUG -> copy_files() -> GAME FILE TYPE: {game_file_type}")
 
-        #TODO compare and validate destinations
+    check_files_result = check_files(game_file_type) # Returns [[[[assets_hash, assets_path]]],[[lang[[file_hash, file_path]]]]
+    asset_files_hash = check_files_result[0]
+    game_files_hash = check_files_result[1]
 
-        #copy_files_exec(check_files_result)
-        
-        """
-        current_dir = f"{os.getcwd()}\\assets\\sounds\\{game_file_type}"
-        print(os.listdir(current_dir))
-        if os.path.isdir(os.path.dirname(current_dir)):
-                print(f"REMOVE: {os.path.dirname(current_dir)} ISFILE? {os.path.isfile(current_dir)}")
-                try:
-                    os.remove(os.path.dirname(current_dir))
-                except Exception as e:
-                    get_exception(e)
+    #TODO compare and validate destinations
 
-        if game_file_type == "filter":
-            if (check_files_result[0] == False):
-                check_game_path()
-                copy_files_exec(game_file_type, langs)
-        elif game_file_type == "font":
-            if (check_files_result[1] == False):
-                check_game_path()
-                copy_files_exec(game_file_type, langs)
-        elif game_file_type == "voice":
-            if (check_files_result[2] == False):
-                check_game_path()
-                copy_files_exec(game_file_type, langs)
-        """
+    #copy_files_exec(check_files_result)
 
 def copy_files_exec(check_files_result):
+    """
     
+    """
+
     #TODO move all files from assets to game folder
 
     try:
@@ -335,6 +349,9 @@ def copy_files_exec(check_files_result):
         return
     
 def get_exception(e):
+    """
+    This function keeps track of Exception errors.
+    """
     trace = []
     tb = e.__traceback__
     while tb is not None:
