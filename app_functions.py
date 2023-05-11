@@ -72,8 +72,8 @@ def classic_eu_path():
         else:
             print("Client not found. Please select manually.")
 
-    except:
-        print("Client not found. Please select manually.")
+    except Exception as e:
+        get_exception(e)
         return
 
 def classic_na_path():
@@ -142,92 +142,6 @@ def define_region():
     app_config.set('app', 'region', str(count_region))
     app_config_write()
 
-def check_files(game_file_type):
-    """
-    This function returns the Hash and Full Path of all files that the
-    app can modify depending on the installed game versions, considering
-    the given File Type.
-
-    If any of the files doesn't exists it returns a 'False' boolean that
-    will be used to validate the copying of the files.
-
-    If the returned value is a Hash, then all of the files will be replaced
-    when it calls the 'copy_files_exec()' function.
-    """
-    try:
-        app_config = app_config_read()[0]
-        app_region = app_config.get('app', 'region')
-        print(f"DEBUG :: check_files() -> app_region: {app_region}.")
-        game_lang = []
-
-        if not app_region in ("1", "2", "3"):
-            print("ERROR -> app_region :: Region is not set.")
-            return
-
-        if app_region  in ("1", "3"):
-            game_lang.append("enu")
-        if app_region in ("2", "3"):
-            game_lang.extend(["eng", "fra", "deu"])
-
-        if game_file_type in ("filter", "font", "voice"):
-            print(f"DEBUG -> check_files() :: game_lang: {game_lang}")
-            files_hash = get_files_hash(game_lang, game_file_type) # Get all files' hashes
-        else:
-            print("ERROR -> check_files() :: Unknown file type.")
-            return
-
-        print(f"DEBUG :: check_files() -> files_hash: {files_hash} {len(files_hash)}.")
-        return files_hash
-    
-    except Exception as e:
-        get_exception(e)
-        return
-
-def get_files_hash(game_lang, game_file_type):
-    """
-    Returns the files' Hashes as requested by check_files()
-    """
-    try:
-        file_path = get_game_file_path(game_file_type)
-        print(f"DEBUG :: get_files_hash() -> file_path: {file_path} {len(file_path)}.")
-
-        assets_full_file_path = [f"assets\{file_path}"]
-
-        all_assets_files = get_all_files(assets_full_file_path)
-        print(f"DEBUG -> get_files_hash() -> all_assets_files: {all_assets_files} {len(all_assets_files)}")
-
-        full_file_path = get_full_file_path(game_lang, file_path)
-        all_game_files = get_all_files(full_file_path)
-        print(f"DEBUG -> get_files_hash() -> all_game_files: {all_game_files} {len(all_game_files)}")
-
-        all_assets_files_hash = get_files_hash_exec(all_assets_files)
-        all_game_files_hash = get_files_hash_exec(all_game_files)
-
-        print(f"DEBUG :: check_files_hash() -> \n\nall_assets_files_hash: {len(all_assets_files_hash)} \n{all_assets_files_hash} -> \n\nall_game_files_hash: {len(all_game_files_hash)}\n{all_game_files_hash} -> \n\ngame_file_type: {game_file_type}.")
-        return [all_assets_files_hash, all_game_files_hash]
-    
-    except Exception as e:
-        get_exception(e)
-        return
-    
-def get_files_hash_exec(all_files):
-    """
-    
-    """
-    print(f"DEBUG :: get_files_hash_exec() -> all_files: {all_files} {len(all_files)}.")
-    full_hash = []
-    for list in all_files:
-        print(f"DEBUG :: get_files_hash_exec() -> list: {list} {len(list)}.")
-        files_hash = []
-        for file in list:
-            print(f"DEBUG :: get_files_hash_exec() -> file: {file}.")
-            with open(file, 'rb', buffering=0) as f:
-                hashed = hashlib.file_digest(f, 'sha256').hexdigest()
-                files_hash.extend([[hashed, file]])
-        full_hash.extend([files_hash])
-    print(f"DEBUG :: get_files_hash_exec() -> files_hash: {files_hash} {len(files_hash)}.")
-    return full_hash
-
 def get_game_file_path(game_file_type):
     """
     
@@ -262,74 +176,133 @@ def get_full_file_path(game_lang, file_path):
             print("ERROR -> get_full_file_path() :: Unknown region.")
             return
     return full_file_path
-        
-def get_all_files(file_path):
+
+def check_files(game_file_type):
+    """
+    This function returns the Hash and Full Path of all files that the
+    app can modify depending on the installed game versions, considering
+    the given File Type.
+
+    If any of the files doesn't exists it returns a 'False' boolean that
+    will be used to validate the copying of the files.
+
+    If the returned value is a Hash, then all of the files will be replaced
+    when it calls the 'copy_files_exec()' function.
+    """
+    try:
+        app_config = app_config_read()[0]
+        app_region = app_config.get('app', 'region')
+        #print(f"DEBUG :: check_files() -> app_region: {app_region}.")
+        game_lang = []
+
+        if not app_region in ("1", "2", "3"):
+            print("ERROR -> app_region :: Region is not set.")
+            return
+
+        if app_region  in ("1", "3"):
+            game_lang.append("enu")
+        if app_region in ("2", "3"):
+            game_lang.extend(["eng", "fra", "deu"])
+
+        if game_file_type in ("filter", "font", "voice"):
+            #print(f"DEBUG -> check_files() :: game_lang: {game_lang}")
+            full_files = get_full_files(game_lang, game_file_type) # Get files' hashes when files already exist in game path
+        else:
+            print("ERROR -> check_files() :: Unknown file type.")
+            return
+
+        #print(f"DEBUG :: check_files() -> files_hash: {files_hash} {len(files_hash)}.")
+        return full_files
+    
+    except Exception as e:
+        get_exception(e)
+        return
+
+def get_full_files(game_lang, game_file_type):
+    """
+    Returns the list of files that should be copied or replaced
+    in the game path.
+    """
+    try:
+        file_path = get_game_file_path(game_file_type)
+        #print(f"DEBUG :: get_full_files() -> file_path: {file_path} {len(file_path)}.")
+
+        assets_full_file_path = [f"assets\{file_path}"] # Defines assets path
+        full_file_path = get_full_file_path(game_lang, file_path) # Returns [full_file_path]. It can be multiple paths depending on regions selected
+
+        compared_files = compare_files(assets_full_file_path, full_file_path) # Returns [[check_hash_list], [copy_files_list]]
+
+        copy_files_check = compare_files_hash(compared_files)
+
+        #print(f"DEBUG :: get_full_files() -> copy_files_check: {len(copy_files_check)} \n{copy_files_check}")
+        return copy_files_check
+    
+    except Exception as e:
+        get_exception(e)
+        return
+    
+def compare_files_hash(compared_files):
     """
     
     """
-    all_game_files = []
-    print(f"DEBUG :: get_all_files() -> file_path: {file_path} {len(file_path)}.")
-    for path in file_path:
-        game_files = []
-        print(f"DEBUG :: get_all_files() -> path: {path} {len(path)}.")
-        for root, dirs, files in os.walk(path):
-            for file in files:
-                print(f"DEBUG :: get_all_files() -> file: {os.path.join(root, file)}.")
-                game_files.extend([os.path.join(root, file)])
-        all_game_files.extend([game_files])
-    return all_game_files
+    #print(f"DEBUG :: compare_files_hash() -> compared_files: {len(compared_files)} \n{compared_files}.")
+    check_hash_list = compared_files[0]
+    copy_files_list = compared_files[1]
 
+    for list in check_hash_list:
+        asset_file = list[0]
+        game_file = list[1]
+        #print(f"DEBUG :: compare_files_hash() -> asset_file: {asset_file}.")
+        with open(asset_file, 'rb', buffering=0) as f:
+            asset_file_hashed = hashlib.file_digest(f, 'sha256').hexdigest()
+
+        #print(f"DEBUG :: compare_files_hash() -> game_file: {game_file}.")
+        with open(game_file, 'rb', buffering=0) as f:
+            game_file_hashed = hashlib.file_digest(f, 'sha256').hexdigest()
+        if asset_file_hashed != game_file_hashed:
+            copy_files_list.extend([[asset_file, game_file]])
+
+    #print(f"DEBUG :: compare_files_hash() -> copy_files_list: {len(copy_files_list)} \n{copy_files_list}.")
+    return copy_files_list
+        
+def compare_files(assets_full_file_path, full_file_path):
+    #print(f"DEBUG :: compare_files() -> assets_full_file_path: \n{assets_full_file_path}.\nDEBUG :: compare_files() -> full_file_path: \n{full_file_path}.")
+
+    try:
+        copy_files_list = []
+        check_hash_list = []
+        for assets_dir in assets_full_file_path:
+            #print(f"DEBUG :: compare_files() -> assets_dir: {assets_dir}.")
+            for (dirpath, dirnames, filenames) in os.walk(assets_dir):
+                for filename in filenames:
+                    relative_path = dirpath.replace(assets_dir, "")
+                    for files_dir in full_file_path:
+                        asset_path = assets_dir+'\\'+filename
+                        file_path = files_dir+relative_path+'\\'+filename
+                        if not os.path.exists(file_path):
+                            #print(f"DEBUG :: compare_files() -> file_path -> copy_files_list[]: NAY {file_path}")
+                            copy_files_list.extend([[asset_path, file_path]])
+                        else:
+                            #print(f"DEBUG :: compare_files() -> file_path -> check_hash_list[]: AY {file_path}")
+                            check_hash_list.extend([[asset_path, file_path]])
+
+            #print(f"DEBUG :: compare_files() -> check_hash_list: \n{check_hash_list}")
+            #print(f"DEBUG :: compare_files() -> copy_files_list: \n{copy_files_list}")
+            return [check_hash_list, copy_files_list]
+
+    except Exception as e:
+        get_exception(e)
+        return
+    
 def copy_files(game_file_type):
     """
 
     """
-    print(f"DEBUG -> copy_files() -> GAME FILE TYPE: {game_file_type}")
-
-    check_files_result = check_files(game_file_type) # Returns [[[[assets_hash, assets_path]]],[[lang[[file_hash, file_path]]]]
-    asset_files_hash = check_files_result[0][0]
-    print(f"DEBUG -> copy_files() -> asset_files_hash: {asset_files_hash}")
-    game_files_hash = check_files_result[1]
-    print(f"DEBUG -> copy_files() -> game_files_hash: {game_files_hash}")
-
-    #TODO compare and validate destinations
-
-    check_files_result = []
-    for langs in game_files_hash:
-        print(f"DEBUG -> copy_files() -> langs: {langs}")
-        file_names = []
-        for file in langs:
-            file_name = os.path.basename(file[1])
-            file_names.append(file_name)
-            #print(f"DEBUG -> copy_files() -> file: {file}")
-            #print(f"DEBUG -> copy_files() -> os.path.basename(file[1]): {os.path.basename(file[1])}")
-        print(f"DEBUG -> copy_files() -> file_names: {file_names}")
-
-        asset_names = []
-        for asset in asset_files_hash:
-            asset_name = os.path.basename(asset[1])
-            asset_names.append(asset_name)
-            #print(f"DEBUG -> copy_files() -> asset: {asset}")
-            #print(f"DEBUG -> copy_files() -> os.path.basename(asset[1]): {os.path.basename(asset[1])}")
-        print(f"DEBUG -> copy_files() -> asset_names: {asset_names}")
-
-        for asset in asset_names:
-            if asset in file_names:
-                print(f"DEBUG -> copy_files() -> asset file is in file_name: {asset}")
-            else:
-                print(f"DEBUG -> copy_files() -> asset file is NOT in file_name: {asset}")
-            #check_files_result.extend()
-
-    #copy_files_exec(check_files_result)
-    
-
-def copy_files_exec(check_files_result):
-    """
-    
-    """
-
-    #TODO move all files from assets to game folder
-
     try:
+        #print(f"DEBUG -> copy_files() -> GAME FILE TYPE: {game_file_type}")
+        copy_files_list = check_files(game_file_type) # Returns [[asset_path, file_path]] ready to copy!
+
+        """
         assets_result = check_files_result[0]
         print(f"DEBUG :: copy_files_exec() -> assets_result: {assets_result}.")
         files_result = check_files_result[1]
@@ -357,6 +330,8 @@ def copy_files_exec(check_files_result):
             except Exception as e:
                 get_exception(e)
                 return
+        """
+
     except Exception as e:
         get_exception(e)
         return
