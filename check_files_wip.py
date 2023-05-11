@@ -195,6 +195,8 @@ def get_files_hash(game_lang, game_file_type):
         return
     
 def get_files_hash_exec(all_files):
+    #TODO validate destinations for 'False' if file not found
+
     print(f"DEBUG :: get_files_hash_exec() -> all_files: {all_files} {len(all_files)}.")
     full_hash = []
     for list in all_files:
@@ -254,7 +256,12 @@ def get_all_files(file_path):
 def copy_files(game_file_type):
         print(f"DEBUG -> copy_files() -> GAME FILE TYPE: {game_file_type}")
 
-        check_files_result = check_files(game_file_type) # Returns [[assets_hash, assets_path],[file_hash, file_path]]
+        check_files_result = check_files(game_file_type) # Returns [[[[assets_hash, assets_path]]],[[lang[[file_hash, file_path]]]]
+        asset_files_hash = check_files_result[0]
+        game_files_hash = check_files_result[1]
+
+        #TODO compare and validate destinations
+
         #copy_files_exec(check_files_result)
         
         """
