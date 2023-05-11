@@ -1,21 +1,11 @@
 import tkinter as tk
 import customtkinter as ctk
-from configparser import ConfigParser
-import winreg, hashlib, os, os.path
+import winreg, hashlib, os, os.path, app_functions_wip
 
 # Read configs from file
-def app_config_read():
-    try:
-        app_config = ConfigParser()
-        config_path = 'config/'
-        config_file = 'config.ini'
-        config_full_path = config_path + config_file
-        app_config.read(config_full_path)
-
-        return (app_config, config_full_path)
-    except: ""
-app_config = app_config_read()[0]
-config_full_path = app_config_read()[1]
+load_configs = app_functions_wip.app_config_read()
+app_config = load_configs[0]
+config_full_path = load_configs[0]
 
 def app_config_write():
     try:
