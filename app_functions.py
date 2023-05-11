@@ -1,5 +1,5 @@
 from configparser import ConfigParser
-import os, os.path, hashlib, winreg
+import os, os.path, hashlib, winreg, ntpath
 
 def app_config_read():
     try:
@@ -111,13 +111,7 @@ def check_game_path():
     #print(f"APP CONFIG NA PATH #1: {na_path}")
     if not na_path:
         classic_na_path()
-        app_config = app_config_read()[0]
-        na_path = app_config.get('app', 'napath')
 
-        #print(f"APP CONFIG NA PATH #2: {na_path}")
-        if not na_path:
-            #print("COULD'NT FIND NA GAME DIRECTORY.")
-            return
     if na_path:
         game_path = f"{na_path}\\bin64\\Aion.bin"
         if not os.path.isfile(game_path):
@@ -127,13 +121,6 @@ def check_game_path():
     #print(f"APP CONFIG EU PATH #1: {eu_path}")
     if not eu_path:
         classic_eu_path()
-        app_config = app_config_read()[0]
-        eu_path = app_config.get('app', 'eupath')
-
-        #print(f"APP CONFIG EU PATH #2: {eu_path}")
-        if not eu_path:
-            #print("COULD'NT FIND EU GAME DIRECTORY.")
-            return
         
     if eu_path:
         game_path = f"{eu_path}\\bin64\\aionclassic.bin"
@@ -227,9 +214,6 @@ def get_files_hash_exec(all_files):
     """
     
     """
-
-    #TODO validate destinations for 'False' if file not found
-
     print(f"DEBUG :: get_files_hash_exec() -> all_files: {all_files} {len(all_files)}.")
     full_hash = []
     for list in all_files:
@@ -302,12 +286,41 @@ def copy_files(game_file_type):
     print(f"DEBUG -> copy_files() -> GAME FILE TYPE: {game_file_type}")
 
     check_files_result = check_files(game_file_type) # Returns [[[[assets_hash, assets_path]]],[[lang[[file_hash, file_path]]]]
-    asset_files_hash = check_files_result[0]
+    asset_files_hash = check_files_result[0][0]
+    print(f"DEBUG -> copy_files() -> asset_files_hash: {asset_files_hash}")
     game_files_hash = check_files_result[1]
+    print(f"DEBUG -> copy_files() -> game_files_hash: {game_files_hash}")
 
     #TODO compare and validate destinations
 
+    check_files_result = []
+    for langs in game_files_hash:
+        print(f"DEBUG -> copy_files() -> langs: {langs}")
+        file_names = []
+        for file in langs:
+            file_name = os.path.basename(file[1])
+            file_names.append(file_name)
+            #print(f"DEBUG -> copy_files() -> file: {file}")
+            #print(f"DEBUG -> copy_files() -> os.path.basename(file[1]): {os.path.basename(file[1])}")
+        print(f"DEBUG -> copy_files() -> file_names: {file_names}")
+
+        asset_names = []
+        for asset in asset_files_hash:
+            asset_name = os.path.basename(asset[1])
+            asset_names.append(asset_name)
+            #print(f"DEBUG -> copy_files() -> asset: {asset}")
+            #print(f"DEBUG -> copy_files() -> os.path.basename(asset[1]): {os.path.basename(asset[1])}")
+        print(f"DEBUG -> copy_files() -> asset_names: {asset_names}")
+
+        for asset in asset_names:
+            if asset in file_names:
+                print(f"DEBUG -> copy_files() -> asset file is in file_name: {asset}")
+            else:
+                print(f"DEBUG -> copy_files() -> asset file is NOT in file_name: {asset}")
+            #check_files_result.extend()
+
     #copy_files_exec(check_files_result)
+    
 
 def copy_files_exec(check_files_result):
     """
@@ -368,6 +381,6 @@ def get_exception(e):
     })
 
 
-#copy_files("filter")
+copy_files("filter")
 #copy_files("font")
-copy_files("voice")
+#copy_files("voice")
