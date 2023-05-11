@@ -72,12 +72,12 @@ def define_region():
         app_config_write()
     except: ""
 
-def check_filter_hash(filter_files):
+def check_files_hash(filter_files):
     app_config_read()
     count = 0
     check_hash = []
     for filter in filter_files:
-        if filter == "original":
+        if filter == "assets":
             filter_path = "assets\\l10n\\enu\\data\\Strings\\aionfilterline.pak"
         elif filter == "enu":
             filter_path = f"{app_config.get('app', 'napath')}\\l10n\\{filter}\\data\\Strings\\aionfilterline.pak"
@@ -96,8 +96,8 @@ def check_filter_hash(filter_files):
 
 def check_files():
 #try:
-    filter_files = ["original", "enu", "eng", "deu", "fra"]
-    check_hash = check_filter_hash(filter_files)
+    filter_files = ["assets", "enu", "eng", "deu", "fra"]
+    check_hash = check_files_hash(filter_files)
     print(check_hash)
 
 def first_run():
