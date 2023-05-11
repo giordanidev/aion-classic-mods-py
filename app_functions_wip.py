@@ -17,6 +17,16 @@ def app_config_read():
 app_config = app_config_read()[0]
 config_full_path = app_config_read()[1]
 
+def first_run():
+    if not app_config.get('app', 'region'):
+        try:
+            classic_na_path()
+            classic_eu_path()
+            define_region()
+            check_files()
+
+        except: ""
+
 def app_config_write():
     try:
         with open(config_full_path, 'w') as config_write:

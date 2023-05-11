@@ -7,116 +7,12 @@ load_configs = app_functions_wip.app_config_read()
 app_config = load_configs[0]
 config_full_path = load_configs[0]
 
-def app_config_write():
-    try:
-        with open(config_full_path, 'w') as config_write:
-            app_config.write(config_write)
-
-    except: ""
-
-def classic_eu_path():
-    try:
-        aReg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
-        aKey = winreg.OpenKey(aReg, r'SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall')
-
-        notFound = True
-        for i in range(1024):
-            try:
-                aValue_name = winreg.EnumKey(aKey, i)
-                oKey = winreg.OpenKey(aKey, aValue_name)
-                sValue = winreg.QueryValueEx(oKey, "DisplayName")
-                classicEuPublisher = winreg.QueryValueEx(oKey, "Publisher")
-                if (sValue[0] == "AION Classic"):
-                    if (classicEuPublisher[0] == "Gameforge"):
-                        classicEuPath = winreg.QueryValueEx(oKey, "InstallLocation")
-                        notFound = False
-
-            except: "" #print(EnvironmentError)
-
-        if (notFound == False):
-            print("Client found: "+classicEuPath[0])
-            app_config.set('app', 'eupath', classicEuPath[0])
-            app_config_write()
-        else:
-            print("Client not found. Please select manually.")
-
-    except:
-        print("Client not found. Please select manually.")
-
-def classic_na_path():
-    try:
-        app_config_read()
-        aReg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
-        aKey = winreg.OpenKey(aReg, r'SOFTWARE\\WOW6432Node\\NCWest\\AION_CLASSIC')
-
-        if aKey:
-            sValue = winreg.QueryValueEx(aKey, "BaseDir")
-            na_dir = sValue[0]
-            if na_dir[len(na_dir)-1] == "\\":
-                na_dir = na_dir.rstrip(na_dir[-1])
-            app_config.set('app', 'napath', na_dir)
-            app_config_write()
-            
-    except:
-        print("Client not found. Please select manually.")
-
-def define_region():
-    try:
-        count_region = 0
-        app_config_read()
-
-        if app_config.get('app', 'napath'): count_region += 1
-        if app_config.get('app', 'eupath'): count_region += 2
-
-        app_config.set('app', 'region', str(count_region))
-        app_config_write()
-    except: ""
-
-def check_files_hash(filter_files):
-    app_config_read()
-    count = 0
-    check_hash = []
-    for filter in filter_files:
-        if filter == "assets":
-            filter_path = "assets\\l10n\\enu\\data\\Strings\\aionfilterline.pak"
-        elif filter == "enu":
-            filter_path = f"{app_config.get('app', 'napath')}\\l10n\\{filter}\\data\\Strings\\aionfilterline.pak"
-        else:
-            filter_path = f"{app_config.get('app', 'eupath')}\\l10n\\{filter}\\data\\Strings\\aionfilterline.pak"
-
-        if os.path.isfile(filter_path):
-            with open(filter_path, 'rb', buffering=0) as f:
-                print(f"FILTER {filter_path} PASSED. {count} {hashlib.file_digest(f, 'sha256').hexdigest()}")
-                check_hash.append(hashlib.file_digest(f, 'sha256').hexdigest())
-        else:
-            print(f"FILTER {filter_path} NOT FOUND. {count}")
-            check_hash.append(False)
-        count += 1
-    return check_hash
-
-def check_files():
-#try:
-    filter_files = ["assets", "enu", "eng", "deu", "fra"]
-    check_hash = check_files_hash(filter_files)
-    print(check_hash)
-
-def first_run():
-    if not app_config.get('app', 'region'):
-        try:
-            classic_na_path()
-            classic_eu_path()
-            define_region()
-            check_files()
-
-        except: ""
-first_run()
-
-
+app_functions_wip.first_run()
 class mainTabs(ctk.CTkTabview):
     def __init__(self, master, change_color_event, **kwargs):
         super().__init__(master=master, **kwargs)
 
-        app_config_read()
+        app_functions_wip.app_config_read()
 
         # create tabs
         self.add("App")
