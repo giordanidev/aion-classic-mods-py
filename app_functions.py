@@ -285,7 +285,7 @@ def get_full_files(game_lang, game_file_type):
     
     except Exception as e:
         get_exception(e)
-        return
+        return False
         
 def compare_files(assets_full_file_path, full_file_path):
     logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_full_file_path: {assets_full_file_path}. compare_files() -> full_file_path: {full_file_path}.")
@@ -412,11 +412,6 @@ def get_exception(e):
             "line": tb.tb_lineno
         })
         tb = tb.tb_next
-    print({
-        'ERROR': type(e).__name__,
-        'message': str(e),
-        'trace': trace
-    })
     logging.error({
         'ERROR': type(e).__name__,
         'message': str(e),

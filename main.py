@@ -41,7 +41,7 @@ class App(ctk.CTk):
     def reset_current_ui(self):
         for widget in self.current_ui:
             widget.destroy()
-        self.tabsView = createTabs(self, self.change_color_event)
+        self.tabsView = createTabs(self, self.change_color_event, self.reset_current_ui)
         self.tabsView.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         self.tabsView._segmented_button.grid(sticky="w")
         createTabs.set(self.tabsView, "Config")
@@ -77,17 +77,6 @@ class createTabs(ctk.CTkTabview):
         self.appTopFrame.configure(fg_color="transparent")
         self.appTopFrame.grid_columnconfigure(1, weight=1)
 
-        def check_files_button(file_type_list):
-            """
-            
-            """
-            for file_type in file_type_list:
-                print(file_type)
-
-        self.voiceButton = ctk.CTkButton(self.appTopFrame, text="Check Files", command=partial(check_files_button, ["voice", "filter", "font"]))
-        self.voiceButton.grid(row=0, column=2, padx=(5, 0), pady=5)
-        self.voiceButton.configure(font=("", 13, "bold")) # , state="disabled"
-
         self.voiceLabel = ctk.CTkLabel(self.appTopFrame, text="KR Voices:")
         self.voiceLabel.grid(row=1, column=0, padx=(0, 5), pady=5, sticky="e")
         self.voiceLabel.configure(font=("", 12, "bold"))
@@ -98,31 +87,64 @@ class createTabs(ctk.CTkTabview):
         self.fontLabel.grid(row=3, column=0, padx=(0, 5), pady=5, sticky="e")
         self.fontLabel.configure(font=("", 12, "bold"))
 
-        self.voiceReturnLabel = ctk.CTkLabel(self.appTopFrame, text="voice")
+        self.checkAllButton = ctk.CTkButton(self.appTopFrame, text="Check All Files")
+        self.checkAllButton.grid(row=0, column=2, padx=(5, 0), pady=5)
+        self.checkAllButton.configure(font=("", 13, "bold"))
+
+        self.voiceReturnLabel = ctk.CTkLabel(self.appTopFrame, text=f"Please press '{self.checkAllButton.cget('text')}' to start.")
         self.voiceReturnLabel.grid(row=1, column=1, padx=5, pady=5, sticky="w")
-        self.filterReturnLabel = ctk.CTkLabel(self.appTopFrame, text="filter")
+        self.filterReturnLabel = ctk.CTkLabel(self.appTopFrame, text=f"Please press '{self.checkAllButton.cget('text')}' to start.")
         self.filterReturnLabel.grid(row=2, column=1, padx=5, pady=5, sticky="w")
-        self.fontReturnLabel = ctk.CTkLabel(self.appTopFrame, text="font")
+        self.fontReturnLabel = ctk.CTkLabel(self.appTopFrame, text=f"Please press '{self.checkAllButton.cget('text')}' to start.")
         self.fontReturnLabel.grid(row=3, column=1, padx=5, pady=5, sticky="w")
 
-        def copy_files_button(file_type, return_label):
+        def copy_files_button(file_type, return_label, return_button):
             """
             
             """
+            return_label.configure(text=f"Verifying '{file_type.capitalize()}' files.")
+
             copy_files_return = copy_files(file_type)
 
             if copy_files_return:
-                return_label.configure(text="AY")
+                return_label.configure(text=f"Success! '{file_type.capitalize()}' files have been updated.", text_color="#00E30A")
+                return_button.configure(text=f"Up to date", state="disabled")
             elif not copy_files_return:
-                return_label.configure(text="NAY")
-            print(return_label.cget("text"))
-
-        self.voiceButton = ctk.CTkButton(self.appTopFrame, text="Install", command=partial(copy_files_button, "voice", self.voiceReturnLabel))
+                return_label.configure(text=f"There are no new '{file_type}' files to update.")
+                return_button.configure(text=f"Up to date", state="disabled")
+        
+        self.voiceButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled")
+        self.voiceButton.configure(command=partial(copy_files_button, "voice", self.voiceReturnLabel, self.voiceButton))
         self.voiceButton.grid(row=1, column=2, padx=(5, 0), pady=5)
-        self.filterButton = ctk.CTkButton(self.appTopFrame, text="Install", command=partial(copy_files_button, "filter", self.filterReturnLabel))
+
+        self.filterButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled")
+        self.filterButton.configure(command=partial(copy_files_button, "filter", self.filterReturnLabel, self.filterButton))
         self.filterButton.grid(row=2, column=2, padx=(5, 0), pady=5)
-        self.fontButton = ctk.CTkButton(self.appTopFrame, text="Install", command=partial(copy_files_button, "font", self.fontReturnLabel))
+
+        self.fontButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled")
+        self.fontButton.configure(command=partial(copy_files_button, "font", self.fontReturnLabel, self.fontButton))
         self.fontButton.grid(row=3, column=2, padx=(5, 0), pady=5)
+
+        def check_files_button(file_type_list, install_buttons_list, file_type_label_list):
+            """
+            
+            """
+            start_button = 0
+            for file_type in file_type_list:
+                file_type_label_list[start_button].configure(text=f"Verifying '{file_type}' files.")
+                check_files_return = check_files(file_type)
+                if check_files_return:
+                    install_buttons_list[start_button].configure(text=f"Install", state="normal")
+                    file_type_label_list[start_button].configure(text=f"'{file_type.capitalize()}' files are ready to update. Press install.", text_color="red")
+                elif not check_files_return:
+                    install_buttons_list[start_button].configure(text=f"Up to date", state="disabled")
+                    file_type_label_list[start_button].configure(text=f"There are no new '{file_type}' files to update.", text_color="#00E30A")
+                start_button += 1
+
+        self.checkAllButton.configure(command=partial(check_files_button, 
+                                                   ["voice", "filter", "font"], 
+                                                   [self.voiceButton, self.filterButton, self.fontButton], 
+                                                   [self.voiceReturnLabel, self.filterReturnLabel, self.fontReturnLabel]))
 
         """
         self.appTextbox = ctk.CTkTextbox(self.appTopFrame)
@@ -244,6 +266,14 @@ class createTabs(ctk.CTkTabview):
         if app_config.get('app', 'napath'): self.naPathEntry.insert(0, app_config.get('app', 'napath'))
         if app_config.get('app', 'eupath'): self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
         if app_config.get('app', 'color'): self.colorButton.set(app_config.get('app', 'color'))
+        region_selection()
+
+        # Runs file check at start
+        """
+        check_files_button(["voice", "filter", "font"], 
+                           [self.voiceButton, self.filterButton, self.fontButton], 
+                           [self.voiceReturnLabel, self.filterReturnLabel, self.fontReturnLabel])
+        """
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values read.")
 
