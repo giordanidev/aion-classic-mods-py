@@ -1,3 +1,0 @@
-configparser==5.3.0
-customtkinter==5.1.2
-setuptools==65.5.0
