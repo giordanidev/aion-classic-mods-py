@@ -1,5 +1,8 @@
 from configparser import ConfigParser
-import os, os.path, hashlib, winreg, sys
+import os, os.path, hashlib, winreg, sys, json, logging
+
+logging.basicConfig(filename='.\\config\\logs\\logs.log', format='%(asctime)s [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=logging.DEBUG, filemode='w')
+logging.getLogger().addHandler(logging.StreamHandler())
 
 def app_config_read():
     try:
@@ -8,7 +11,7 @@ def app_config_read():
         config_file = 'config.ini'
         config_full_path = config_path + config_file
         app_config.read(config_full_path)
-
+        logging.info(f"{sys._getframe().f_code.co_name}() -> app_config_read: {app_config.items('app')}")
         return (app_config, config_full_path)
     except Exception as e:
         get_exception(e)
@@ -21,7 +24,7 @@ config_full_path = load_configs[1]
 def app_config_write(app_config):
     try:
         with open(config_full_path, 'w') as config_write:
-            #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> config_write: \n{app_config.items('app')}")
+            logging.info(f"{sys._getframe().f_code.co_name}() -> app_config_write: {app_config.items('app')}")
             app_config.write(config_write)
 
     except Exception as e:
@@ -32,7 +35,7 @@ def first_run():
     app_config = app_config_read()[0]
     if not app_config.get('app', 'region'):
         try:
-            #print(f"DEBUG -> {sys._getframe().f_code.co_name}() :: First run!")
+            logging.info(f"{sys._getframe().f_code.co_name}() :: First run!")
             classic_na_path()
             classic_eu_path()
             check_game_path()
@@ -42,8 +45,8 @@ def first_run():
             return
         return True
     else:
-        ""
-        #print(f"DEBUG -> {sys._getframe().f_code.co_name}() :: Not the first run!")
+        logging.info(f"{sys._getframe().f_code.co_name}() :: Not the first run anymore!")
+        return False
 
 def classic_na_path():
     """
@@ -55,18 +58,15 @@ def classic_na_path():
     try:
         a_reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
         a_key = winreg.OpenKey(a_reg, r'SOFTWARE\\WOW6432Node\\NCWest\\AION_CLASSIC')
-        #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> a_key: {a_key}")
 
         if a_key:
             classic_na_path = winreg.QueryValueEx(a_key, "BaseDir")[0]
-            #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> na_dir: {classic_na_path}")
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> na_dir: {classic_na_path}")
             if classic_na_path[len(classic_na_path)-1] == "\\":
                 classic_na_path = classic_na_path.rstrip(classic_na_path[-1])
             app_config = app_config_read()[0]
-            #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> app_config_read(): \n{app_config}")
             app_config.set('app', 'napath', classic_na_path)
             app_config_write(app_config)
-            #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> app_config_write()")
             
     except Exception as e:
         get_exception(e)
@@ -82,36 +82,33 @@ def classic_eu_path():
     try:
         a_reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
         a_key = winreg.OpenKey(a_reg, r'SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall')
-        #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> a_key: {a_key}")
 
         not_found = True
         for i in range(1024):
             try:
                 key_name = winreg.EnumKey(a_key, i)
-                #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> key_name: {key_name}")
                 o_key = winreg.OpenKey(a_key, key_name)
-                #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> o_key: {o_key}")
                 display_name = winreg.QueryValueEx(o_key, "DisplayName")[0]
-                #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> display_name: {display_name}")
                 if display_name == "AION Classic":
                     game_publisher = winreg.QueryValueEx(o_key, "Publisher")[0]
                     if (game_publisher == "Gameforge"):
-                        #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> classic_eu_publisher[0]: {game_publisher}")
-                        classic_eu_path = winreg.QueryValueEx(o_key, "InstallLocation")
-                        #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> classic_eu_path: {classic_eu_path}")
-                        eu_dir = classic_eu_path[0]
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> display_name: {display_name}")
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> game_publisher: {game_publisher}")
+                        classic_eu_path = winreg.QueryValueEx(o_key, "InstallLocation")[0]
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> classic_eu_path: {classic_eu_path}")
                         not_found = False
+                if not_found == False:
+                    if classic_eu_path[len(classic_eu_path)-1] == "\\":
+                        classic_eu_path = classic_eu_path.rstrip(classic_eu_path[-1])
+                    app_config = app_config_read()[0]
+                    app_config.set('app', 'eupath', classic_eu_path)
+                    app_config_write(app_config)
+                    return
 
             except:
-                ""
+                continue
 
-        if (not_found == False):
-            app_config = app_config_read()[0]
-            #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> app_config_read(): \n{app_config}")
-            app_config.set('app', 'eupath', eu_dir)
-            app_config_write(app_config)
-            #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> app_config_write()")
-        else:
+        if not_found == True:
             print("Client not found. Please select manually.")
 
     except Exception as e:
@@ -141,7 +138,6 @@ def check_game_path():
     the user to select a new path.
     """
     app_config = app_config_read()[0]
-    #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> app_config_read(): \n{app_config}")
     na_path = app_config.get('app', 'napath')
     eu_path = app_config.get('app', 'eupath')
 
@@ -168,7 +164,7 @@ def get_game_file_path(game_file_type):
     elif (game_file_type == "voice"):
         file_path = "sounds\\voice"
     else:
-        print(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown file type.")
+        logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown file type.")
         return
     return file_path
 
@@ -189,7 +185,7 @@ def get_full_file_path(game_lang, file_path):
         elif lang in ("eng", "fra", "deu"):
             full_file_path.append(f"{eu_path}\\l10n\\{lang}\\{file_path}")
         else:
-            print(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown region.")
+            logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown region.")
             return
     return full_file_path
 
@@ -203,11 +199,11 @@ def check_files(game_file_type):
     try:
         app_config = app_config_read()[0]
         app_region = app_config.get('app', 'region')
-        #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> app_region: {app_region}.")
+        #print(f"{sys._getframe().f_code.co_name}() -> app_region: {app_region}.")
         game_lang = []
 
         if not app_region in ("1", "2", "3"):
-            print(f"ERROR -> {sys._getframe().f_code.co_name}() -> app_region :: Region is not set.")
+            logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() -> app_region :: Region is not set.")
             return
 
         if app_region  in ("1", "3"):
@@ -216,15 +212,20 @@ def check_files(game_file_type):
             game_lang.extend(["eng", "fra", "deu"])
 
         if game_file_type in ("filter", "font", "voice"):
-            #print(f"DEBUG -> {sys._getframe().f_code.co_name}() :: game_lang: {game_lang}")
             # Gets all files and hashes them when files already exist in game path
             copy_files_check = get_full_files(game_lang, game_file_type)
         else:
-            print(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown file type.")
+            logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} :: Unknown file type.")
             return
 
-        #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> files_hash: {files_hash} {len(files_hash)}.")
-        return copy_files_check
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_check: {len(copy_files_check)} {copy_files_check}.")
+        if len(copy_files_check) <= 0:
+            return False
+        elif len(copy_files_check) >= 1:
+            return True
+        else:
+            logging.warning(f"{sys._getframe().f_code.co_name}() -> copy_files_check type: {type(copy_files_check)}.")
+        
     
     except Exception as e:
         get_exception(e)
@@ -257,15 +258,15 @@ def get_full_files(game_lang, game_file_type):
     #6 - Returns the final list of files that should be copied, even if
     they are already in the game path but are different files.
 
-    #7 - Stores the files on the const 'copy_files_check' variable to be
-    used by the 'copy_files()' command when requested.
+    #7 - Stores the files in a JSON file at './assets/lists/{type}_files.json'
+    to be used by the 'copy_files()' command when requested.
     """
     try:
         file_path = get_game_file_path(game_file_type)
-        #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> file_path: {file_path} {len(file_path)}.")
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}.")
 
         # Defines assets path
-        assets_full_file_path = [f"assets\{file_path}"]
+        assets_full_file_path = [f".\\assets\\{file_path}"]
         # Returns [full_file_path]. It can be multiple paths depending on regions selected
         full_file_path = get_full_file_path(game_lang, file_path)
 
@@ -275,10 +276,43 @@ def get_full_files(game_lang, game_file_type):
         # Compares duplicated files hashes and adds them to the copy_files_check list if hashes differ
         copy_files_check = compare_files_hash(compared_files) 
 
-        
-        #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> copy_files_check: {len(copy_files_check)} \n{copy_files_check}")
+        with open(f'.\\config\\lists\\{game_file_type}_files.json', 'w', encoding='utf-8') as f:
+            json.dump(copy_files_check, f, ensure_ascii=False, indent=4)
+            f.close
+
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_check: {len(copy_files_check)} {copy_files_check}")
         return copy_files_check
     
+    except Exception as e:
+        get_exception(e)
+        return
+        
+def compare_files(assets_full_file_path, full_file_path):
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_full_file_path: {assets_full_file_path}. compare_files() -> full_file_path: {full_file_path}.")
+
+    try:
+        copy_files_list = []
+        check_hash_list = []
+        for assets_dir in assets_full_file_path:
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_dir: {assets_dir}.")
+            for (dirpath, dirnames, filenames) in os.walk(assets_dir):
+                for filename in filenames:
+                    relative_path = dirpath.replace(assets_dir, "")
+                    for files_dir in full_file_path:
+                        asset_path = assets_dir+relative_path+'\\'+filename
+                        file_path = files_dir+relative_path+'\\'+filename
+                        if not os.path.exists(file_path):
+                            logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
+                            copy_files_list.extend([[asset_path, file_path]])
+                        else:
+                            logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path -> check_hash_list[]: AY {file_path}")
+                            check_hash_list.extend([[asset_path, file_path]])
+
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> check_hash_list: {check_hash_list}")
+            logging.info(f"{sys._getframe().f_code.co_name}() -> check_hash_list: {len(check_hash_list)} files need to be compared.")
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_list: {copy_files_list}")
+            return [check_hash_list, copy_files_list]
+
     except Exception as e:
         get_exception(e)
         return
@@ -291,96 +325,79 @@ def compare_files_hash(compared_files):
     file paths ready to be replaced in [[asset_file, game_file]]
     format.
     """
-    #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> compared_files: {len(compared_files)} \n{compared_files}.")
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> compared_files: {len(compared_files)} {compared_files}.")
     check_hash_list = compared_files[0]
     copy_files_list = compared_files[1]
 
     for list in check_hash_list:
         asset_file = list[0]
         game_file = list[1]
-        #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> asset_file: {asset_file}.")
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> asset_file: {asset_file}.")
         with open(asset_file, 'rb', buffering=0) as f:
             asset_file_hashed = hashlib.file_digest(f, 'sha256').hexdigest()
 
-        #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> game_file: {game_file}.")
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> game_file: {game_file}.")
         with open(game_file, 'rb', buffering=0) as f:
             game_file_hashed = hashlib.file_digest(f, 'sha256').hexdigest()
         if asset_file_hashed != game_file_hashed:
             copy_files_list.extend([[asset_file, game_file]])
 
-    #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> copy_files_list: {len(copy_files_list)} \n{copy_files_list}.")
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_list: {len(copy_files_list)} {copy_files_list}.")
+    logging.info(f"{sys._getframe().f_code.co_name}() -> copy_files_list: {len(copy_files_list)} files need to be moved.")
     return copy_files_list
-        
-def compare_files(assets_full_file_path, full_file_path):
-    #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> assets_full_file_path: \n{assets_full_file_path}.\nDEBUG :: compare_files() -> full_file_path: \n{full_file_path}.")
-
-    try:
-        copy_files_list = []
-        check_hash_list = []
-        for assets_dir in assets_full_file_path:
-            #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> assets_dir: {assets_dir}.")
-            for (dirpath, dirnames, filenames) in os.walk(assets_dir):
-                for filename in filenames:
-                    relative_path = dirpath.replace(assets_dir, "")
-                    for files_dir in full_file_path:
-                        asset_path = assets_dir+'\\'+filename
-                        file_path = files_dir+relative_path+'\\'+filename
-                        if not os.path.exists(file_path):
-                            #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
-                            copy_files_list.extend([[asset_path, file_path]])
-                        else:
-                            #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> file_path -> check_hash_list[]: AY {file_path}")
-                            check_hash_list.extend([[asset_path, file_path]])
-
-            #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> check_hash_list: \n{check_hash_list}")
-            #print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> copy_files_list: \n{copy_files_list}")
-            return [check_hash_list, copy_files_list]
-
-    except Exception as e:
-        get_exception(e)
-        return
     
-def copy_files(copy_files_check):
+def copy_files(game_file_type):
     """
     Creates directories, removes old/different files, copies
     new files.
     """
     try:
-        print(f"DEBUG -> {sys._getframe().f_code.co_name}() -> copy_files_check: \n{copy_files_check}")
+        with open(f'.\\config\\lists\\{game_file_type}_files.json') as f:
+            copy_files_list = json.load(f)
+            f.close
+        if not copy_files_list == []:
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files -> type: {game_file_type}: {copy_files_list}")
 
-        """
-        assets_result = check_files_result[0]
-        print(f"DEBUG -> {sys._getframe().f_code.co_name}() -> assets_result: {assets_result}.")
-        files_result = check_files_result[1]
-        print(f"DEBUG -> {sys._getframe().f_code.co_name}() -> files_result: {files_result}.")
-
-        for file in files_result:
-            print(f"DEBUG -> ASSETS: {assets_result[1]} DEST: {file[1]}")
-            if not os.path.isdir(os.path.dirname(file[1])):
-                print(f"DEBUG -> {sys._getframe().f_code.co_name}() -> MKDIR: {os.path.dirname(file[1])}")
+            for files in copy_files_list:
                 try:
-                    os.makedirs(os.path.dirname(file[1]))
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> files: {len(files)} {files}.")
+                    asset_file = files[0]
+                    game_file = files[1]
+                    if not os.path.isdir(os.path.dirname(game_file)):
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> MKDIR: {os.path.dirname(game_file)}")
+                        try:
+                            os.makedirs(os.path.dirname(game_file))
+                        except Exception as e:
+                            get_exception(e)
+                            return
+                    if os.path.isfile(game_file):
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {game_file}")
+                        try:
+                            os.remove(game_file)
+                        except Exception as e:
+                            get_exception(e)
+                            return
+                    try:
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> COPY :: {asset_file} -> {game_file}")
+                        os.system(f'copy {asset_file} {game_file}')
+                    except Exception as e:
+                        get_exception(e)
+                        return
+
                 except Exception as e:
                     get_exception(e)
                     return
-            if os.path.isfile(file[1]):
-                print(f"DEBUG -> {sys._getframe().f_code.co_name}() -> REMOVE: {file[1]} ISFILE? {os.path.isfile(file[1])}")
-                try:
-                    os.remove(file[1])
-                except Exception as e:
-                    get_exception(e)
-                    return
-            try:
-                print("DEBUG -> COPY")
-                os.system(f'copy {assets_result[1]} {file[1]}')
-            except Exception as e:
-                get_exception(e)
-                return
-        """
-
+            with open(f'.\\config\\lists\\{game_file_type}_files.json', 'w', encoding='utf-8') as f:
+                json.dump([], f, ensure_ascii=False, indent=4)
+                f.close
+            return True
+        else:
+            logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to copy from '.\\config\\lists\\{game_file_type}_files.json'")
+            return False
+    
     except Exception as e:
         get_exception(e)
-        return
+        return False
     
 def get_exception(e):
     """
@@ -400,8 +417,8 @@ def get_exception(e):
         'message': str(e),
         'trace': trace
     })
-
-#check_files("filter")
-#check_files("font")
-#check_files("voice")
-#copy_files(copy_files_check)
+    logging.error({
+        'ERROR': type(e).__name__,
+        'message': str(e),
+        'trace': trace
+    })

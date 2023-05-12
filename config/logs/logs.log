@@ -1,0 +1,11 @@
+2023-05-12 04:12:04,234 [INFO] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Green'), ('region', '3'), ('eupath', 'E:\\JOGOS\\aionclassic'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('filterversion', '')]
+2023-05-12 04:12:04,235 [INFO] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Green'), ('region', '3'), ('eupath', 'E:\\JOGOS\\aionclassic'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('filterversion', '')]
+2023-05-12 04:12:04,328 [DEBUG] -> :: __init__() -> App() initialized.
+2023-05-12 04:12:04,345 [DEBUG] -> :: __init__() -> createTabs() initialized.
+2023-05-12 04:12:04,346 [INFO] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Green'), ('region', '3'), ('eupath', 'E:\\JOGOS\\aionclassic'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('filterversion', '')]
+2023-05-12 04:12:04,346 [DEBUG] -> :: __init__() -> app_config.items(): [('theme', 'System'), ('color', 'Green'), ('region', '3'), ('eupath', 'E:\\JOGOS\\aionclassic'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('filterversion', '')]
+2023-05-12 04:12:04,356 [DEBUG] -> :: __init__() -> Tabs created.
+2023-05-12 04:12:04,424 [INFO] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Green'), ('region', '3'), ('eupath', 'E:\\JOGOS\\aionclassic'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('filterversion', '')]
+2023-05-12 04:12:04,424 [INFO] -> :: first_run() :: Not the first run anymore!
+2023-05-12 04:12:04,424 [DEBUG] -> :: __init__() -> Tabs populated.
+2023-05-12 04:12:04,429 [DEBUG] -> :: __init__() -> Default values read.
