@@ -24,7 +24,7 @@ class App(ctk.CTk):
         ctk.set_appearance_mode(app_config.get('app', 'theme'))
         ctk.set_default_color_theme(app_config.get('app', 'color').lower())
 
-        self.tabsView = createTabs(self, self.change_color_event)
+        self.tabsView = createTabs(self, self.change_color_event, self.reset_current_ui)
         self.tabsView.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         self.tabsView._segmented_button.grid(sticky="w")
 
@@ -47,7 +47,7 @@ class App(ctk.CTk):
         createTabs.set(self.tabsView, "Config")
 
 class createTabs(ctk.CTkTabview):
-    def __init__(self, master, change_color_event, **kwargs):
+    def __init__(self, master, change_color_event, reset_current_ui, **kwargs):
         super().__init__(master=master, **kwargs)
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> createTabs() initialized.")
@@ -68,6 +68,8 @@ class createTabs(ctk.CTkTabview):
         configTab.grid_columnconfigure(1, weight=1)
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs created.")
+        
+        if first_run(): reset_current_ui
 
         # App tab widgets
         self.appTopFrame = ctk.CTkFrame(appTab)
@@ -96,24 +98,30 @@ class createTabs(ctk.CTkTabview):
         self.fontLabel.grid(row=3, column=0, padx=(0, 5), pady=5, sticky="e")
         self.fontLabel.configure(font=("", 12, "bold"))
 
-        self.voiceReturnLabel = ctk.CTkLabel(self.appTopFrame, text="Koren Voices are installed.")
+        self.voiceReturnLabel = ctk.CTkLabel(self.appTopFrame, text="voice")
         self.voiceReturnLabel.grid(row=1, column=1, padx=5, pady=5, sticky="w")
-        self.filterReturnLabel = ctk.CTkLabel(self.appTopFrame, text="Chat Filter is up to date.")
+        self.filterReturnLabel = ctk.CTkLabel(self.appTopFrame, text="filter")
         self.filterReturnLabel.grid(row=2, column=1, padx=5, pady=5, sticky="w")
-        self.fontReturnLabel = ctk.CTkLabel(self.appTopFrame, text="JP Fonts are installed.")
+        self.fontReturnLabel = ctk.CTkLabel(self.appTopFrame, text="font")
         self.fontReturnLabel.grid(row=3, column=1, padx=5, pady=5, sticky="w")
 
-        def copy_files_button(file_type):
+        def copy_files_button(file_type, return_label):
             """
             
             """
-            print(file_type)
+            copy_files_return = copy_files(file_type)
 
-        self.voiceButton = ctk.CTkButton(self.appTopFrame, text="Install", command=partial(copy_files_button, "voice"))
+            if copy_files_return:
+                return_label.configure(text="AY")
+            elif not copy_files_return:
+                return_label.configure(text="NAY")
+            print(return_label.cget("text"))
+
+        self.voiceButton = ctk.CTkButton(self.appTopFrame, text="Install", command=partial(copy_files_button, "voice", self.voiceReturnLabel))
         self.voiceButton.grid(row=1, column=2, padx=(5, 0), pady=5)
-        self.filterButton = ctk.CTkButton(self.appTopFrame, text="Install", command=partial(copy_files_button, "filter"))
+        self.filterButton = ctk.CTkButton(self.appTopFrame, text="Install", command=partial(copy_files_button, "filter", self.filterReturnLabel))
         self.filterButton.grid(row=2, column=2, padx=(5, 0), pady=5)
-        self.fontButton = ctk.CTkButton(self.appTopFrame, text="Install", command=partial(copy_files_button, "font"))
+        self.fontButton = ctk.CTkButton(self.appTopFrame, text="Install", command=partial(copy_files_button, "font", self.fontReturnLabel))
         self.fontButton.grid(row=3, column=2, padx=(5, 0), pady=5)
 
         """
@@ -227,7 +235,6 @@ class createTabs(ctk.CTkTabview):
         self.configTextbox.grid(row=5, column=0, columnspan=2, pady=(5, 0), sticky="nsew")
         self.configTextbox.configure(state="disabled")
         """
-        if first_run(): createTabs.set(self, "Config")
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs populated.")
 
