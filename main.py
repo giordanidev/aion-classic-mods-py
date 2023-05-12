@@ -1,18 +1,61 @@
 import tkinter as tk
 import customtkinter as ctk
-import app_functions
+from app_functions import *
 
 # Read configs from file
-load_configs = app_functions.app_config_read()
+load_configs = app_config_read()
 app_config = load_configs[0]
 config_full_path = load_configs[0]
 
-app_functions.first_run()
-class mainTabs(ctk.CTkTabview):
+first_run()
+
+class App(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+
+        self.title("Aion Classic 'Mods' by Load")
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
+        load_configs = app_config_read()
+        app_config = load_configs[0]
+
+        # System appearance
+        ctk.set_appearance_mode(app_config.get('app', 'theme'))
+        ctk.set_default_color_theme(app_config.get('app', 'color').lower())
+
+        self.tabsView = createTabs(self, self.change_color_event)
+        self.tabsView.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
+        self.tabsView._segmented_button.grid(sticky="w")
+
+        self.current_ui = []
+        self.current_ui.append(self.tabsView)
+
+    def change_color_event(self, color):
+        ctk.set_default_color_theme(color.lower())
+        app_config = app_config_read()[0]
+        app_config.set('app', 'color', color)
+        app_config_write(app_config)
+        self.reset_current_ui()
+
+    def reset_current_ui(self):
+        for widget in self.current_ui:
+            widget.destroy()
+        self.tabsView = createTabs(self, self.change_color_event)
+        self.tabsView.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
+        self.tabsView._segmented_button.grid(sticky="w")
+        createTabs.set(self.tabsView, "Config")
+
+class createTabs(ctk.CTkTabview):
     def __init__(self, master, change_color_event, **kwargs):
         super().__init__(master=master, **kwargs)
 
-        app_functions.app_config_read()
+        print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> createTabs() initialized.")
+
+        app_config = app_config_read()[0]
+
+        print(f"DEBUG :: {sys._getframe().f_code.co_name}() -> app_config.items(): \n{app_config.items('app')}")
 
         # create tabs
         self.add("App")
@@ -31,7 +74,7 @@ class mainTabs(ctk.CTkTabview):
         self.appTopFrame.configure(fg_color="transparent")
         self.appTopFrame.grid_columnconfigure(1, weight=1)
 
-        self.voiceButton = ctk.CTkButton(self.appTopFrame, text="Check Updates", command="")
+        self.voiceButton = ctk.CTkButton(self.appTopFrame, text="Check Files", command="")
         self.voiceButton.grid(row=0, column=2, padx=(5, 0), pady=5)
         self.voiceButton.configure(font=("", 13, "bold"), state="disabled")
 
@@ -100,8 +143,9 @@ class mainTabs(ctk.CTkTabview):
         self.regionRadio = tk.IntVar()
 
         def region_selection():
+            app_config = app_config_read()[0]
             app_config.set('app', 'region', str(self.regionRadio.get()))
-            app_functions.app_config_write()
+            app_config_write(app_config)
             if (self.regionRadio.get() == 0):
                 self.naPathLabel.configure(state="disabled")
                 self.naPathEntry.configure(state="disabled")
@@ -167,55 +211,18 @@ class mainTabs(ctk.CTkTabview):
         """
 
         #DEFAULT VALUES
-        app_functions.app_config_read()
+        app_config = app_config_read()[0]
         if app_config.get('app', 'theme'): self.themeButton.set(app_config.get('app', 'theme'))
         if app_config.get('app', 'region'): self.regionRadio.set(app_config.get('app', 'region'))
         if app_config.get('app', 'napath'): self.naPathEntry.insert(0, app_config.get('app', 'napath'))
         if app_config.get('app', 'eupath'): self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
         if app_config.get('app', 'color'): self.colorButton.set(app_config.get('app', 'color'))
-        region_selection()
 
     def change_theme_event(self, value):
+        app_config = app_config_read()[0]
         app_config.set('app', 'theme', value)
-        app_functions.app_config_write()
+        app_config_write(app_config)
         ctk.set_appearance_mode(value)
-
-class App(ctk.CTk):
-    def __init__(self):
-        super().__init__()
-
-        self.title("Aion Classic 'Mods' by Load")
-
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-
-        app_functions.app_config_read()
-
-        # System appearance
-        ctk.set_appearance_mode(app_config.get('app', 'theme'))
-        ctk.set_default_color_theme(app_config.get('app', 'color').lower())
-
-        self.tabsView = mainTabs(self, self.change_color_event)
-        self.tabsView.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
-        self.tabsView._segmented_button.grid(sticky="w")
-
-        self.current_ui = []
-        self.current_ui.append(self.tabsView)
-
-    def change_color_event(self, color):
-        ctk.set_default_color_theme(color.lower())
-        app_config.set('app', 'color', color)
-        app_functions.app_config_write()
-        app_functions.app_config_read()
-        self.reset_current_ui()
-
-    def reset_current_ui(self):
-        for widget in self.current_ui:
-            widget.destroy()
-        self.tabsView = mainTabs(self, self.change_color_event)
-        self.tabsView.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
-        self.tabsView._segmented_button.grid(sticky="w")
-        mainTabs.set(self.tabsView, "Config")
 
 app = App()
 app.geometry("500x250")
