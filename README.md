@@ -3,6 +3,8 @@ Watch me on YouTube at [@LoadRPG](https://youtube.com/@LoadRPG) (PT-BR/EN) - If 
 
 > TESTED ON WINDOWS 10 22H2 for Aion Classic NA and Aion Classic EU.
 
+> This APP does NOT "modify" the game files as per say other than the Chat Filter. It grabs other ORIGINAL files from a different region and replaces them.
+
 ## BACKUP IS NOT YET IMPLEMENTED. YOU WILL LOSE YOUR ORIGINAL FILES IF YOU RUN THE APP.
 - If you want to backup your files, go to GAME_FOLDER/l10n/[LANGUAGE]/ and copy the following folders to a backup folder:
   - sounds/voice
@@ -15,7 +17,7 @@ Watch me on YouTube at [@LoadRPG](https://youtube.com/@LoadRPG) (PT-BR/EN) - If 
 - The app SHOULD detect your install directories automatically depending on which versions of the game you have installed. If it doesn't you can go to the options and select the game path directory manually.
 
 ## AION CHAT FILTER:
-The chat filter will try to remove bot spam messages from any chat windows. It does not iclude in-game mails.
+The chat filter will try to remove bot spam messages from any chat windows. It does not include in-game mails.
 
 ## JAPANESE CRIT/PARRY/BLOCK/DODGE/RESIST FONTS:
 ![Crit Preview](https://i.imgur.com/QYhucVk.png)
