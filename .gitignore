@@ -1028,3 +1028,4 @@ output/Aion-Classic-Mods/tk/ttk/vistaTheme.tcl
 output/Aion-Classic-Mods/tk/ttk/winTheme.tcl
 output/Aion-Classic-Mods/tk/ttk/xpTheme.tcl
 auto-py-to-exe-config.json
+setup.py
