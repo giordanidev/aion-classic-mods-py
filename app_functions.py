@@ -1,9 +1,6 @@
 from configparser import ConfigParser
-import os, os.path, hashlib, winreg, sys, json, logging, subprocess
+import os, os.path, hashlib, winreg, sys, json, logging
 from tkinter import messagebox
-
-def get_id():
-    return subprocess.Popen('dmidecode.exe -s system-uuid'.split())
 
 logging.basicConfig(filename='.\\config\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=logging.DEBUG, filemode='w')
 logging.getLogger().addHandler(logging.StreamHandler())
@@ -214,24 +211,24 @@ def show_alert(alert_type, message):
 
 
 def validate_directory(game_directory, placeholder_text):
-    wrong_directory = "Selected directory is not the correct {VERSION} game directory. Please select the root {VERSION} game directory."
+    wrong_directory = "Selected directory is not the correct {_VERSION_} game directory. Please select the root {_VERSION_} game directory."
 
-    if placeholder_text == "C:\\NA\\Game\\Directory":
+    if "NA" in placeholder_text.plit("\\"):
         game_path = f"{game_directory}\\bin64\\Aion.bin"
         logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
         logging.debug(f"{sys._getframe().f_code.co_name}() -> placeholder_text: {placeholder_text}.")
         if not os.path.isfile(game_path):
-            show_alert("showerror", wrong_directory.replace("{VERSION}","NA"))
+            show_alert("showerror", wrong_directory.replace("{_VERSION_}","NA"))
             return False
         else:
             return True
         
-    elif placeholder_text == "C:\\EU\\Game\\Directory":
+    if "EU" in placeholder_text.plit("\\"):
         game_path = f"{game_directory}\\bin64\\aionclassic.bin"
         logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
         logging.debug(f"{sys._getframe().f_code.co_name}() -> placeholder_text: {placeholder_text}.")
         if not os.path.isfile(game_path):
-            show_alert("showerror", wrong_directory.replace("{VERSION}","EU"))
+            show_alert("showerror", wrong_directory.replace("{_VERSION_}","EU"))
             return False
         else:
             return True
@@ -432,7 +429,7 @@ def compare_files_hash(compared_files):
     logging.info(f"{sys._getframe().f_code.co_name}() -> copy_files_list: {len(copy_files_list)} files need to be moved.")
     return copy_files_list
     
-def copy_files(game_file_type):
+def copy_files(game_file_type, copy_backup):
     """
     Creates directories, removes old/different files, copies
     new files.
