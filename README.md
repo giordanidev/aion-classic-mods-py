@@ -3,6 +3,13 @@ Watch me on YouTube at [@LoadRPG](https://youtube.com/@LoadRPG) (PT-BR/EN) - If 
 
 > TESTED ON WINDOWS 10 22H2 for Aion Classic NA and Aion Classic EU.
 
+## BACKUP IS NOT YET IMPLEMENTED. YOU WILL LOSE YOUR ORIGINAL FILES IF YOU RUN THE APP.
+- If you want to backup your files, go to GAME_FOLDER/l10n/[LANGUAGE]/ and copy the following folders to a backup folder:
+  - sounds/voice
+  - data/Strings
+  - texture/ui
+
+## What do I do?
 - Download and extract the files anywere on your computer. It doesn't need to be in the game directory.
 - Execute the "Aion-Classic.Mods.exe" file
 - The app SHOULD detect your install directories automatically depending on which versions of the game you have installed. If it doesn't you can go to the options and select the game path directory manually.
