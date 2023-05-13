@@ -1,8 +1,9 @@
-import tkinter as tk
-import customtkinter as ctk
+import tkinter as tk, customtkinter as ctk, logging, threading
+from tkinter import filedialog
 from functools import partial
 from app_functions import *
-import logging
+
+logging.debug(f"{sys._getframe().f_code.co_name}() -> main.py imported.")
 
 # Read configs from file
 load_configs = app_config_read()
@@ -13,7 +14,7 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> App() initialized.")
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> App() class initialized.")
 
         self.title("Aion Classic 'Mods' by Load")
 
@@ -37,6 +38,7 @@ class App(ctk.CTk):
         app_config.set('app', 'color', color)
         app_config_write(app_config)
         self.reset_current_ui()
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> Color changed to '{color.capitalize()}'.")
 
     def reset_current_ui(self):
         for widget in self.current_ui:
@@ -50,7 +52,7 @@ class createTabs(ctk.CTkTabview):
     def __init__(self, master, change_color_event, reset_current_ui, **kwargs):
         super().__init__(master=master, **kwargs)
 
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> createTabs() initialized.")
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> createTabs() class initialized.")
 
         app_config = app_config_read()[0]
 
@@ -69,7 +71,14 @@ class createTabs(ctk.CTkTabview):
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs created.")
         
-        if first_run(): reset_current_ui
+        if first_run(): change_color_event
+
+        text_color_success = ("#007514", "#7EFF93")
+        text_color_fail = ("#D80000", "#FF6969")
+        text_color_verifying = ("black", "white")
+        font_regular = ("", 12)
+        font_regular_bold = ("", 12, "bold")
+        font_big_bold = ("", 13, "bold")
 
         # App tab widgets
         self.appTopFrame = ctk.CTkFrame(appTab)
@@ -79,39 +88,41 @@ class createTabs(ctk.CTkTabview):
 
         self.voiceLabel = ctk.CTkLabel(self.appTopFrame, text="KR Voices:")
         self.voiceLabel.grid(row=1, column=0, padx=(0, 5), pady=5, sticky="e")
-        self.voiceLabel.configure(font=("", 12, "bold"))
+        self.voiceLabel.configure(font=font_regular_bold)
         self.filterLabel = ctk.CTkLabel(self.appTopFrame, text="Chat Filter:")
         self.filterLabel.grid(row=2, column=0, padx=(0, 5), pady=5, sticky="e")
-        self.filterLabel.configure(font=("", 12, "bold"))
+        self.filterLabel.configure(font=font_regular_bold)
         self.fontLabel = ctk.CTkLabel(self.appTopFrame, text="JP Fonts:")
         self.fontLabel.grid(row=3, column=0, padx=(0, 5), pady=5, sticky="e")
-        self.fontLabel.configure(font=("", 12, "bold"))
+        self.fontLabel.configure(font=font_regular_bold)
 
         self.checkAllButton = ctk.CTkButton(self.appTopFrame, text="Check All Files")
         self.checkAllButton.grid(row=0, column=2, padx=(5, 0), pady=5)
-        self.checkAllButton.configure(font=("", 13, "bold"))
+        self.checkAllButton.configure(font=font_big_bold)
 
-        self.voiceReturnLabel = ctk.CTkLabel(self.appTopFrame, text=f"Please press '{self.checkAllButton.cget('text')}' to start.")
+        press_to_start = f"Please press '{self.checkAllButton.cget('text')}' to start."
+        self.voiceReturnLabel = ctk.CTkLabel(self.appTopFrame, text=press_to_start)
         self.voiceReturnLabel.grid(row=1, column=1, padx=5, pady=5, sticky="w")
-        self.filterReturnLabel = ctk.CTkLabel(self.appTopFrame, text=f"Please press '{self.checkAllButton.cget('text')}' to start.")
+        self.filterReturnLabel = ctk.CTkLabel(self.appTopFrame, text=press_to_start)
         self.filterReturnLabel.grid(row=2, column=1, padx=5, pady=5, sticky="w")
-        self.fontReturnLabel = ctk.CTkLabel(self.appTopFrame, text=f"Please press '{self.checkAllButton.cget('text')}' to start.")
+        self.fontReturnLabel = ctk.CTkLabel(self.appTopFrame, text=press_to_start)
         self.fontReturnLabel.grid(row=3, column=1, padx=5, pady=5, sticky="w")
 
         def copy_files_button(file_type, return_label, return_button):
             """
             
             """
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> {return_button.cget('text')} ({file_type.capitalize()}) button pressed. pressed.")
             return_label.configure(text=f"Verifying '{file_type.capitalize()}' files.")
 
             copy_files_return = copy_files(file_type)
 
             if copy_files_return:
-                return_label.configure(text=f"Success! '{file_type.capitalize()}' files have been updated.", text_color="#00E30A")
-                return_button.configure(text=f"Up to date", state="disabled")
+                return_label.configure(text=f"Success! '{file_type.capitalize()}' files have been updated.", text_color=text_color_success)
+                return_button.configure(text=f"Up to date", state="disabled", font=font_regular)
             elif not copy_files_return:
                 return_label.configure(text=f"There are no new '{file_type}' files to update.")
-                return_button.configure(text=f"Up to date", state="disabled")
+                return_button.configure(text=f"Up to date", state="disabled", font=font_regular)
         
         self.voiceButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled")
         self.voiceButton.configure(command=partial(copy_files_button, "voice", self.voiceReturnLabel, self.voiceButton))
@@ -125,26 +136,56 @@ class createTabs(ctk.CTkTabview):
         self.fontButton.configure(command=partial(copy_files_button, "font", self.fontReturnLabel, self.fontButton))
         self.fontButton.grid(row=3, column=2, padx=(5, 0), pady=5)
 
-        def check_files_button(file_type_list, install_buttons_list, file_type_label_list):
+        def check_files_button(file_type_list, install_buttons_list, file_type_label_list, check_all_button):
             """
             
             """
-            start_button = 0
-            for file_type in file_type_list:
-                file_type_label_list[start_button].configure(text=f"Verifying '{file_type}' files.")
-                check_files_return = check_files(file_type)
-                if check_files_return:
-                    install_buttons_list[start_button].configure(text=f"Install", state="normal")
-                    file_type_label_list[start_button].configure(text=f"'{file_type.capitalize()}' files are ready to update. Press install.", text_color="red")
-                elif not check_files_return:
-                    install_buttons_list[start_button].configure(text=f"Up to date", state="disabled")
-                    file_type_label_list[start_button].configure(text=f"There are no new '{file_type}' files to update.", text_color="#00E30A")
-                start_button += 1
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> {check_all_button.cget('text')} button pressed.")
+            try:
+                if check_game_path() == True:
+                    check_all_button.configure(text=f"Checking", state="disabled")
+                    check_all_button.configure(font=font_regular)
+                    logging.info(f"{sys._getframe().f_code.co_name}() -> check_all_buttom disabled.")
+
+                    type_count = 0
+                    for file_type in file_type_list:
+                        def check_files_thread(file_type, type_count):
+                            logging.debug(f"{sys._getframe().f_code.co_name}() -> thread started.")
+                            file_type_label_list[type_count].configure(text=f"Checking '{file_type}' files, please wait!", text_color=text_color_verifying)
+                            install_buttons_list[type_count].configure(text=f"Checking", state="disabled")
+                            install_buttons_list[type_count].configure(font=font_regular)
+                            check_files_return = check_files(file_type)
+                            if check_files_return:
+                                file_type_label_list[type_count].configure(text=f"'{file_type.capitalize()}' files are ready to update. Press install.", text_color=text_color_fail)
+                                install_buttons_list[type_count].configure(text=f"Install", state="normal")
+                                install_buttons_list[type_count].configure(font=font_big_bold)
+                                file_type_label_list[type_count].configure(font=font_regular)
+                            elif not check_files_return:
+                                file_type_label_list[type_count].configure(text=f"There are no new '{file_type}' files to update.", text_color=text_color_success)
+                                file_type_label_list[type_count].configure(font=font_regular)
+                                install_buttons_list[type_count].configure(text=f"Up to date", state="disabled")
+                                install_buttons_list[type_count].configure(font=font_regular)
+                        check_files_thread_func = threading.Thread(target=check_files_thread, args=(file_type, type_count))
+                        check_files_thread_func.start()
+                        #check_files_thread_func.join() # crashes the app =(
+                        type_count += 1
+
+                    check_all_button.configure(text=f"Check All Files", state="normal")
+                    check_all_button.configure(font=font_big_bold)
+                    logging.info(f"{sys._getframe().f_code.co_name}() -> check_all_buttom enabled.")
+                else:
+                    self.set("Config")
+
+
+            except Exception as e:
+                get_exception(e)
+                return False
 
         self.checkAllButton.configure(command=partial(check_files_button, 
-                                                   ["voice", "filter", "font"], 
-                                                   [self.voiceButton, self.filterButton, self.fontButton], 
-                                                   [self.voiceReturnLabel, self.filterReturnLabel, self.fontReturnLabel]))
+                                                   ["filter", "font", "voice"], 
+                                                   [self.filterButton, self.fontButton, self.voiceButton], 
+                                                   [self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel],
+                                                   self.checkAllButton))
 
         """
         self.appTextbox = ctk.CTkTextbox(self.appTopFrame)
@@ -159,19 +200,19 @@ class createTabs(ctk.CTkTabview):
 
         self.themeLabel = ctk.CTkLabel(self.configLeftFrame, text="App Theme:")
         self.themeLabel.grid(row=0, column=0, padx=(0, 5), pady=5, sticky="e")
-        self.themeLabel.configure(font=("", 12, "bold"))
+        self.themeLabel.configure(font=font_regular_bold)
         self.colorLabel = ctk.CTkLabel(self.configLeftFrame, text="App Color:")
         self.colorLabel.grid(row=1, column=0, padx=(0, 5), pady=5, sticky="e")
-        self.colorLabel.configure(font=("", 12, "bold"))
+        self.colorLabel.configure(font=font_regular_bold)
         self.regionLabel = ctk.CTkLabel(self.configLeftFrame, text="Region Selection:")
         self.regionLabel.grid(row=2, column=0, padx=(0, 5), pady=5, sticky="e")
-        self.regionLabel.configure(font=("", 12, "bold"))
-        self.naPathLabel = ctk.CTkLabel(self.configLeftFrame, text="NA Path:")
+        self.regionLabel.configure(font=font_regular_bold)
+        self.naPathLabel = ctk.CTkLabel(self.configLeftFrame, text="NA Game Directory:")
         self.naPathLabel.grid(row=3, column=0, padx=(0, 5), pady=5, sticky="e")
-        self.naPathLabel.configure(font=("", 12, "bold"))
-        self.euPathLabel = ctk.CTkLabel(self.configLeftFrame, text="EU Path:")
+        self.naPathLabel.configure(font=font_regular_bold)
+        self.euPathLabel = ctk.CTkLabel(self.configLeftFrame, text="EU Game Directory:")
         self.euPathLabel.grid(row=4, column=0, padx=(0, 5), pady=5, sticky="e")
-        self.euPathLabel.configure(font=("", 12, "bold"))
+        self.euPathLabel.configure(font=font_regular_bold)
 
         # Config tab widgets > Right
         self.configRightFrame = ctk.CTkFrame(configTab)
@@ -198,7 +239,9 @@ class createTabs(ctk.CTkTabview):
                 self.euPathEntry.configure(state="disabled")
                 self.euPathButton.configure(state="disabled")
             elif (self.regionRadio.get() == 1):
-                classic_na_path()
+                if classic_na_path():
+                    self.naPathEntry.delete(0, 'end')
+                    self.naPathEntry.insert(0, app_config.get('app', 'napath'))
                 self.naPathLabel.configure(state="normal")
                 self.naPathEntry.configure(state="normal")
                 self.naPathButton.configure(state="normal")
@@ -206,7 +249,9 @@ class createTabs(ctk.CTkTabview):
                 self.euPathEntry.configure(state="disabled")
                 self.euPathButton.configure(state="disabled")
             elif (self.regionRadio.get() == 2):
-                classic_eu_path()
+                if classic_eu_path():
+                    self.euPathEntry.delete(0, 'end')
+                    self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
                 self.naPathLabel.configure(state="disabled")
                 self.naPathEntry.configure(state="disabled")
                 self.naPathButton.configure(state="disabled")
@@ -214,8 +259,12 @@ class createTabs(ctk.CTkTabview):
                 self.euPathEntry.configure(state="normal")
                 self.euPathButton.configure(state="normal")
             elif (self.regionRadio.get() == 3):
-                classic_na_path()
-                classic_eu_path()
+                if classic_na_path():
+                    self.naPathEntry.delete(0, 'end')
+                    self.naPathEntry.insert(0, app_config.get('app', 'napath'))
+                if classic_eu_path():
+                    self.euPathEntry.delete(0, 'end')
+                    self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
                 self.naPathLabel.configure(state="normal")
                 self.naPathEntry.configure(state="normal")
                 self.naPathButton.configure(state="normal")
@@ -242,14 +291,35 @@ class createTabs(ctk.CTkTabview):
                                                     value=3)
         self.bothRadio.grid(row=2, column=2, pady=8, sticky="w")
 
-        self.naPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text="Game folder not found.")
+        def select_directory(path_entry):
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> {path_entry} ({path_entry}) button pressed.")
+            game_directory = filedialog.askdirectory().replace("/","\\")
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> game_directory: {game_directory}.")
+
+            if game_directory:
+                placeholder_text = path_entry.cget("placeholder_text")
+                validate_directory_return = validate_directory(game_directory, placeholder_text)
+                logging.debug(f"{sys._getframe().f_code.co_name}() -> validate_directory_return: {validate_directory_return}.")
+
+                if validate_directory_return:
+                    path_entry.delete(0, 'end')
+                    path_entry.insert(0, game_directory)
+                    return
+
+            else:
+                if not check_game_path():
+                    logging.debug(f"ERROR -> {sys._getframe().f_code.co_name}() -> Wrong game directory.")
+                    return
+                return
+
+        self.naPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text="C:\\NA\\Game\\Directory")
         self.naPathEntry.grid(row=3, column=0, padx=(5, 0), pady=(5, 5), columnspan=2, sticky="we")
-        self.naPathButton = ctk.CTkButton(self.configRightFrame, text="Select Folder", command="")
+        self.naPathButton = ctk.CTkButton(self.configRightFrame, text="Select Folder", command=partial(select_directory, self.naPathEntry))
         self.naPathButton.grid(row=3, column=2, padx=(5, 0), pady=(5, 5))
 
-        self.euPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text="Game folder not found.")
+        self.euPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text="C:\\EU\\Game\\Directory")
         self.euPathEntry.grid(row=4, column=0, padx=(5, 0), pady=(5, 5), columnspan=2, sticky="we")
-        self.euPathButton = ctk.CTkButton(self.configRightFrame, text="Select Folder", command="")
+        self.euPathButton = ctk.CTkButton(self.configRightFrame, text="Select Folder", command=partial(select_directory, self.euPathEntry))
         self.euPathButton.grid(row=4, column=2, padx=(5, 0), pady=(5, 5))
 
         """
@@ -261,12 +331,18 @@ class createTabs(ctk.CTkTabview):
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs populated.")
 
         # DEFAULT VALUES
+        app_config = app_config_read()[0]
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values -> "+
+                      f"theme: {app_config.get('app', 'theme')} | "+
+                      f"region: {app_config.get('app', 'region')} | "+
+                      f"napath: {app_config.get('app', 'napath')} | "+
+                      f"eupath: {app_config.get('app', 'eupath')} | "+
+                      f"color: {app_config.get('app', 'color')}")
         if app_config.get('app', 'theme'): self.themeButton.set(app_config.get('app', 'theme'))
+        if app_config.get('app', 'color'): self.colorButton.set(app_config.get('app', 'color'))
         if app_config.get('app', 'region'): self.regionRadio.set(app_config.get('app', 'region'))
         if app_config.get('app', 'napath'): self.naPathEntry.insert(0, app_config.get('app', 'napath'))
         if app_config.get('app', 'eupath'): self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
-        if app_config.get('app', 'color'): self.colorButton.set(app_config.get('app', 'color'))
-        region_selection()
 
         # Runs file check at start
         """
@@ -286,6 +362,7 @@ class createTabs(ctk.CTkTabview):
         app_config.set('app', 'theme', value)
         app_config_write(app_config)
         ctk.set_appearance_mode(value)
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> Theme changed to '{value.capitalize()}'.")
 
 app = App()
 app.geometry("500x250")

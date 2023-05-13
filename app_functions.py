@@ -1,8 +1,15 @@
 from configparser import ConfigParser
-import os, os.path, hashlib, winreg, sys, json, logging
+import os, os.path, hashlib, winreg, sys, json, logging, subprocess
+from tkinter import messagebox
 
-logging.basicConfig(filename='.\\config\\logs\\logs.log', format='%(asctime)s [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=logging.DEBUG, filemode='w')
+def get_id():
+    return subprocess.Popen('dmidecode.exe -s system-uuid'.split())
+
+logging.basicConfig(filename='.\\config\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=logging.DEBUG, filemode='w')
 logging.getLogger().addHandler(logging.StreamHandler())
+
+logging.debug(f"{sys._getframe().f_code.co_name}() -> App initialized.")
+logging.debug(f"{sys._getframe().f_code.co_name}() -> app_functions.py imported.")
 
 def app_config_read():
     try:
@@ -11,7 +18,7 @@ def app_config_read():
         config_file = 'config.ini'
         config_full_path = config_path + config_file
         app_config.read(config_full_path)
-        logging.info(f"{sys._getframe().f_code.co_name}() -> app_config_read: {app_config.items('app')}")
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> app_config_read: {app_config.items('app')}")
         return (app_config, config_full_path)
     except Exception as e:
         get_exception(e)
@@ -24,7 +31,7 @@ config_full_path = load_configs[1]
 def app_config_write(app_config):
     try:
         with open(config_full_path, 'w') as config_write:
-            logging.info(f"{sys._getframe().f_code.co_name}() -> app_config_write: {app_config.items('app')}")
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> app_config_write: {app_config.items('app')}")
             app_config.write(config_write)
 
     except Exception as e:
@@ -36,9 +43,13 @@ def first_run():
     if not app_config.get('app', 'region'):
         try:
             logging.info(f"{sys._getframe().f_code.co_name}() :: First run!")
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> classic_na_path() initialized.")
             classic_na_path()
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> classic_eu_path() initialized.")
             classic_eu_path()
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> check_game_path() initialized.")
             check_game_path()
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> define_region() initialized.")
             define_region()
         except Exception as e:
             get_exception(e)
@@ -67,10 +78,12 @@ def classic_na_path():
             app_config = app_config_read()[0]
             app_config.set('app', 'napath', classic_na_path)
             app_config_write(app_config)
+            return True
             
     except Exception as e:
         get_exception(e)
-        return
+        logging.debug(f"{sys._getframe().f_code.co_name}(): Installation path not found. Select manually.")
+        return False
 
 def classic_eu_path():
     """
@@ -103,17 +116,18 @@ def classic_eu_path():
                     app_config = app_config_read()[0]
                     app_config.set('app', 'eupath', classic_eu_path)
                     app_config_write(app_config)
-                    return
+                    return True
 
             except:
                 continue
 
         if not_found == True:
-            print("Client not found. Please select manually.")
+            logging.debug(f"{sys._getframe().f_code.co_name}(): Installation path not found. Select manually.")
+            return False
 
     except Exception as e:
         get_exception(e)
-        return
+        return False
 
 def define_region():
     """
@@ -140,18 +154,87 @@ def check_game_path():
     app_config = app_config_read()[0]
     na_path = app_config.get('app', 'napath')
     eu_path = app_config.get('app', 'eupath')
+    app_region = app_config.get('app', 'region')
 
-    if na_path:
-        game_path = f"{na_path}\\bin64\\Aion.bin"
-        if not os.path.isfile(game_path):
-            app_config.set('app', 'napath', "")
-            app_config_write(app_config)
+    if not app_region == "0":
+        wrong_directory = "Selected directory is not the correct {VERSION} game directory. Please select the root {VERSION} game directory."
+        if app_region in ("1", "3"):
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> na_path: {na_path}")
+            if na_path:
+                game_path = f"{na_path}\\bin64\\Aion.bin"
+                if not os.path.isfile(game_path):
+                    app_config.set('app', 'napath', "")
+                    app_config_write(app_config)
+                    show_alert("showerror", wrong_directory.replace("{VERSION}","NA"))
+                    return False
+            else:
+                logging.debug(f"{sys._getframe().f_code.co_name}() -> NA game directory is not set.")
+                show_alert("showerror", wrong_directory.replace("{VERSION}","NA"))
+                return False
 
-    if eu_path:
-        game_path = f"{eu_path}\\bin64\\aionclassic.bin"
+        if app_region in ("2", "3"):
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> eu_path: {eu_path}")
+            if eu_path:
+                game_path = f"{eu_path}\\bin64\\aionclassic.bin"
+                if not os.path.isfile(game_path):
+                    app_config.set('app', 'eupath', "")
+                    app_config_write(app_config)
+                    show_alert("showerror", wrong_directory.replace("{VERSION}","EU"))
+                    return False
+            else:
+                logging.debug(f"{sys._getframe().f_code.co_name}() -> EU game directory is not set.")
+                show_alert("showerror", wrong_directory.replace("{VERSION}","EU"))
+                return False
+        return True
+    
+    else:
+        show_alert("showerror", "You need to select a game region to proceed.")
+        return False
+    
+# alert_type = showinfo | showwarning | showerror | askquestion | askokcancel | askyesno 
+def show_alert(alert_type, message):
+    if alert_type == "showinfo": # returns "ok"
+        alert_return = messagebox.showinfo('Information', message)
+    elif alert_type == "showwarning": # returns "ok"
+        alert_return = messagebox.showwarning('Attention!', message)
+    elif alert_type == "showerror": # returns "ok"
+        alert_return = messagebox.showerror('Error!', message)
+    elif alert_type == "askquestion": # returns "yes" or "no"
+        alert_return = messagebox.askquestion('What would you like to do?', message)
+    elif alert_type == "askokcancel": # returns "True" or "False"
+        alert_return = messagebox.askokcancel('Would you like to cancel?', message)
+    elif alert_type == "askyesno": # returns "True" or "False"
+        alert_return = messagebox.askyesno('Are you sure?', message)
+    else:
+        logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown alert type.")
+        return
+    
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> alert_return: {alert_return}.")
+    return alert_return
+
+
+def validate_directory(game_directory, placeholder_text):
+    wrong_directory = "Selected directory is not the correct {VERSION} game directory. Please select the root {VERSION} game directory."
+
+    if placeholder_text == "C:\\NA\\Game\\Directory":
+        game_path = f"{game_directory}\\bin64\\Aion.bin"
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> placeholder_text: {placeholder_text}.")
         if not os.path.isfile(game_path):
-            app_config.set('app', 'eupath', "")
-            app_config_write(app_config)
+            show_alert("showerror", wrong_directory.replace("{VERSION}","NA"))
+            return False
+        else:
+            return True
+        
+    elif placeholder_text == "C:\\EU\\Game\\Directory":
+        game_path = f"{game_directory}\\bin64\\aionclassic.bin"
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> placeholder_text: {placeholder_text}.")
+        if not os.path.isfile(game_path):
+            show_alert("showerror", wrong_directory.replace("{VERSION}","EU"))
+            return False
+        else:
+            return True
 
 def get_game_file_path(game_file_type):
     """
@@ -173,6 +256,8 @@ def get_full_file_path(game_lang, file_path):
     Gets the full file paths for the selected regions using the
     previously set base file path.
     """
+    check_game_path()
+
     app_config = app_config_read()[0]
     na_path = app_config.get('app', 'napath')
     eu_path = app_config.get('app', 'eupath')
@@ -213,6 +298,7 @@ def check_files(game_file_type):
 
         if game_file_type in ("filter", "font", "voice"):
             # Gets all files and hashes them when files already exist in game path
+            logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() -> copy_files_check -> get_full_files.")
             copy_files_check = get_full_files(game_lang, game_file_type)
         else:
             logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} :: Unknown file type.")
