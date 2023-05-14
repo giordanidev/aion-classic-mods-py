@@ -118,9 +118,7 @@ class createTabs(ctk.CTkTabview):
             """
             logging.debug(f"{sys._getframe().f_code.co_name}() -> {return_button.cget('text')} {copy_backup.capitalize()} ({file_type.capitalize()}) button pressed.")
             return_label.configure(text=f"Verifying '{file_type.capitalize()}' files.")
-
             copy_files_return = copy_files(file_type, copy_backup)
-
             if copy_files_return:
                 return_label.configure(text=f"Success! '{file_type.capitalize()}' files have been updated.", text_color=text_color_success)
                 return_button.configure(text=f"Up to date", state="disabled", font=font_regular)
@@ -175,37 +173,42 @@ class createTabs(ctk.CTkTabview):
             # TODO VERIFY BACKUP FILES
             logging.debug(f"{sys._getframe().f_code.co_name}() -> {check_all_backup_button.cget('text')} button pressed.")
             try:
-                if check_game_path() == True:
-
-                    type_count = 0
+                if check_game_path():
                     for file_type in file_type_list:
                         def check_files_thread(file_type, type_count):
                             logging.debug(f"{sys._getframe().f_code.co_name}() -> thread started.")
                             file_type_label_list[type_count].configure(text=f"Checking '{file_type}' files, please wait!", text_color=text_color_verifying)
                             install_backup_buttons_list[type_count].configure(text=f"Checking", state="disabled")
                             install_backup_buttons_list[type_count].configure(font=font_regular)
+
                             if check_all_backup == "check_backup":
                                 delete_buttons_list[type_count].configure(text=f"Checking", state="disabled")
                                 delete_buttons_list[type_count].configure(font=font_regular)
                             # Sends the file type and check for regular or backup files
                             # check_files() has to know which files it is going to look for
-                            check_files_return = check_files(file_type, check_all_backup)
+                            # TODO if backups already exist, return False
+                            check_files_return = check_files(file_type, check_all_backup) 
+
                             if check_files_return:
                                 file_type_label_list[type_count].configure(text=f"'{file_type.capitalize()}' files are ready to update.", text_color=text_color_fail)
                                 file_type_label_list[type_count].configure(font=font_regular)
                                 install_backup_buttons_list[type_count].configure(text=f"Install", state="normal")
                                 install_backup_buttons_list[type_count].configure(font=font_big_bold)
+
                                 if check_all_backup == "check_backup":
                                     delete_buttons_list[type_count].configure(text=f"Install", state="normal")
                                     delete_buttons_list[type_count].configure(font=font_big_bold)
+
                             elif not check_files_return:
                                 file_type_label_list[type_count].configure(text=f"There are no new '{file_type}' files to update.", text_color=text_color_success)
                                 file_type_label_list[type_count].configure(font=font_regular)
                                 install_backup_buttons_list[type_count].configure(text=f"Up to date", state="disabled")
                                 #install_backup_buttons_list[type_count].configure(font=font_regular)
+
                                 if check_all_backup == "check_backup":
                                     delete_buttons_list[type_count].configure(text=f"Up to date", state="disabled")
                                     #delete_buttons_list[type_count].configure(font=font_regular)
+
                         check_files_thread_func = threading.Thread(target=check_files_thread, args=(file_type, type_count))
                         check_files_thread_func.start()
                         #check_files_thread_func.join() # crashes the app =(
@@ -226,6 +229,7 @@ class createTabs(ctk.CTkTabview):
                                                    [self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel],
                                                    self.checkAllButton,
                                                    "check_all"))
+        
         self.checkBackupButton.configure(command=partial(check_files_button, 
                                                    ["filter", "font", "voice"],
                                                    [self.filterBackupButton, self.fontBackupButton, self.voiceBackupButton],
@@ -334,6 +338,7 @@ class createTabs(ctk.CTkTabview):
 
         def select_directory(path_entry):
             logging.debug(f"{sys._getframe().f_code.co_name}() -> {path_entry} ({path_entry}) button pressed.")
+
             game_directory = filedialog.askdirectory().replace("/","\\")
             logging.debug(f"{sys._getframe().f_code.co_name}() -> game_directory: {game_directory}.")
 
@@ -345,13 +350,12 @@ class createTabs(ctk.CTkTabview):
                 if validate_directory_return:
                     path_entry.delete(0, 'end')
                     path_entry.insert(0, game_directory)
-                    return
+                    return True
 
             else:
                 if not check_game_path():
-                    logging.debug(f"ERROR -> {sys._getframe().f_code.co_name}() -> Wrong game directory.")
-                    return
-                return
+                    logging.debug(f"ERROR -> {sys._getframe().f_code.co_name}() -> Wrong game folder.")
+                    return False
 
         self.naPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text="C:\\NA\\Game\\Folder")
         self.naPathEntry.grid(row=3, column=0, padx=(5, 0), pady=(5, 5), columnspan=3, sticky="we")
