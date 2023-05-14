@@ -1,253 +1,179 @@
-2023-05-13 17:30:32,783 [MainThread] -> [DEBUG] -> :: <module>() -> App initialized.
-2023-05-13 17:30:32,784 [MainThread] -> [DEBUG] -> :: <module>() -> app_functions.py imported.
-2023-05-13 17:30:32,784 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:32,785 [MainThread] -> [DEBUG] -> :: <module>() -> main.py imported.
-2023-05-13 17:30:32,785 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:32,856 [MainThread] -> [DEBUG] -> :: __init__() -> App() class initialized.
-2023-05-13 17:30:32,871 [MainThread] -> [DEBUG] -> :: __init__() -> createTabs() class initialized.
-2023-05-13 17:30:32,872 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:32,872 [MainThread] -> [DEBUG] -> :: __init__() -> app_config.items(): [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:32,883 [MainThread] -> [DEBUG] -> :: __init__() -> Tabs created.
-2023-05-13 17:30:32,884 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:32,884 [MainThread] -> [INFO] -> :: first_run() :: Not the first run anymore!
-2023-05-13 17:30:32,967 [MainThread] -> [DEBUG] -> :: __init__() -> Tabs populated.
-2023-05-13 17:30:32,968 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:32,968 [MainThread] -> [DEBUG] -> :: __init__() -> Default values -> theme: System | region: 1 | napath: E:\JOGOS\AION_CLASSIC | eupath: E:\JOGOS\aionclassic | color: Blue
-2023-05-13 17:30:32,973 [MainThread] -> [DEBUG] -> :: __init__() -> Default values read.
-2023-05-13 17:30:34,807 [MainThread] -> [DEBUG] -> :: check_files_button() -> Check All Files button pressed.
-2023-05-13 17:30:34,810 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,812 [MainThread] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
-2023-05-13 17:30:34,814 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: check_files_thread() -> thread started.
-2023-05-13 17:30:34,815 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: check_files_thread() -> thread started.
-2023-05-13 17:30:34,817 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: check_files_thread() -> thread started.
-2023-05-13 17:30:34,853 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,853 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,853 [Thread-2 (check_files_thread)] -> [WARNING] -> :: ERROR -> check_files() -> copy_files_check -> get_full_files.
-2023-05-13 17:30:34,854 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,854 [Thread-1 (check_files_thread)] -> [WARNING] -> :: ERROR -> check_files() -> copy_files_check -> get_full_files.
-2023-05-13 17:30:34,854 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> file_path: textures\ui.
-2023-05-13 17:30:34,854 [Thread-3 (check_files_thread)] -> [WARNING] -> :: ERROR -> check_files() -> copy_files_check -> get_full_files.
-2023-05-13 17:30:34,855 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> file_path: data\Strings.
-2023-05-13 17:30:34,855 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> file_path: sounds\voice.
-2023-05-13 17:30:34,856 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,856 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,856 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
-2023-05-13 17:30:34,857 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
-2023-05-13 17:30:34,857 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,858 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
-2023-05-13 17:30:34,858 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,858 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,859 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_full_file_path: ['.\\assets\\textures\\ui']. compare_files() -> full_file_path: ['E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui'].
-2023-05-13 17:30:34,859 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_full_file_path: ['.\\assets\\data\\Strings']. compare_files() -> full_file_path: ['E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings'].
-2023-05-13 17:30:34,859 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,859 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_dir: .\assets\textures\ui.
-2023-05-13 17:30:34,860 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_dir: .\assets\data\Strings.
-2023-05-13 17:30:34,860 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_full_file_path: ['.\\assets\\sounds\\voice']. compare_files() -> full_file_path: ['E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice'].
-2023-05-13 17:30:34,860 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> copy_files_list[]: NAY E:\JOGOS\AION_CLASSIC\l10n\enu\textures\ui\hit_number.pak
-2023-05-13 17:30:34,861 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_dir: .\assets\sounds\voice.
-2023-05-13 17:30:34,861 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> check_hash_list: []
-2023-05-13 17:30:34,861 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.dat
-2023-05-13 17:30:34,861 [Thread-2 (check_files_thread)] -> [INFO] -> :: compare_files() -> check_hash_list: 0 files need to be compared.
-2023-05-13 17:30:34,862 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.pak
-2023-05-13 17:30:34,862 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> copy_files_list: [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']]
-2023-05-13 17:30:34,862 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\attack\attack.pak
-2023-05-13 17:30:34,862 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> check_hash_list: [['.\\assets\\data\\Strings\\aionfilterline.dat', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.dat'], ['.\\assets\\data\\Strings\\aionfilterline.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.pak']]
-2023-05-13 17:30:34,863 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> compared_files: 2 [[], [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']]].
-2023-05-13 17:30:34,863 [Thread-1 (check_files_thread)] -> [INFO] -> :: compare_files() -> check_hash_list: 2 files need to be compared.
-2023-05-13 17:30:34,863 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\cast\cast.pak
-2023-05-13 17:30:34,864 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> copy_files_list: 1 [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']].
-2023-05-13 17:30:34,864 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> copy_files_list: []
-2023-05-13 17:30:34,864 [Thread-2 (check_files_thread)] -> [INFO] -> :: compare_files_hash() -> copy_files_list: 1 files need to be moved.
-2023-05-13 17:30:34,865 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> compared_files: 2 [[['.\\assets\\data\\Strings\\aionfilterline.dat', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.dat'], ['.\\assets\\data\\Strings\\aionfilterline.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.pak']], []].
-2023-05-13 17:30:34,865 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\damage\damage.pak
-2023-05-13 17:30:34,866 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\data\Strings\aionfilterline.dat.
-2023-05-13 17:30:34,866 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> copy_files_check: 1 [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']]
-2023-05-13 17:30:34,867 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: check_files() -> copy_files_check: 1 [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']].
-2023-05-13 17:30:34,867 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\defence\defence.pak
-2023-05-13 17:30:34,867 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.dat.
-2023-05-13 17:30:34,868 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\data\Strings\aionfilterline.pak.
-2023-05-13 17:30:34,868 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\login\login.pak
-2023-05-13 17:30:34,869 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.pak.
-2023-05-13 17:30:34,869 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\motion\motion.pak
-2023-05-13 17:30:34,869 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> copy_files_list: 0 [].
-2023-05-13 17:30:34,870 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> check_hash_list: [['.\\assets\\sounds\\voice\\attack\\attack.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\attack\\attack.pak'], ['.\\assets\\sounds\\voice\\cast\\cast.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\cast\\cast.pak'], ['.\\assets\\sounds\\voice\\damage\\damage.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\damage\\damage.pak'], ['.\\assets\\sounds\\voice\\defence\\defence.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\defence\\defence.pak'], ['.\\assets\\sounds\\voice\\login\\login.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\login\\login.pak'], ['.\\assets\\sounds\\voice\\motion\\motion.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\motion\\motion.pak']]
-2023-05-13 17:30:34,870 [Thread-1 (check_files_thread)] -> [INFO] -> :: compare_files_hash() -> copy_files_list: 0 files need to be moved.
-2023-05-13 17:30:34,871 [Thread-3 (check_files_thread)] -> [INFO] -> :: compare_files() -> check_hash_list: 6 files need to be compared.
-2023-05-13 17:30:34,871 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> copy_files_list: []
-2023-05-13 17:30:34,871 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> compared_files: 2 [[['.\\assets\\sounds\\voice\\attack\\attack.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\attack\\attack.pak'], ['.\\assets\\sounds\\voice\\cast\\cast.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\cast\\cast.pak'], ['.\\assets\\sounds\\voice\\damage\\damage.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\damage\\damage.pak'], ['.\\assets\\sounds\\voice\\defence\\defence.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\defence\\defence.pak'], ['.\\assets\\sounds\\voice\\login\\login.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\login\\login.pak'], ['.\\assets\\sounds\\voice\\motion\\motion.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\motion\\motion.pak']], []].
-2023-05-13 17:30:34,872 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> copy_files_check: 0 []
-2023-05-13 17:30:34,872 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\attack\attack.pak.
-2023-05-13 17:30:34,873 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: check_files() -> copy_files_check: 0 [].
-2023-05-13 17:30:34,896 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\attack\attack.pak.
-2023-05-13 17:30:34,911 [MainThread] -> [DEBUG] -> :: check_files_button() -> Check All Files button pressed.
-2023-05-13 17:30:34,912 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,913 [MainThread] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
-2023-05-13 17:30:34,914 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: check_files_thread() -> thread started.
-2023-05-13 17:30:34,914 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: check_files_thread() -> thread started.
-2023-05-13 17:30:34,914 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: check_files_thread() -> thread started.
-2023-05-13 17:30:34,920 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\cast\cast.pak.
-2023-05-13 17:30:34,925 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,926 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,926 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,926 [Thread-4 (check_files_thread)] -> [WARNING] -> :: ERROR -> check_files() -> copy_files_check -> get_full_files.
-2023-05-13 17:30:34,926 [Thread-5 (check_files_thread)] -> [WARNING] -> :: ERROR -> check_files() -> copy_files_check -> get_full_files.
-2023-05-13 17:30:34,927 [Thread-6 (check_files_thread)] -> [WARNING] -> :: ERROR -> check_files() -> copy_files_check -> get_full_files.
-2023-05-13 17:30:34,927 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> file_path: data\Strings.
-2023-05-13 17:30:34,927 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> file_path: textures\ui.
-2023-05-13 17:30:34,928 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> file_path: sounds\voice.
-2023-05-13 17:30:34,929 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,930 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,930 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
-2023-05-13 17:30:34,930 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,930 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
-2023-05-13 17:30:34,931 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
-2023-05-13 17:30:34,931 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,932 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,932 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_full_file_path: ['.\\assets\\data\\Strings']. compare_files() -> full_file_path: ['E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings'].
-2023-05-13 17:30:34,932 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:34,932 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_full_file_path: ['.\\assets\\textures\\ui']. compare_files() -> full_file_path: ['E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui'].
-2023-05-13 17:30:34,933 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_dir: .\assets\data\Strings.
-2023-05-13 17:30:34,933 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_full_file_path: ['.\\assets\\sounds\\voice']. compare_files() -> full_file_path: ['E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice'].
-2023-05-13 17:30:34,933 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_dir: .\assets\textures\ui.
-2023-05-13 17:30:34,934 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_dir: .\assets\sounds\voice.
-2023-05-13 17:30:34,934 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.dat
-2023-05-13 17:30:34,934 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> copy_files_list[]: NAY E:\JOGOS\AION_CLASSIC\l10n\enu\textures\ui\hit_number.pak
-2023-05-13 17:30:34,934 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.pak
-2023-05-13 17:30:34,935 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> check_hash_list: []
-2023-05-13 17:30:34,935 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> check_hash_list: [['.\\assets\\data\\Strings\\aionfilterline.dat', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.dat'], ['.\\assets\\data\\Strings\\aionfilterline.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.pak']]
-2023-05-13 17:30:34,935 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\attack\attack.pak
-2023-05-13 17:30:34,935 [Thread-5 (check_files_thread)] -> [INFO] -> :: compare_files() -> check_hash_list: 0 files need to be compared.
-2023-05-13 17:30:34,935 [Thread-4 (check_files_thread)] -> [INFO] -> :: compare_files() -> check_hash_list: 2 files need to be compared.
-2023-05-13 17:30:34,936 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> copy_files_list: [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']]
-2023-05-13 17:30:34,936 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> copy_files_list: []
-2023-05-13 17:30:34,936 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\cast\cast.pak
-2023-05-13 17:30:34,937 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> compared_files: 2 [[], [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']]].
-2023-05-13 17:30:34,937 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> compared_files: 2 [[['.\\assets\\data\\Strings\\aionfilterline.dat', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.dat'], ['.\\assets\\data\\Strings\\aionfilterline.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.pak']], []].
-2023-05-13 17:30:34,938 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> copy_files_list: 1 [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']].
-2023-05-13 17:30:34,938 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\damage\damage.pak
-2023-05-13 17:30:34,938 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\data\Strings\aionfilterline.dat.
-2023-05-13 17:30:34,938 [Thread-5 (check_files_thread)] -> [INFO] -> :: compare_files_hash() -> copy_files_list: 1 files need to be moved.
-2023-05-13 17:30:34,939 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\defence\defence.pak
-2023-05-13 17:30:34,940 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.dat.
-2023-05-13 17:30:34,940 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> copy_files_check: 1 [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']]
-2023-05-13 17:30:34,940 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\login\login.pak
-2023-05-13 17:30:34,940 [Thread-5 (check_files_thread)] -> [DEBUG] -> :: check_files() -> copy_files_check: 1 [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']].
-2023-05-13 17:30:34,941 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\data\Strings\aionfilterline.pak.
-2023-05-13 17:30:34,941 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\motion\motion.pak
-2023-05-13 17:30:34,942 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.pak.
-2023-05-13 17:30:34,942 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> check_hash_list: [['.\\assets\\sounds\\voice\\attack\\attack.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\attack\\attack.pak'], ['.\\assets\\sounds\\voice\\cast\\cast.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\cast\\cast.pak'], ['.\\assets\\sounds\\voice\\damage\\damage.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\damage\\damage.pak'], ['.\\assets\\sounds\\voice\\defence\\defence.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\defence\\defence.pak'], ['.\\assets\\sounds\\voice\\login\\login.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\login\\login.pak'], ['.\\assets\\sounds\\voice\\motion\\motion.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\motion\\motion.pak']]
-2023-05-13 17:30:34,942 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> copy_files_list: 0 [].
-2023-05-13 17:30:34,943 [Thread-6 (check_files_thread)] -> [INFO] -> :: compare_files() -> check_hash_list: 6 files need to be compared.
-2023-05-13 17:30:34,943 [Thread-4 (check_files_thread)] -> [INFO] -> :: compare_files_hash() -> copy_files_list: 0 files need to be moved.
-2023-05-13 17:30:34,943 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> copy_files_list: []
-2023-05-13 17:30:34,944 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> compared_files: 2 [[['.\\assets\\sounds\\voice\\attack\\attack.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\attack\\attack.pak'], ['.\\assets\\sounds\\voice\\cast\\cast.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\cast\\cast.pak'], ['.\\assets\\sounds\\voice\\damage\\damage.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\damage\\damage.pak'], ['.\\assets\\sounds\\voice\\defence\\defence.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\defence\\defence.pak'], ['.\\assets\\sounds\\voice\\login\\login.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\login\\login.pak'], ['.\\assets\\sounds\\voice\\motion\\motion.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\motion\\motion.pak']], []].
-2023-05-13 17:30:34,944 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> copy_files_check: 0 []
-2023-05-13 17:30:34,945 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\attack\attack.pak.
-2023-05-13 17:30:34,945 [Thread-4 (check_files_thread)] -> [DEBUG] -> :: check_files() -> copy_files_check: 0 [].
-2023-05-13 17:30:34,969 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\attack\attack.pak.
-2023-05-13 17:30:34,989 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\cast\cast.pak.
-2023-05-13 17:30:35,014 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\cast\cast.pak.
-2023-05-13 17:30:35,055 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\cast\cast.pak.
-2023-05-13 17:30:35,078 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\damage\damage.pak.
-2023-05-13 17:30:35,090 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\damage\damage.pak.
-2023-05-13 17:30:35,102 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\defence\defence.pak.
-2023-05-13 17:30:35,105 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\defence\defence.pak.
-2023-05-13 17:30:35,109 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\login\login.pak.
-2023-05-13 17:30:35,114 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\login\login.pak.
-2023-05-13 17:30:35,118 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\motion\motion.pak.
-2023-05-13 17:30:35,120 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\motion\motion.pak.
-2023-05-13 17:30:35,121 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\damage\damage.pak.
-2023-05-13 17:30:35,123 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> copy_files_list: 0 [].
-2023-05-13 17:30:35,123 [Thread-3 (check_files_thread)] -> [INFO] -> :: compare_files_hash() -> copy_files_list: 0 files need to be moved.
-2023-05-13 17:30:35,124 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> copy_files_check: 0 []
-2023-05-13 17:30:35,124 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: check_files() -> copy_files_check: 0 [].
-2023-05-13 17:30:35,134 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\damage\damage.pak.
-2023-05-13 17:30:35,146 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\defence\defence.pak.
-2023-05-13 17:30:35,150 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\defence\defence.pak.
-2023-05-13 17:30:35,153 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\login\login.pak.
-2023-05-13 17:30:35,157 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\login\login.pak.
-2023-05-13 17:30:35,161 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\motion\motion.pak.
-2023-05-13 17:30:35,164 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\motion\motion.pak.
-2023-05-13 17:30:35,167 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> copy_files_list: 0 [].
-2023-05-13 17:30:35,167 [Thread-6 (check_files_thread)] -> [INFO] -> :: compare_files_hash() -> copy_files_list: 0 files need to be moved.
-2023-05-13 17:30:35,168 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> copy_files_check: 0 []
-2023-05-13 17:30:35,168 [Thread-6 (check_files_thread)] -> [DEBUG] -> :: check_files() -> copy_files_check: 0 [].
-2023-05-13 17:30:36,199 [MainThread] -> [DEBUG] -> :: check_files_button() -> Check All Files button pressed.
-2023-05-13 17:30:36,202 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:36,203 [MainThread] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
-2023-05-13 17:30:36,205 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: check_files_thread() -> thread started.
-2023-05-13 17:30:36,206 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: check_files_thread() -> thread started.
-2023-05-13 17:30:36,207 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: check_files_thread() -> thread started.
-2023-05-13 17:30:36,257 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:36,257 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:36,258 [Thread-9 (check_files_thread)] -> [WARNING] -> :: ERROR -> check_files() -> copy_files_check -> get_full_files.
-2023-05-13 17:30:36,258 [Thread-7 (check_files_thread)] -> [WARNING] -> :: ERROR -> check_files() -> copy_files_check -> get_full_files.
-2023-05-13 17:30:36,259 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> file_path: sounds\voice.
-2023-05-13 17:30:36,259 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> file_path: data\Strings.
-2023-05-13 17:30:36,260 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:36,260 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:36,260 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
-2023-05-13 17:30:36,261 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
-2023-05-13 17:30:36,262 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:36,262 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:36,262 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_full_file_path: ['.\\assets\\sounds\\voice']. compare_files() -> full_file_path: ['E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice'].
-2023-05-13 17:30:36,263 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_full_file_path: ['.\\assets\\data\\Strings']. compare_files() -> full_file_path: ['E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings'].
-2023-05-13 17:30:36,263 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_dir: .\assets\sounds\voice.
-2023-05-13 17:30:36,263 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_dir: .\assets\data\Strings.
-2023-05-13 17:30:36,264 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.dat
-2023-05-13 17:30:36,264 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\attack\attack.pak
-2023-05-13 17:30:36,265 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.pak
-2023-05-13 17:30:36,265 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> check_hash_list: [['.\\assets\\data\\Strings\\aionfilterline.dat', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.dat'], ['.\\assets\\data\\Strings\\aionfilterline.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.pak']]
-2023-05-13 17:30:36,265 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\cast\cast.pak
-2023-05-13 17:30:36,265 [Thread-7 (check_files_thread)] -> [INFO] -> :: compare_files() -> check_hash_list: 2 files need to be compared.
-2023-05-13 17:30:36,266 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> copy_files_list: []
-2023-05-13 17:30:36,267 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> compared_files: 2 [[['.\\assets\\data\\Strings\\aionfilterline.dat', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.dat'], ['.\\assets\\data\\Strings\\aionfilterline.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.pak']], []].
-2023-05-13 17:30:36,267 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:36,267 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\damage\damage.pak
-2023-05-13 17:30:36,268 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\data\Strings\aionfilterline.dat.
-2023-05-13 17:30:36,268 [Thread-8 (check_files_thread)] -> [WARNING] -> :: ERROR -> check_files() -> copy_files_check -> get_full_files.
-2023-05-13 17:30:36,269 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> file_path: textures\ui.
-2023-05-13 17:30:36,269 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.dat.
-2023-05-13 17:30:36,269 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\defence\defence.pak
-2023-05-13 17:30:36,270 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:36,270 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\data\Strings\aionfilterline.pak.
-2023-05-13 17:30:36,270 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
-2023-05-13 17:30:36,271 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\login\login.pak
-2023-05-13 17:30:36,271 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.pak.
-2023-05-13 17:30:36,272 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '1'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
-2023-05-13 17:30:36,272 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> copy_files_list: 0 [].
-2023-05-13 17:30:36,272 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\motion\motion.pak
-2023-05-13 17:30:36,272 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_full_file_path: ['.\\assets\\textures\\ui']. compare_files() -> full_file_path: ['E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui'].
-2023-05-13 17:30:36,272 [Thread-7 (check_files_thread)] -> [INFO] -> :: compare_files_hash() -> copy_files_list: 0 files need to be moved.
-2023-05-13 17:30:36,273 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> check_hash_list: [['.\\assets\\sounds\\voice\\attack\\attack.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\attack\\attack.pak'], ['.\\assets\\sounds\\voice\\cast\\cast.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\cast\\cast.pak'], ['.\\assets\\sounds\\voice\\damage\\damage.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\damage\\damage.pak'], ['.\\assets\\sounds\\voice\\defence\\defence.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\defence\\defence.pak'], ['.\\assets\\sounds\\voice\\login\\login.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\login\\login.pak'], ['.\\assets\\sounds\\voice\\motion\\motion.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\motion\\motion.pak']]
-2023-05-13 17:30:36,273 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_dir: .\assets\textures\ui.
-2023-05-13 17:30:36,274 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> copy_files_check: 0 []
-2023-05-13 17:30:36,274 [Thread-9 (check_files_thread)] -> [INFO] -> :: compare_files() -> check_hash_list: 6 files need to be compared.
-2023-05-13 17:30:36,274 [Thread-7 (check_files_thread)] -> [DEBUG] -> :: check_files() -> copy_files_check: 0 [].
-2023-05-13 17:30:36,275 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> copy_files_list[]: NAY E:\JOGOS\AION_CLASSIC\l10n\enu\textures\ui\hit_number.pak
-2023-05-13 17:30:36,275 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> copy_files_list: []
-2023-05-13 17:30:36,275 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> check_hash_list: []
-2023-05-13 17:30:36,276 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> compared_files: 2 [[['.\\assets\\sounds\\voice\\attack\\attack.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\attack\\attack.pak'], ['.\\assets\\sounds\\voice\\cast\\cast.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\cast\\cast.pak'], ['.\\assets\\sounds\\voice\\damage\\damage.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\damage\\damage.pak'], ['.\\assets\\sounds\\voice\\defence\\defence.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\defence\\defence.pak'], ['.\\assets\\sounds\\voice\\login\\login.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\login\\login.pak'], ['.\\assets\\sounds\\voice\\motion\\motion.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\motion\\motion.pak']], []].
-2023-05-13 17:30:36,276 [Thread-8 (check_files_thread)] -> [INFO] -> :: compare_files() -> check_hash_list: 0 files need to be compared.
-2023-05-13 17:30:36,277 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\attack\attack.pak.
-2023-05-13 17:30:36,277 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> copy_files_list: [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']]
-2023-05-13 17:30:36,277 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> compared_files: 2 [[], [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']]].
-2023-05-13 17:30:36,278 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> copy_files_list: 1 [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']].
-2023-05-13 17:30:36,278 [Thread-8 (check_files_thread)] -> [INFO] -> :: compare_files_hash() -> copy_files_list: 1 files need to be moved.
-2023-05-13 17:30:36,279 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> copy_files_check: 1 [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']]
-2023-05-13 17:30:36,279 [Thread-8 (check_files_thread)] -> [DEBUG] -> :: check_files() -> copy_files_check: 1 [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak']].
-2023-05-13 17:30:36,294 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\attack\attack.pak.
-2023-05-13 17:30:36,311 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\cast\cast.pak.
-2023-05-13 17:30:36,375 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\cast\cast.pak.
-2023-05-13 17:30:36,442 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\damage\damage.pak.
-2023-05-13 17:30:36,455 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\damage\damage.pak.
-2023-05-13 17:30:36,468 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\defence\defence.pak.
-2023-05-13 17:30:36,472 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\defence\defence.pak.
-2023-05-13 17:30:36,475 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\login\login.pak.
-2023-05-13 17:30:36,478 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\login\login.pak.
-2023-05-13 17:30:36,483 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\motion\motion.pak.
-2023-05-13 17:30:36,486 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\motion\motion.pak.
-2023-05-13 17:30:36,489 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> copy_files_list: 0 [].
-2023-05-13 17:30:36,489 [Thread-9 (check_files_thread)] -> [INFO] -> :: compare_files_hash() -> copy_files_list: 0 files need to be moved.
-2023-05-13 17:30:36,490 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> copy_files_check: 0 []
-2023-05-13 17:30:36,490 [Thread-9 (check_files_thread)] -> [DEBUG] -> :: check_files() -> copy_files_check: 0 [].
+2023-05-14 03:46:40,123 [MainThread] -> [DEBUG] -> :: <module>() -> App initialized.
+2023-05-14 03:46:40,124 [MainThread] -> [DEBUG] -> :: <module>() -> app_functions.py imported.
+2023-05-14 03:46:40,124 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:40,125 [MainThread] -> [DEBUG] -> :: <module>() -> main.py imported.
+2023-05-14 03:46:40,125 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:40,193 [MainThread] -> [DEBUG] -> :: __init__() -> App() class initialized.
+2023-05-14 03:46:40,206 [MainThread] -> [DEBUG] -> :: __init__() -> createTabs() class initialized.
+2023-05-14 03:46:40,207 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:40,207 [MainThread] -> [DEBUG] -> :: __init__() -> app_config.items(): [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:40,217 [MainThread] -> [DEBUG] -> :: __init__() -> Tabs created.
+2023-05-14 03:46:40,218 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:40,218 [MainThread] -> [INFO] -> :: first_run() :: Not the first run anymore!
+2023-05-14 03:46:40,299 [MainThread] -> [DEBUG] -> :: __init__() -> Tabs populated.
+2023-05-14 03:46:40,300 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:40,300 [MainThread] -> [DEBUG] -> :: __init__() -> Default values -> theme: System | region: 3 | napath: E:\JOGOS\AION_CLASSIC | eupath: E:\JOGOS\aionclassic | color: Blue
+2023-05-14 03:46:40,304 [MainThread] -> [DEBUG] -> :: __init__() -> Default values read.
+2023-05-14 03:46:41,869 [MainThread] -> [DEBUG] -> :: check_files_button() -> Check Files button pressed.
+2023-05-14 03:46:41,872 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:41,874 [MainThread] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
+2023-05-14 03:46:41,876 [MainThread] -> [DEBUG] -> :: check_game_path() -> eu_path: E:\JOGOS\aionclassic
+2023-05-14 03:46:41,878 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: check_files_thread() -> thread started.
+2023-05-14 03:46:41,879 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: check_files_thread() -> thread started.
+2023-05-14 03:46:41,881 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: check_files_thread() -> thread started.
+2023-05-14 03:46:41,935 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:41,935 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:41,935 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> file_path: textures\ui.
+2023-05-14 03:46:41,936 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> file_path: data\Strings.
+2023-05-14 03:46:41,936 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:41,937 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:41,937 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> file_path: sounds\voice.
+2023-05-14 03:46:41,937 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:41,937 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
+2023-05-14 03:46:41,938 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
+2023-05-14 03:46:41,938 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:41,938 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> eu_path: E:\JOGOS\aionclassic
+2023-05-14 03:46:41,939 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> eu_path: E:\JOGOS\aionclassic
+2023-05-14 03:46:41,939 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> na_path: E:\JOGOS\AION_CLASSIC
+2023-05-14 03:46:41,940 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:41,940 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: check_game_path() -> eu_path: E:\JOGOS\aionclassic
+2023-05-14 03:46:41,940 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:41,940 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_full_file_path: ['.\\assets\\textures\\ui'] - full_file_path: ['E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\textures\\ui', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\textures\\ui', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\textures\\ui']
+2023-05-14 03:46:41,941 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_full_file_path: ['.\\assets\\data\\Strings'] - full_file_path: ['E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\data\\Strings', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\data\\Strings', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\data\\Strings']
+2023-05-14 03:46:41,941 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic')]
+2023-05-14 03:46:41,941 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_dir: .\assets\textures\ui.
+2023-05-14 03:46:41,942 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_dir: .\assets\data\Strings.
+2023-05-14 03:46:41,942 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_full_file_path: ['.\\assets\\sounds\\voice'] - full_file_path: ['E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\sounds\\voice', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\sounds\\voice', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\sounds\\voice']
+2023-05-14 03:46:41,943 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\textures\ui\hit_number.pak
+2023-05-14 03:46:41,943 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.dat
+2023-05-14 03:46:41,943 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> assets_dir: .\assets\sounds\voice.
+2023-05-14 03:46:41,944 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\eng\data\Strings\aionfilterline.dat
+2023-05-14 03:46:41,944 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\eng\textures\ui\hit_number.pak
+2023-05-14 03:46:41,945 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\fra\data\Strings\aionfilterline.dat
+2023-05-14 03:46:41,945 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\fra\textures\ui\hit_number.pak
+2023-05-14 03:46:41,945 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\attack\attack.pak
+2023-05-14 03:46:41,945 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\deu\data\Strings\aionfilterline.dat
+2023-05-14 03:46:41,945 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\deu\textures\ui\hit_number.pak
+2023-05-14 03:46:41,946 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\eng\sounds\voice\attack\attack.pak
+2023-05-14 03:46:41,946 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.pak
+2023-05-14 03:46:41,946 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> check_hash_list: [['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak'], ['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\textures\\ui\\hit_number.pak'], ['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\textures\\ui\\hit_number.pak'], ['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\textures\\ui\\hit_number.pak']]
+2023-05-14 03:46:41,947 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\fra\sounds\voice\attack\attack.pak
+2023-05-14 03:46:41,947 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\eng\data\Strings\aionfilterline.pak
+2023-05-14 03:46:41,947 [Thread-2 (check_files_thread)] -> [INFO] -> :: compare_files() -> check_hash_list: 4 files need to be compared.
+2023-05-14 03:46:41,948 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\deu\sounds\voice\attack\attack.pak
+2023-05-14 03:46:41,948 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\fra\data\Strings\aionfilterline.pak
+2023-05-14 03:46:41,948 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> copy_files_list: []
+2023-05-14 03:46:41,949 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\deu\data\Strings\aionfilterline.pak
+2023-05-14 03:46:41,949 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> compared_files: 2 [[['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\textures\\ui\\hit_number.pak'], ['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\textures\\ui\\hit_number.pak'], ['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\textures\\ui\\hit_number.pak'], ['.\\assets\\textures\\ui\\hit_number.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\textures\\ui\\hit_number.pak']], []].
+2023-05-14 03:46:41,949 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\cast\cast.pak
+2023-05-14 03:46:41,949 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> check_hash_list: [['.\\assets\\data\\Strings\\aionfilterline.dat', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.dat'], ['.\\assets\\data\\Strings\\aionfilterline.dat', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\data\\Strings\\aionfilterline.dat'], ['.\\assets\\data\\Strings\\aionfilterline.dat', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\data\\Strings\\aionfilterline.dat'], ['.\\assets\\data\\Strings\\aionfilterline.dat', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\data\\Strings\\aionfilterline.dat'], ['.\\assets\\data\\Strings\\aionfilterline.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.pak'], ['.\\assets\\data\\Strings\\aionfilterline.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\data\\Strings\\aionfilterline.pak'], ['.\\assets\\data\\Strings\\aionfilterline.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\data\\Strings\\aionfilterline.pak'], ['.\\assets\\data\\Strings\\aionfilterline.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\data\\Strings\\aionfilterline.pak']]
+2023-05-14 03:46:41,950 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\textures\ui\hit_number.pak.
+2023-05-14 03:46:41,950 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\eng\sounds\voice\cast\cast.pak
+2023-05-14 03:46:41,951 [Thread-1 (check_files_thread)] -> [INFO] -> :: compare_files() -> check_hash_list: 8 files need to be compared.
+2023-05-14 03:46:41,951 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\fra\sounds\voice\cast\cast.pak
+2023-05-14 03:46:41,951 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> copy_files_list: []
+2023-05-14 03:46:41,952 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\textures\ui\hit_number.pak.
+2023-05-14 03:46:41,952 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\deu\sounds\voice\cast\cast.pak
+2023-05-14 03:46:41,952 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> compared_files: 2 [[['.\\assets\\data\\Strings\\aionfilterline.dat', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.dat'], ['.\\assets\\data\\Strings\\aionfilterline.dat', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\data\\Strings\\aionfilterline.dat'], ['.\\assets\\data\\Strings\\aionfilterline.dat', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\data\\Strings\\aionfilterline.dat'], ['.\\assets\\data\\Strings\\aionfilterline.dat', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\data\\Strings\\aionfilterline.dat'], ['.\\assets\\data\\Strings\\aionfilterline.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\data\\Strings\\aionfilterline.pak'], ['.\\assets\\data\\Strings\\aionfilterline.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\data\\Strings\\aionfilterline.pak'], ['.\\assets\\data\\Strings\\aionfilterline.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\data\\Strings\\aionfilterline.pak'], ['.\\assets\\data\\Strings\\aionfilterline.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\data\\Strings\\aionfilterline.pak']], []].
+2023-05-14 03:46:41,953 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\textures\ui\hit_number.pak.
+2023-05-14 03:46:41,953 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\damage\damage.pak
+2023-05-14 03:46:41,953 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\data\Strings\aionfilterline.dat.
+2023-05-14 03:46:41,954 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\eng\sounds\voice\damage\damage.pak
+2023-05-14 03:46:41,954 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\eng\textures\ui\hit_number.pak.
+2023-05-14 03:46:41,955 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.dat.
+2023-05-14 03:46:41,955 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\fra\sounds\voice\damage\damage.pak
+2023-05-14 03:46:41,955 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\textures\ui\hit_number.pak.
+2023-05-14 03:46:41,955 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\deu\sounds\voice\damage\damage.pak
+2023-05-14 03:46:41,956 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\data\Strings\aionfilterline.dat.
+2023-05-14 03:46:41,956 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\fra\textures\ui\hit_number.pak.
+2023-05-14 03:46:41,956 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\defence\defence.pak
+2023-05-14 03:46:41,956 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\eng\data\Strings\aionfilterline.dat.
+2023-05-14 03:46:41,957 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\textures\ui\hit_number.pak.
+2023-05-14 03:46:41,957 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\eng\sounds\voice\defence\defence.pak
+2023-05-14 03:46:41,957 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\data\Strings\aionfilterline.dat.
+2023-05-14 03:46:41,958 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\fra\sounds\voice\defence\defence.pak
+2023-05-14 03:46:41,958 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\deu\textures\ui\hit_number.pak.
+2023-05-14 03:46:41,958 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\fra\data\Strings\aionfilterline.dat.
+2023-05-14 03:46:41,958 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\deu\sounds\voice\defence\defence.pak
+2023-05-14 03:46:41,959 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> copy_files_list: 0 [].
+2023-05-14 03:46:41,959 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\data\Strings\aionfilterline.dat.
+2023-05-14 03:46:41,959 [Thread-2 (check_files_thread)] -> [INFO] -> :: compare_files_hash() -> copy_files_list: 0 files need to be moved.
+2023-05-14 03:46:41,959 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\login\login.pak
+2023-05-14 03:46:41,960 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\deu\data\Strings\aionfilterline.dat.
+2023-05-14 03:46:41,960 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\eng\sounds\voice\login\login.pak
+2023-05-14 03:46:41,960 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> copy_files_check: 0 - check_all :: []
+2023-05-14 03:46:41,961 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\data\Strings\aionfilterline.pak.
+2023-05-14 03:46:41,961 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\fra\sounds\voice\login\login.pak
+2023-05-14 03:46:41,961 [Thread-2 (check_files_thread)] -> [DEBUG] -> :: check_files() -> copy_files_check: 0 [].
+2023-05-14 03:46:41,961 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\data\Strings\aionfilterline.pak.
+2023-05-14 03:46:41,962 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\deu\sounds\voice\login\login.pak
+2023-05-14 03:46:41,962 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\data\Strings\aionfilterline.pak.
+2023-05-14 03:46:41,963 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\motion\motion.pak
+2023-05-14 03:46:41,963 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\eng\data\Strings\aionfilterline.pak.
+2023-05-14 03:46:41,963 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\eng\sounds\voice\motion\motion.pak
+2023-05-14 03:46:41,964 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\data\Strings\aionfilterline.pak.
+2023-05-14 03:46:41,970 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\fra\sounds\voice\motion\motion.pak
+2023-05-14 03:46:41,971 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\fra\data\Strings\aionfilterline.pak.
+2023-05-14 03:46:41,971 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> file_path -> check_hash_list[]: AY E:\JOGOS\aionclassic\l10n\deu\sounds\voice\motion\motion.pak
+2023-05-14 03:46:41,972 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> check_hash_list: [['.\\assets\\sounds\\voice\\attack\\attack.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\attack\\attack.pak'], ['.\\assets\\sounds\\voice\\attack\\attack.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\sounds\\voice\\attack\\attack.pak'], ['.\\assets\\sounds\\voice\\attack\\attack.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\sounds\\voice\\attack\\attack.pak'], ['.\\assets\\sounds\\voice\\attack\\attack.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\sounds\\voice\\attack\\attack.pak'], ['.\\assets\\sounds\\voice\\cast\\cast.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\cast\\cast.pak'], ['.\\assets\\sounds\\voice\\cast\\cast.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\sounds\\voice\\cast\\cast.pak'], ['.\\assets\\sounds\\voice\\cast\\cast.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\sounds\\voice\\cast\\cast.pak'], ['.\\assets\\sounds\\voice\\cast\\cast.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\sounds\\voice\\cast\\cast.pak'], ['.\\assets\\sounds\\voice\\damage\\damage.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\damage\\damage.pak'], ['.\\assets\\sounds\\voice\\damage\\damage.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\sounds\\voice\\damage\\damage.pak'], ['.\\assets\\sounds\\voice\\damage\\damage.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\sounds\\voice\\damage\\damage.pak'], ['.\\assets\\sounds\\voice\\damage\\damage.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\sounds\\voice\\damage\\damage.pak'], ['.\\assets\\sounds\\voice\\defence\\defence.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\defence\\defence.pak'], ['.\\assets\\sounds\\voice\\defence\\defence.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\sounds\\voice\\defence\\defence.pak'], ['.\\assets\\sounds\\voice\\defence\\defence.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\sounds\\voice\\defence\\defence.pak'], ['.\\assets\\sounds\\voice\\defence\\defence.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\sounds\\voice\\defence\\defence.pak'], ['.\\assets\\sounds\\voice\\login\\login.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\login\\login.pak'], ['.\\assets\\sounds\\voice\\login\\login.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\sounds\\voice\\login\\login.pak'], ['.\\assets\\sounds\\voice\\login\\login.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\sounds\\voice\\login\\login.pak'], ['.\\assets\\sounds\\voice\\login\\login.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\sounds\\voice\\login\\login.pak'], ['.\\assets\\sounds\\voice\\motion\\motion.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\motion\\motion.pak'], ['.\\assets\\sounds\\voice\\motion\\motion.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\sounds\\voice\\motion\\motion.pak'], ['.\\assets\\sounds\\voice\\motion\\motion.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\sounds\\voice\\motion\\motion.pak'], ['.\\assets\\sounds\\voice\\motion\\motion.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\sounds\\voice\\motion\\motion.pak']]
+2023-05-14 03:46:41,972 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\data\Strings\aionfilterline.pak.
+2023-05-14 03:46:41,974 [Thread-3 (check_files_thread)] -> [INFO] -> :: compare_files() -> check_hash_list: 24 files need to be compared.
+2023-05-14 03:46:41,975 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files() -> copy_files_list: []
+2023-05-14 03:46:41,975 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\deu\data\Strings\aionfilterline.pak.
+2023-05-14 03:46:41,975 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> compared_files: 2 [[['.\\assets\\sounds\\voice\\attack\\attack.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\attack\\attack.pak'], ['.\\assets\\sounds\\voice\\attack\\attack.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\sounds\\voice\\attack\\attack.pak'], ['.\\assets\\sounds\\voice\\attack\\attack.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\sounds\\voice\\attack\\attack.pak'], ['.\\assets\\sounds\\voice\\attack\\attack.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\sounds\\voice\\attack\\attack.pak'], ['.\\assets\\sounds\\voice\\cast\\cast.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\cast\\cast.pak'], ['.\\assets\\sounds\\voice\\cast\\cast.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\sounds\\voice\\cast\\cast.pak'], ['.\\assets\\sounds\\voice\\cast\\cast.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\sounds\\voice\\cast\\cast.pak'], ['.\\assets\\sounds\\voice\\cast\\cast.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\sounds\\voice\\cast\\cast.pak'], ['.\\assets\\sounds\\voice\\damage\\damage.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\damage\\damage.pak'], ['.\\assets\\sounds\\voice\\damage\\damage.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\sounds\\voice\\damage\\damage.pak'], ['.\\assets\\sounds\\voice\\damage\\damage.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\sounds\\voice\\damage\\damage.pak'], ['.\\assets\\sounds\\voice\\damage\\damage.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\sounds\\voice\\damage\\damage.pak'], ['.\\assets\\sounds\\voice\\defence\\defence.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\defence\\defence.pak'], ['.\\assets\\sounds\\voice\\defence\\defence.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\sounds\\voice\\defence\\defence.pak'], ['.\\assets\\sounds\\voice\\defence\\defence.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\sounds\\voice\\defence\\defence.pak'], ['.\\assets\\sounds\\voice\\defence\\defence.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\sounds\\voice\\defence\\defence.pak'], ['.\\assets\\sounds\\voice\\login\\login.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\login\\login.pak'], ['.\\assets\\sounds\\voice\\login\\login.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\sounds\\voice\\login\\login.pak'], ['.\\assets\\sounds\\voice\\login\\login.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\sounds\\voice\\login\\login.pak'], ['.\\assets\\sounds\\voice\\login\\login.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\sounds\\voice\\login\\login.pak'], ['.\\assets\\sounds\\voice\\motion\\motion.pak', 'E:\\JOGOS\\AION_CLASSIC\\l10n\\enu\\sounds\\voice\\motion\\motion.pak'], ['.\\assets\\sounds\\voice\\motion\\motion.pak', 'E:\\JOGOS\\aionclassic\\l10n\\eng\\sounds\\voice\\motion\\motion.pak'], ['.\\assets\\sounds\\voice\\motion\\motion.pak', 'E:\\JOGOS\\aionclassic\\l10n\\fra\\sounds\\voice\\motion\\motion.pak'], ['.\\assets\\sounds\\voice\\motion\\motion.pak', 'E:\\JOGOS\\aionclassic\\l10n\\deu\\sounds\\voice\\motion\\motion.pak']], []].
+2023-05-14 03:46:41,976 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> copy_files_list: 0 [].
+2023-05-14 03:46:41,978 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\attack\attack.pak.
+2023-05-14 03:46:41,978 [Thread-1 (check_files_thread)] -> [INFO] -> :: compare_files_hash() -> copy_files_list: 0 files need to be moved.
+2023-05-14 03:46:41,979 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> copy_files_check: 0 - check_all :: []
+2023-05-14 03:46:41,980 [Thread-1 (check_files_thread)] -> [DEBUG] -> :: check_files() -> copy_files_check: 0 [].
+2023-05-14 03:46:41,995 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\attack\attack.pak.
+2023-05-14 03:46:42,009 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\attack\attack.pak.
+2023-05-14 03:46:42,023 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\eng\sounds\voice\attack\attack.pak.
+2023-05-14 03:46:42,037 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\attack\attack.pak.
+2023-05-14 03:46:42,051 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\fra\sounds\voice\attack\attack.pak.
+2023-05-14 03:46:42,066 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\attack\attack.pak.
+2023-05-14 03:46:42,079 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\deu\sounds\voice\attack\attack.pak.
+2023-05-14 03:46:42,094 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\cast\cast.pak.
+2023-05-14 03:46:42,158 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\cast\cast.pak.
+2023-05-14 03:46:42,226 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\cast\cast.pak.
+2023-05-14 03:46:42,293 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\eng\sounds\voice\cast\cast.pak.
+2023-05-14 03:46:42,358 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\cast\cast.pak.
+2023-05-14 03:46:42,422 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\fra\sounds\voice\cast\cast.pak.
+2023-05-14 03:46:42,490 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\cast\cast.pak.
+2023-05-14 03:46:42,556 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\deu\sounds\voice\cast\cast.pak.
+2023-05-14 03:46:42,622 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\damage\damage.pak.
+2023-05-14 03:46:42,634 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\damage\damage.pak.
+2023-05-14 03:46:42,647 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\damage\damage.pak.
+2023-05-14 03:46:42,659 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\eng\sounds\voice\damage\damage.pak.
+2023-05-14 03:46:42,671 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\damage\damage.pak.
+2023-05-14 03:46:42,684 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\fra\sounds\voice\damage\damage.pak.
+2023-05-14 03:46:42,696 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\damage\damage.pak.
+2023-05-14 03:46:42,708 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\deu\sounds\voice\damage\damage.pak.
+2023-05-14 03:46:42,721 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\defence\defence.pak.
+2023-05-14 03:46:42,724 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\defence\defence.pak.
+2023-05-14 03:46:42,728 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\defence\defence.pak.
+2023-05-14 03:46:42,732 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\eng\sounds\voice\defence\defence.pak.
+2023-05-14 03:46:42,736 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\defence\defence.pak.
+2023-05-14 03:46:42,741 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\fra\sounds\voice\defence\defence.pak.
+2023-05-14 03:46:42,745 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\defence\defence.pak.
+2023-05-14 03:46:42,749 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\deu\sounds\voice\defence\defence.pak.
+2023-05-14 03:46:42,752 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\login\login.pak.
+2023-05-14 03:46:42,756 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\login\login.pak.
+2023-05-14 03:46:42,760 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\login\login.pak.
+2023-05-14 03:46:42,764 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\eng\sounds\voice\login\login.pak.
+2023-05-14 03:46:42,768 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\login\login.pak.
+2023-05-14 03:46:42,772 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\fra\sounds\voice\login\login.pak.
+2023-05-14 03:46:42,777 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\login\login.pak.
+2023-05-14 03:46:42,780 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\deu\sounds\voice\login\login.pak.
+2023-05-14 03:46:42,784 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\motion\motion.pak.
+2023-05-14 03:46:42,787 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\AION_CLASSIC\l10n\enu\sounds\voice\motion\motion.pak.
+2023-05-14 03:46:42,790 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\motion\motion.pak.
+2023-05-14 03:46:42,793 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\eng\sounds\voice\motion\motion.pak.
+2023-05-14 03:46:42,796 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\motion\motion.pak.
+2023-05-14 03:46:42,799 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\fra\sounds\voice\motion\motion.pak.
+2023-05-14 03:46:42,802 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> asset_file: .\assets\sounds\voice\motion\motion.pak.
+2023-05-14 03:46:42,805 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> game_file: E:\JOGOS\aionclassic\l10n\deu\sounds\voice\motion\motion.pak.
+2023-05-14 03:46:42,807 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: compare_files_hash() -> copy_files_list: 0 [].
+2023-05-14 03:46:42,809 [Thread-3 (check_files_thread)] -> [INFO] -> :: compare_files_hash() -> copy_files_list: 0 files need to be moved.
+2023-05-14 03:46:42,809 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: get_full_files() -> copy_files_check: 0 - check_all :: []
+2023-05-14 03:46:42,809 [Thread-3 (check_files_thread)] -> [DEBUG] -> :: check_files() -> copy_files_check: 0 [].

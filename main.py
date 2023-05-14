@@ -96,11 +96,11 @@ class createTabs(ctk.CTkTabview):
         self.fontLabel.grid(row=3, column=0, padx=(0, 5), pady=5, sticky="e")
         self.fontLabel.configure(font=font_regular_bold)
 
-        self.checkAllButton = ctk.CTkButton(self.appTopFrame, text="Check All Files", width=120)
+        self.checkAllButton = ctk.CTkButton(self.appTopFrame, text="Check Files", width=120)
         self.checkAllButton.grid(row=0, column=2, padx=(5, 0), pady=5)
         self.checkAllButton.configure(font=font_big_bold)
 
-        self.checkBackupButton = ctk.CTkButton(self.appTopFrame, text="Check Backup", width=145)
+        self.checkBackupButton = ctk.CTkButton(self.appTopFrame, text="Check Backup Files", width=157)
         self.checkBackupButton.grid(row=0, column=3, columnspan=2, padx=(5, 0), pady=5)
         self.checkBackupButton.configure(font=font_big_bold)
 
@@ -124,7 +124,7 @@ class createTabs(ctk.CTkTabview):
             if copy_files_return:
                 return_label.configure(text=f"Success! '{file_type.capitalize()}' files have been updated.", text_color=text_color_success)
                 return_button.configure(text=f"Up to date", state="disabled", font=font_regular)
-            elif not copy_files_return:
+            else:
                 return_label.configure(text=f"There are no new '{file_type}' files to update.")
                 return_button.configure(text=f"Up to date", state="disabled", font=font_regular)
         
@@ -140,42 +140,42 @@ class createTabs(ctk.CTkTabview):
         self.fontButton.configure(command=partial(copy_files_button, "font", "copy", self.fontReturnLabel, self.fontButton))
         self.fontButton.grid(row=3, column=2, padx=(5, 0), pady=5)
 
-        self.voiceBackupButton = ctk.CTkButton(self.appTopFrame, text="Backup", state="disabled", width=85)
-        self.voiceBackupButton.configure(command=partial(copy_files_button, "voice", "backup", self.voiceReturnLabel, self.voiceButton))
+        self.voiceBackupButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled", width=85)
+        self.voiceBackupButton.configure(command=partial(copy_files_button, "voice", "create", self.voiceReturnLabel, self.voiceButton))
         self.voiceBackupButton.grid(row=1, column=3, padx=(5, 0), pady=5)
 
-        self.filterBackupButton = ctk.CTkButton(self.appTopFrame, text="Restore", state="disabled", width=85)
-        self.filterBackupButton.configure(command=partial(copy_files_button, "filter", "backup", self.filterReturnLabel, self.filterButton))
+        self.filterBackupButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled", width=85)
+        self.filterBackupButton.configure(command=partial(copy_files_button, "filter", "create", self.filterReturnLabel, self.filterButton))
         self.filterBackupButton.grid(row=2, column=3, padx=(5, 0), pady=5)
 
-        self.fontBackupButton = ctk.CTkButton(self.appTopFrame, text="Indisponível", state="disabled", width=85)
-        self.fontBackupButton.configure(command=partial(copy_files_button, "font", "backup", self.fontReturnLabel, self.fontButton))
+        self.fontBackupButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled", width=85)
+        self.fontBackupButton.configure(command=partial(copy_files_button, "font", "create", self.fontReturnLabel, self.fontButton))
         self.fontBackupButton.grid(row=3, column=3, padx=(5, 0), pady=5)
 
-        self.voiceDeleteButton = ctk.CTkButton(self.appTopFrame, text="Delete", state="disabled", width=55)
+        self.voiceDeleteButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled", width=67)
         self.voiceDeleteButton.configure(command=partial(copy_files_button, "voice", "delete", self.voiceReturnLabel, self.voiceButton))
         self.voiceDeleteButton.grid(row=1, column=4, padx=(5, 0), pady=5)
 
-        self.filterDeleteButton = ctk.CTkButton(self.appTopFrame, text="Delete", state="disabled", width=55)
+        self.filterDeleteButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled", width=67)
         self.filterDeleteButton.configure(command=partial(copy_files_button, "filter", "delete", self.filterReturnLabel, self.filterButton))
         self.filterDeleteButton.grid(row=2, column=4, padx=(5, 0), pady=5)
 
-        self.fontDeleteButton = ctk.CTkButton(self.appTopFrame, text="Deletar", state="disabled", width=55)
+        self.fontDeleteButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled", width=67)
         self.fontDeleteButton.configure(command=partial(copy_files_button, "font", "delete", self.fontReturnLabel, self.fontButton))
         self.fontDeleteButton.grid(row=3, column=4, padx=(5, 0), pady=5)
 
-        def check_files_button(file_type_list, install_backup_buttons_list, delete_buttons_list, file_type_label_list, check_all_backup_button, check_all_delete):
+        # file_type_list: filter, font, voice | install_backup_buttons_list: filter, font, voice buttons
+        # delete_buttons_list: filter, font, voice -> delete buttons -> Only used when Checking Backups
+        # file_type_label_list: filter, font, voice labels | check_all_backup_button: filter, font, voice
+        # check_all_delete "check_all" or "check_backup" -> Used to identify if we are checking for game files or backup files
+        def check_files_button(file_type_list, install_backup_buttons_list, delete_buttons_list, file_type_label_list, check_all_backup_button, check_all_backup):
             """
             
             """
+            # TODO VERIFY BACKUP FILES
             logging.debug(f"{sys._getframe().f_code.co_name}() -> {check_all_backup_button.cget('text')} button pressed.")
             try:
                 if check_game_path() == True:
-                    """
-                    check_all_backup_button.configure(text=f"Checking", state="disabled")
-                    check_all_backup_button.configure(font=font_regular)
-                    logging.info(f"{sys._getframe().f_code.co_name}() -> check_all_backup_button disabled.")
-                    """
 
                     type_count = 0
                     for file_type in file_type_list:
@@ -184,29 +184,36 @@ class createTabs(ctk.CTkTabview):
                             file_type_label_list[type_count].configure(text=f"Checking '{file_type}' files, please wait!", text_color=text_color_verifying)
                             install_backup_buttons_list[type_count].configure(text=f"Checking", state="disabled")
                             install_backup_buttons_list[type_count].configure(font=font_regular)
-                            check_files_return = check_files(file_type)
+                            if check_all_backup == "check_backup":
+                                delete_buttons_list[type_count].configure(text=f"Checking", state="disabled")
+                                delete_buttons_list[type_count].configure(font=font_regular)
+                            # Sends the file type and check for regular or backup files
+                            # check_files() has to know which files it is going to look for
+                            check_files_return = check_files(file_type, check_all_backup)
                             if check_files_return:
                                 file_type_label_list[type_count].configure(text=f"'{file_type.capitalize()}' files are ready to update.", text_color=text_color_fail)
+                                file_type_label_list[type_count].configure(font=font_regular)
                                 install_backup_buttons_list[type_count].configure(text=f"Install", state="normal")
                                 install_backup_buttons_list[type_count].configure(font=font_big_bold)
-                                file_type_label_list[type_count].configure(font=font_regular)
+                                if check_all_backup == "check_backup":
+                                    delete_buttons_list[type_count].configure(text=f"Install", state="normal")
+                                    delete_buttons_list[type_count].configure(font=font_big_bold)
                             elif not check_files_return:
                                 file_type_label_list[type_count].configure(text=f"There are no new '{file_type}' files to update.", text_color=text_color_success)
                                 file_type_label_list[type_count].configure(font=font_regular)
                                 install_backup_buttons_list[type_count].configure(text=f"Up to date", state="disabled")
-                                install_backup_buttons_list[type_count].configure(font=font_regular)
+                                #install_backup_buttons_list[type_count].configure(font=font_regular)
+                                if check_all_backup == "check_backup":
+                                    delete_buttons_list[type_count].configure(text=f"Up to date", state="disabled")
+                                    #delete_buttons_list[type_count].configure(font=font_regular)
                         check_files_thread_func = threading.Thread(target=check_files_thread, args=(file_type, type_count))
                         check_files_thread_func.start()
                         #check_files_thread_func.join() # crashes the app =(
                         type_count += 1
 
-                    """
-                    check_all_backup_button.configure(text=f"Check All Files", state="normal")
-                    check_all_backup_button.configure(font=font_big_bold)
-                    logging.info(f"{sys._getframe().f_code.co_name}() -> check_all_backup_button enabled.")
-                    """
                 else:
                     self.set("Config")
+                    #TODO ADD ERROR
 
             except Exception as e:
                 get_exception(e)
@@ -226,12 +233,6 @@ class createTabs(ctk.CTkTabview):
                                                    [self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel],
                                                    self.checkBackupButton,
                                                    "check_backup"))
-
-        """
-        self.appTextbox = ctk.CTkTextbox(self.appTopFrame)
-        self.appTextbox.grid(row=4, column=0, columnspan=3, pady=(5, 0), sticky="nsew")
-        self.appTextbox.configure(state="disabled")
-        """
 
         # Config tab widgets > Left
         self.configLeftFrame = ctk.CTkFrame(configTab)
@@ -362,12 +363,6 @@ class createTabs(ctk.CTkTabview):
         self.euPathButton = ctk.CTkButton(self.configRightFrame, text="Select Folder", command=partial(select_directory, self.euPathEntry), width=120)
         self.euPathButton.grid(row=4, column=3, padx=(5, 0), pady=(5, 5))
 
-        """
-        self.configTextbox = ctk.CTkTextbox(configTab)
-        self.configTextbox.grid(row=5, column=0, columnspan=2, pady=(5, 0), sticky="nsew")
-        self.configTextbox.configure(state="disabled")
-        """
-
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs populated.")
 
         # DEFAULT VALUES
@@ -384,18 +379,7 @@ class createTabs(ctk.CTkTabview):
         if app_config.get('app', 'napath'): self.naPathEntry.insert(0, app_config.get('app', 'napath'))
         if app_config.get('app', 'eupath'): self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
 
-        # Runs file check at start
-        """
-        check_files_button(["voice", "filter", "font"], 
-                           [self.voiceButton, self.filterButton, self.fontButton], 
-                           [self.voiceReturnLabel, self.filterReturnLabel, self.fontReturnLabel])
-        """
-
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values read.")
-
-        #copy_files("filter")
-        #copy_files("font")
-        #copy_files("voice")
 
     def change_theme_event(self, value):
         app_config = app_config_read()[0]
@@ -406,7 +390,11 @@ class createTabs(ctk.CTkTabview):
 
 app = App()
 app.iconbitmap("./config/img/Aion-Classic-Mods.ico")
-app.geometry("635x245")
+app.geometry("600x245")
 app.resizable(0, 0)
 app.eval("tk::PlaceWindow . center")
 app.mainloop()
+
+# TODO 
+# REORGANIZE FUNCTIONS
+#

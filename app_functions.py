@@ -213,7 +213,7 @@ def show_alert(alert_type, message):
 def validate_directory(game_directory, placeholder_text):
     wrong_directory = "Selected directory is not the correct {_VERSION_} game directory. Please select the root {_VERSION_} game directory."
 
-    if "NA" in placeholder_text.plit("\\"):
+    if "NA" in placeholder_text.split("\\"):
         game_path = f"{game_directory}\\bin64\\Aion.bin"
         logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
         logging.debug(f"{sys._getframe().f_code.co_name}() -> placeholder_text: {placeholder_text}.")
@@ -223,7 +223,7 @@ def validate_directory(game_directory, placeholder_text):
         else:
             return True
         
-    if "EU" in placeholder_text.plit("\\"):
+    if "EU" in placeholder_text.split("\\"):
         game_path = f"{game_directory}\\bin64\\aionclassic.bin"
         logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
         logging.debug(f"{sys._getframe().f_code.co_name}() -> placeholder_text: {placeholder_text}.")
@@ -271,7 +271,7 @@ def get_full_file_path(game_lang, file_path):
             return
     return full_file_path
 
-def check_files(game_file_type):
+def check_files(game_file_type, check_all_backup):
     """
     Defines regions and languages of which the app will use to
     look for files.
@@ -281,7 +281,6 @@ def check_files(game_file_type):
     try:
         app_config = app_config_read()[0]
         app_region = app_config.get('app', 'region')
-        #print(f"{sys._getframe().f_code.co_name}() -> app_region: {app_region}.")
         game_lang = []
 
         if not app_region in ("1", "2", "3"):
@@ -295,8 +294,8 @@ def check_files(game_file_type):
 
         if game_file_type in ("filter", "font", "voice"):
             # Gets all files and hashes them when files already exist in game path
-            logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() -> copy_files_check -> get_full_files.")
-            copy_files_check = get_full_files(game_lang, game_file_type)
+            copy_files_check = get_full_files(game_lang, game_file_type, check_all_backup)
+
         else:
             logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} :: Unknown file type.")
             return
@@ -314,7 +313,7 @@ def check_files(game_file_type):
         get_exception(e)
         return
 
-def get_full_files(game_lang, game_file_type):
+def get_full_files(game_lang, game_file_type, check_all_backup):
     """
     Returns the list of files that should be copied or replaced
     in the game path.
@@ -354,24 +353,45 @@ def get_full_files(game_lang, game_file_type):
         full_file_path = get_full_file_path(game_lang, file_path)
 
         # Returns [[check_hash_list], [copy_files_list]]
-        compared_files = compare_files(assets_full_file_path, full_file_path) 
+        compared_files = compare_files(assets_full_file_path, full_file_path, check_all_backup)
+        
+        def check_backups_json():
+            with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json') as f:
+                backup_files_list = json.load(f)
+                f.close
+            return backup_files_list
 
-        # Compares duplicated files hashes and adds them to the copy_files_check list if hashes differ
-        copy_files_check = compare_files_hash(compared_files) 
+        def save_files_json(copy_files_check):
+            if len(copy_files_check) == 0:
+                copy_files_check = None
+                
+            with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json', 'w', encoding='utf-8') as f:
+                json.dump(copy_files_check, f, ensure_ascii=False, indent=4)
+                f.close
 
-        with open(f'.\\config\\lists\\{game_file_type}_files.json', 'w', encoding='utf-8') as f:
-            json.dump(copy_files_check, f, ensure_ascii=False, indent=4)
-            f.close
+        if check_all_backup == "check_all":
+            # Compares duplicated files hashes and adds them to the copy_files_check list if hashes differ
+            copy_files_check = compare_files_hash(compared_files)
+            json_file_name = "install"
+            save_files_json(copy_files_check)
 
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_check: {len(copy_files_check)} {copy_files_check}")
+        elif check_all_backup == "check_backup":
+            copy_files_check = compared_files[1]
+            json_file_name = "backup"
+
+        else:
+            logging.warning(f"{sys._getframe().f_code.co_name}() -> check_all_delete :: Unknown if Game or Backup files.")
+            return False
+
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_check: {len(copy_files_check)} - {check_all_backup} :: {copy_files_check}")
         return copy_files_check
     
     except Exception as e:
         get_exception(e)
         return False
-        
-def compare_files(assets_full_file_path, full_file_path):
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_full_file_path: {assets_full_file_path}. compare_files() -> full_file_path: {full_file_path}.")
+    
+def compare_files(assets_full_file_path, full_file_path, check_all_backup):
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_full_file_path: {assets_full_file_path} - full_file_path: {full_file_path}")
 
     try:
         copy_files_list = []
@@ -382,8 +402,12 @@ def compare_files(assets_full_file_path, full_file_path):
                 for filename in filenames:
                     relative_path = dirpath.replace(assets_dir, "")
                     for files_dir in full_file_path:
-                        asset_path = assets_dir+relative_path+'\\'+filename
-                        file_path = files_dir+relative_path+'\\'+filename
+                        if check_all_backup == "check_all":
+                            file_path = files_dir+relative_path+'\\'+filename
+                            asset_path = assets_dir+relative_path+'\\'+filename
+                        elif check_all_backup == "check_backup":
+                            file_path = files_dir+relative_path+'\\'+filename+'.bkp'
+                            asset_path = files_dir+relative_path+'\\'+filename
                         if not os.path.exists(file_path):
                             logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
                             copy_files_list.extend([[asset_path, file_path]])
@@ -435,11 +459,24 @@ def copy_files(game_file_type, copy_backup):
     new files.
     """
     try:
-        with open(f'.\\config\\lists\\{game_file_type}_files.json') as f:
+        if copy_backup == "copy":
+            json_file_name = "install"
+        elif copy_backup in ["create", "delete"]:
+            json_file_name = "backup"
+        else:
+            logging.warning(f"{sys._getframe().f_code.co_name}() :: Unknown if Game or Backup files.")
+            return False
+        
+        with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json') as f:
             copy_files_list = json.load(f)
             f.close
-        if not copy_files_list == []:
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files -> type: {game_file_type}: {copy_files_list}")
+
+        if copy_files_list == None:
+            if copy_backup in ["copy", "create"]:
+                logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_backup} from '.\\config\\lists\\{game_file_type}_{json_file_name}.json'")
+                return False
+        else:
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> {json_file_name} files -> type: {game_file_type}: {copy_files_list}")
 
             for files in copy_files_list:
                 try:
@@ -452,31 +489,33 @@ def copy_files(game_file_type, copy_backup):
                             os.makedirs(os.path.dirname(game_file))
                         except Exception as e:
                             get_exception(e)
-                            return
+                            return False
                     if os.path.isfile(game_file):
-                        logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {game_file}")
-                        try:
-                            os.remove(game_file)
-                        except Exception as e:
-                            get_exception(e)
-                            return
+                        if copy_backup == "create":
+                            logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: You can't {copy_backup} backups before removing the old ones.'")
+                            show_alert("showerror", f"You can't {copy_backup.split('_')[0]} backups before removing the old ones.")
+                            return False
+                        else:
+                            logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {game_file}")
+                            try:
+                                os.remove(game_file)
+                            except Exception as e:
+                                get_exception(e)
+                                return False
                     try:
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> COPY :: {asset_file} -> {game_file}")
                         os.system(f'copy {asset_file} {game_file}')
                     except Exception as e:
                         get_exception(e)
-                        return
+                        return False
 
                 except Exception as e:
                     get_exception(e)
-                    return
-            with open(f'.\\config\\lists\\{game_file_type}_files.json', 'w', encoding='utf-8') as f:
-                json.dump([], f, ensure_ascii=False, indent=4)
+                    return False
+            with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json', 'w', encoding='utf-8') as f:
+                json.dump(None, f, ensure_ascii=False, indent=4)
                 f.close
             return True
-        else:
-            logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to copy from '.\\config\\lists\\{game_file_type}_files.json'")
-            return False
     
     except Exception as e:
         get_exception(e)
