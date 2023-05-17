@@ -1,6 +1,6 @@
 from configparser import ConfigParser
-import os, os.path, hashlib, winreg, sys, json, logging
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
+import os, os.path, hashlib, winreg, sys, json, logging, threading
 
 logging.basicConfig(filename='.\\config\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=logging.DEBUG, filemode='w')
 logging.getLogger().addHandler(logging.StreamHandler())
@@ -33,6 +33,173 @@ def app_config_write(app_config):
     except Exception as e:
         get_exception(e)
         return
+
+###########################################################
+###########                                     ###########
+###########   START  MAIN.PY FUNCTIONS          ###########
+###########                                     ###########
+###########################################################
+
+text_color_success = ("#007514", "#7EFF93")
+text_color_fail = ("#D80000", "#FF6969")
+text_color_verifying = ("black", "white")
+font_regular = ("", 12)
+font_regular_bold = ("", 12, "bold")
+font_big_bold = ("", 13, "bold")
+
+def region_selection(self):
+    app_config = app_config_read()[0]
+    app_config.set('app', 'region', str(self.regionRadio.get()))
+    app_config_write(app_config)
+    if (self.regionRadio.get() == 0):
+        self.naPathLabel.configure(state="disabled")
+        self.naPathEntry.configure(state="disabled")
+        self.naPathButton.configure(state="disabled")
+        self.euPathLabel.configure(state="disabled")
+        self.euPathEntry.configure(state="disabled")
+        self.euPathButton.configure(state="disabled")
+    elif (self.regionRadio.get() == 1):
+        if classic_na_path():
+            self.naPathEntry.delete(0, 'end')
+            self.naPathEntry.insert(0, app_config.get('app', 'napath'))
+        self.naPathLabel.configure(state="normal")
+        self.naPathEntry.configure(state="normal")
+        self.naPathButton.configure(state="normal")
+        self.euPathLabel.configure(state="disabled")
+        self.euPathEntry.configure(state="disabled")
+        self.euPathButton.configure(state="disabled")
+    elif (self.regionRadio.get() == 2):
+        if classic_eu_path():
+            self.euPathEntry.delete(0, 'end')
+            self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
+        self.naPathLabel.configure(state="disabled")
+        self.naPathEntry.configure(state="disabled")
+        self.naPathButton.configure(state="disabled")
+        self.euPathLabel.configure(state="normal")
+        self.euPathEntry.configure(state="normal")
+        self.euPathButton.configure(state="normal")
+    elif (self.regionRadio.get() == 3):
+        if classic_na_path():
+            self.naPathEntry.delete(0, 'end')
+            self.naPathEntry.insert(0, app_config.get('app', 'napath'))
+        if classic_eu_path():
+            self.euPathEntry.delete(0, 'end')
+            self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
+        self.naPathLabel.configure(state="normal")
+        self.naPathEntry.configure(state="normal")
+        self.naPathButton.configure(state="normal")
+        self.euPathLabel.configure(state="normal")
+        self.euPathEntry.configure(state="normal")
+        self.euPathButton.configure(state="normal")
+
+def select_directory(path_entry):
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> {path_entry} ({path_entry}) button pressed.")
+
+    game_directory = filedialog.askdirectory().replace("/","\\")
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> game_directory: {game_directory}.")
+
+    if game_directory:
+        placeholder_text = path_entry.cget("placeholder_text")
+        validate_directory_return = validate_directory(game_directory, placeholder_text)
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> validate_directory_return: {validate_directory_return}.")
+
+        if validate_directory_return:
+            path_entry.delete(0, 'end')
+            path_entry.insert(0, game_directory)
+            return True
+
+    else:
+        if not check_game_path():
+            logging.debug(f"ERROR -> {sys._getframe().f_code.co_name}() -> Wrong game folder.")
+            return False
+
+# file_type_list: [filter, font, voice] list
+# install_backup_buttons_list: filter, font, voice buttons (Returns install for Check All, Backup/Restore for Backup buttons)
+# delete_buttons_list: filter, font, voice -> delete buttons -> Only used when Checking Backups
+# file_type_label_list: filter, font, voice labels widgets
+# check_all_backup_button: button widget that was pressed
+# check_all_backup "check_all" or "check_backup" -> Used to identify if we are checking for game files or backup files
+def check_files_button(file_type_list,
+                        install_backup_buttons_list,
+                        delete_buttons_list,
+                        file_type_label_list,
+                        check_all_backup_button,
+                        check_all_backup,
+                        self):
+    """
+    
+    """
+    # TODO VERIFY BACKUP FILES
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> {check_all_backup_button.cget('text')} button pressed.")
+    try:
+        if check_game_path():
+            type_count = 0
+            for file_type in file_type_list:
+                def check_files_thread(file_type, type_count):
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> thread started.")
+                    file_type_label_list[type_count].configure(text=f"Checking '{file_type}' files, please wait!", text_color=text_color_verifying)
+                    install_backup_buttons_list[type_count].configure(text=f"Checking", state="disabled")
+                    install_backup_buttons_list[type_count].configure(font=font_regular)
+                    if check_all_backup == "check_backup":
+                        existing_backup =  check_existing_backup(file_type)
+                        """
+                        if existing_backup:
+                            delete_buttons_list[type_count].configure(text=f"Delete", state="disabled")
+                            delete_buttons_list[type_count].configure(font=font_regular)
+                        """
+                        # Sends the file type and check for regular or backup files
+                        # check_files() has to know which files it is going to look for
+                        # TODO if backups already exist, return False
+                    check_files_return = check_files(file_type, check_all_backup)
+                    if check_files_return:
+                        file_type_label_list[type_count].configure(text=f"'{file_type.capitalize()}' files are ready to update.", text_color=text_color_fail)
+                        file_type_label_list[type_count].configure(font=font_regular)
+                        install_backup_buttons_list[type_count].configure(text=f"Install", state="normal")
+                        install_backup_buttons_list[type_count].configure(font=font_big_bold)
+                        if check_all_backup == "check_backup":
+                            if existing_backup == "None":
+                                delete_buttons_list[type_count].configure(text=f"Delete", state="enabled")
+                                delete_buttons_list[type_count].configure(font=font_big_bold)
+                    elif not check_files_return:
+                        file_type_label_list[type_count].configure(text=f"There are no new '{file_type}' files to update.", text_color=text_color_success)
+                        file_type_label_list[type_count].configure(font=font_regular)
+                        install_backup_buttons_list[type_count].configure(text=f"Up to date", state="disabled")
+                        #install_backup_buttons_list[type_count].configure(font=font_regular)
+                        """
+                        if check_all_backup == "check_backup":
+                            delete_buttons_list[type_count].configure(text=f"Delete", state="disabled")
+                            #delete_buttons_list[type_count].configure(font=font_regular)
+                        """
+                check_files_thread_func = threading.Thread(target=check_files_thread, args=(file_type, type_count))
+                check_files_thread_func.start()
+                #check_files_thread_func.join() # crashes the app =(
+                type_count += 1
+        else:
+            self.set("Config")
+            #TODO ADD ERROR
+    except Exception as e:
+        get_exception(e)
+        return False
+
+def copy_files_button(file_type, copy_backup, return_label, return_button):
+    """
+    
+    """
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> {return_button.cget('text')} {copy_backup.capitalize()} ({file_type.capitalize()}) button pressed.")
+    return_label.configure(text=f"Verifying '{file_type.capitalize()}' files.")
+    copy_files_return = copy_files(file_type, copy_backup)
+    if copy_files_return:
+        return_label.configure(text=f"Success! '{file_type.capitalize()}' files have been updated.", text_color=text_color_success)
+        return_button.configure(text=f"Up to date", state="disabled", font=font_regular)
+    else:
+        return_label.configure(text=f"There are no new '{file_type}' files to update.")
+        return_button.configure(text=f"Up to date", state="disabled", font=font_regular)
+
+###########################################################
+###########                                     ###########
+###########   END    MAIN.PY FUNCTIONS          ###########
+###########                                     ###########
+###########################################################
 
 def first_run():
     app_config = app_config_read()[0]
@@ -233,6 +400,8 @@ def get_game_file_path(game_file_type):
         return
     return file_path
 
+# TODO change region/language config methods to JSON
+
 def get_full_file_path(game_lang, file_path):
     """
     Gets the full file paths for the selected regions using the
@@ -273,10 +442,42 @@ def check_files(game_file_type, check_all_backup):
             game_lang.extend(["eng", "fra", "deu"])
         if game_file_type in ("filter", "font", "voice"):
             # Gets all files and hashes them when files already exist in game path
-            copy_files_check = get_full_files(game_lang, game_file_type, check_all_backup)
+            file_path = get_game_file_path(game_file_type)
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}.")
+            # Defines assets path
+            assets_full_file_path = [f".\\assets\\{file_path}"]
+            # Returns [full_file_path]. It can be multiple paths depending on regions selected
+            full_file_path = get_full_file_path(game_lang, file_path)
+            # Returns [[check_hash_list], [copy_files_list]]
+            compared_files = compare_files(assets_full_file_path, full_file_path, check_all_backup)
+            
+            # TODO CALL EXISTING BACKUPS
+            # SAVE BACKUP FILES + HASHES TO FILE TO COMPARE LATER
+            
+            def save_files_json(copy_files_check):
+                if len(copy_files_check) == 0:
+                    copy_files_check = None
+                with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json', 'w', encoding='utf-8') as f:
+                    json.dump(copy_files_check, f, ensure_ascii=False, indent=4)
+                    f.close
+            if check_all_backup == "check_all":
+                # Compares duplicated files hashes and adds them to the copy_files_check list if hashes differ
+                copy_files_check = compare_files_hash(compared_files)
+                json_file_name = "install"
+                save_files_json(copy_files_check)
+            elif check_all_backup == "check_backup":
+                copy_files_check = compared_files[1]
+                json_file_name = "backup"
+            else:
+                logging.warning(f"{sys._getframe().f_code.co_name}() -> check_all_delete :: Unknown if Game or Backup files.")
+                return False
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_check: {len(copy_files_check)} - {check_all_backup} :: {copy_files_check}")
+            return copy_files_check
+            
         else:
             logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} :: Unknown file type.")
-            return
+            copy_files_check = None
+            
         logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_check: {len(copy_files_check)} {copy_files_check}.")
         if len(copy_files_check) <= 0:
             return False
@@ -287,72 +488,15 @@ def check_files(game_file_type, check_all_backup):
     except Exception as e:
         get_exception(e)
         return
-
-def get_full_files(game_lang, game_file_type, check_all_backup):
-    """
-    Returns the list of files that should be copied or replaced
-    in the game path.
-
-    #1 - Calls 'get_game_file_path()' to get the base directories of files;
-
-    #2 - Sets the assets full path directory;
-
-    #3 - Calls 'get_full_file_path' to set the full path of the installed
-    versions/regions of the game files.
-
-    #4 - Calls 'compare_files()' that checks for missing files in the game
-    path that are stored in the assets path and returns two lists:
-    - One list contains duplicated files that should be hashed;
-    - The second list contains the files that should be copied because
-    the app could not find them in the game path.
-
-    #5 - Calls 'compare_files_hash()' to determine if the duplicated
-    files are equal or differ from the asset files path.
-    - If the files are different, then it adds the files to the
-    list of files that should be copied. If hashes match, ignores
-    those files.
-
-    #6 - Returns the final list of files that should be copied, even if
-    they are already in the game path but are different files.
-
-    #7 - Stores the files in a JSON file at './assets/lists/{type}_files.json'
-    to be used by the 'copy_files()' command when requested.
-    """
-    try:
-        file_path = get_game_file_path(game_file_type)
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}.")
-        # Defines assets path
-        assets_full_file_path = [f".\\assets\\{file_path}"]
-        # Returns [full_file_path]. It can be multiple paths depending on regions selected
-        full_file_path = get_full_file_path(game_lang, file_path)
-        # Returns [[check_hash_list], [copy_files_list]]
-        compared_files = compare_files(assets_full_file_path, full_file_path, check_all_backup)
-        def check_backups_json():
-            with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json') as f:
-                backup_files_list = json.load(f)
-                f.close
-            return backup_files_list
-        def save_files_json(copy_files_check):
-            if len(copy_files_check) == 0:
-                copy_files_check = None
-            with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json', 'w', encoding='utf-8') as f:
-                json.dump(copy_files_check, f, ensure_ascii=False, indent=4)
-                f.close
-        if check_all_backup == "check_all":
-            # Compares duplicated files hashes and adds them to the copy_files_check list if hashes differ
-            copy_files_check = compare_files_hash(compared_files)
-            json_file_name = "install"
-            save_files_json(copy_files_check)
-        elif check_all_backup == "check_backup":
-            copy_files_check = compared_files[1]
-            json_file_name = "backup"
-        else:
-            logging.warning(f"{sys._getframe().f_code.co_name}() -> check_all_delete :: Unknown if Game or Backup files.")
-            return False
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_check: {len(copy_files_check)} - {check_all_backup} :: {copy_files_check}")
-        return copy_files_check
-    except Exception as e:
-        get_exception(e)
+    
+def check_existing_backup(file_type):
+    with open(f'.\\config\\lists\\{file_type}_backup.json') as f:
+        backup_files_list = json.load(f)
+        f.close
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> backup_files_list: {backup_files_list}.")
+    if backup_files_list:
+        return True
+    else:
         return False
     
 def compare_files(assets_full_file_path, full_file_path, check_all_backup):
@@ -468,7 +612,7 @@ def copy_files(game_file_type, copy_backup):
                     get_exception(e)
                     return False
             with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json', 'w', encoding='utf-8') as f:
-                json.dump(None, f, ensure_ascii=False, indent=4)
+                json.dump([], f, ensure_ascii=False, indent=4)
                 f.close
             return True
     except Exception as e:
