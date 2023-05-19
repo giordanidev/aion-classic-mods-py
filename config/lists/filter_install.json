@@ -1,1 +1,26 @@
-null
+[
+    [
+        ".\\assets\\data\\Strings\\aionfilterline.dat",
+        "E:\\JOGOS\\aionclassic\\l10n\\eng\\data\\Strings\\aionfilterline.dat"
+    ],
+    [
+        ".\\assets\\data\\Strings\\aionfilterline.dat",
+        "E:\\JOGOS\\aionclassic\\l10n\\fra\\data\\Strings\\aionfilterline.dat"
+    ],
+    [
+        ".\\assets\\data\\Strings\\aionfilterline.dat",
+        "E:\\JOGOS\\aionclassic\\l10n\\deu\\data\\Strings\\aionfilterline.dat"
+    ],
+    [
+        ".\\assets\\data\\Strings\\aionfilterline.pak",
+        "E:\\JOGOS\\aionclassic\\l10n\\eng\\data\\Strings\\aionfilterline.pak"
+    ],
+    [
+        ".\\assets\\data\\Strings\\aionfilterline.pak",
+        "E:\\JOGOS\\aionclassic\\l10n\\fra\\data\\Strings\\aionfilterline.pak"
+    ],
+    [
+        ".\\assets\\data\\Strings\\aionfilterline.pak",
+        "E:\\JOGOS\\aionclassic\\l10n\\deu\\data\\Strings\\aionfilterline.pak"
+    ]
+]

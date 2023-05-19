@@ -422,6 +422,18 @@ def get_full_file_path(game_lang, file_path):
             return
     return full_file_path
 
+def get_langs():
+    with open('./config/config.json') as config_file:
+        data = json.load(config_file)
+    langs = data["langs"]
+    return langs
+
+def get_regions():
+    with open('./config/config.json') as config_file:
+        data = json.load(config_file)
+    regions = data["regions"]
+    return regions
+
 def check_files(game_file_type, check_all_backup):
     """
     Defines regions and languages of which the app will use to

@@ -1,0 +1,3 @@
+2023-05-19 11:49:28,188 [MainThread] -> [DEBUG] -> :: <module>() -> App initialized.
+2023-05-19 11:49:28,188 [MainThread] -> [DEBUG] -> :: <module>() -> app_functions.py imported.
+2023-05-19 11:49:28,188 [MainThread] -> [DEBUG] -> :: app_config_read() -> app_config_read: [('theme', 'System'), ('color', 'Blue'), ('region', '3'), ('napath', 'E:\\JOGOS\\AION_CLASSIC'), ('eupath', 'E:\\JOGOS\\aionclassic'), ('regions', '["na", "eu"]'), ('langs_na', '["enu"]'), ('langs_eu', '["eng", "fra", "deu"]')]

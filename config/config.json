@@ -1,0 +1,13 @@
+{
+    "theme": "System",
+    "color": "Blue",
+    "regions": ["na", "eu"],
+    "paths": {
+        "na": "E:\\JOGOS\\AION_CLASSIC",
+        "eu": "E:\\JOGOS\\aionclassic"
+    },
+    "langs": {
+        "na": ["enu"],
+        "eu": ["eng", "fra", "deu"]
+    }
+}
