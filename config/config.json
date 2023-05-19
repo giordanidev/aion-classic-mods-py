@@ -8,6 +8,6 @@
     },
     "langs": {
         "na": [["enu", true]],
-        "eu": [["eng", true], ["fra", false], ["deu", false]]
+        "eu": [["fra", true], ["eng", false], ["deu", false]]
     }
 }
