@@ -34,6 +34,23 @@ def app_config_write(app_config):
         get_exception(e)
         return
 
+def get_langs():
+    with open('./config/config.json') as config_file:
+        data = json.load(config_file)
+    if "langs" in data:
+        langs = data["langs"]
+    else:
+        langs = False
+    print(f"LANGS LANGS LANGS LANGS LANGS LANGS LANGS LANGS LANGS LANGS: {langs}")
+    return langs
+get_langs()
+
+def get_regions():
+    with open('./config/config.json') as config_file:
+        data = json.load(config_file)
+    regions = data["regions"]
+    return regions
+
 ###########################################################
 ###########                                     ###########
 ###########   START  MAIN.PY FUNCTIONS          ###########
@@ -421,18 +438,6 @@ def get_full_file_path(game_lang, file_path):
             logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown region.")
             return
     return full_file_path
-
-def get_langs():
-    with open('./config/config.json') as config_file:
-        data = json.load(config_file)
-    langs = data["langs"]
-    return langs
-
-def get_regions():
-    with open('./config/config.json') as config_file:
-        data = json.load(config_file)
-    regions = data["regions"]
-    return regions
 
 def check_files(game_file_type, check_all_backup):
     """

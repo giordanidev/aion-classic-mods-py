@@ -10,3 +10,5 @@ main.spec
 output/
 auto-py-to-exe-config.json
 setup.py
+config/logs/
+config/lists/
