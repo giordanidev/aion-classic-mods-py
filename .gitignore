@@ -13,3 +13,4 @@ setup.py
 config/logs/
 config/lists/
 jsontest.py
+auto-py-to-exe-backup.json
