@@ -1,0 +1,48 @@
+{
+    "app_title": "Aion Classic 'Mods' por Load",
+    "app_info_label": "Por favor, escolha uma ação para começar!",
+
+    "app_voice": "Vozes KR",
+    "app_filter": "Filtro de Bate-papo",
+    "app_font": "Letras JP",
+
+    "app_voice_label": "Vozes KR:",
+    "app_filter_label": "Filtro de Bate-papo:",
+    "app_font_label": "Letras JP:",
+
+    "app_return_label_waiting": "Esperando...",
+    "app_return_label_verifying": "Verificando arquivos '{_file_type_}', por favor aguarde!",
+    "app_return_label_uptodate": "Não há novos arquivos de '{_file_type_}' para atualizar.",
+
+    "app_return_label_backup_ready": "Arquivos de '{_file_type_}' estão prontos para 'backup'.",
+    "app_return_label_backup_found": "'Backups' de '{_file_type_}' encontrados.",
+
+    "app_button_check_all": "Verificar Todos",
+    "app_button_check_all_backups": "Verificar Backups",
+    "app_button_verifying": "Verificando",
+    "app_button_install": "Instalar",
+    "app_button_create": "Criar",
+    "app_button_restore": "Restaurar",
+    "app_button_delete": "Deletar",
+    "app_button_uptodate": "Atualizado",
+
+    "config_theme_label": "Tema:",
+    "config_color_label": "Cor:",
+    "config_region_label": "Seleção de região:",
+    "config_na_label": "Pasta do Jogo NA:",
+    "config_eu_label": "Pasta do Jogo EU",
+
+    "config_theme_system": "Sistema",
+    "config_theme_dark": "Escuro",
+    "config_theme_light": "Claro",
+
+    "config_color_blue": "Azul",
+    "config_color_darkblue": "Azul-escuro",
+    "config_color_green": "Verde",
+    
+    "config_region_radio_na": "Clássico NA",
+    "config_region_radio_eu": "Clássico EU",
+    "config_region_radio_both": "Ambos",
+
+    "config_select_folder_button": "Selecionar Pasta"
+}

@@ -1,0 +1,48 @@
+{
+    "app_title": "Aion Classic 'Mods' by Load",
+    "app_info_label": "Please choose an option to begin.",
+
+    "app_voice": "KR voices",
+    "app_filter": "Chat Filter",
+    "app_font": "JP fonts",
+
+    "app_voice_label": "KR Voices:",
+    "app_filter_label": "Chat Filter:",
+    "app_font_label": "JP Fonts:",
+
+    "app_return_label_waiting": "Waiting...",
+    "app_return_label_verifying": "Verifying '{_file_type_}' files, please wait!",
+    "app_return_label_uptodate": "There are no new '{_file_type_}' files to update.",
+
+    "app_return_label_backup_ready": "'{_file_type_}' files are ready to be backed up.",
+    "app_return_label_backup_found": "'{_file_type_}' backups found.",
+
+    "app_button_check_all": "Verify All",
+    "app_button_check_all_backups": "Verify Backups",
+    "app_button_verifying": "Verifying",
+    "app_button_install": "Install",
+    "app_button_create": "Create",
+    "app_button_restore": "Restore",
+    "app_button_delete": "Delete",
+    "app_button_uptodate": "Up to date",
+
+    "config_theme_label": "Theme:",
+    "config_color_label": "Color:",
+    "config_region_label": "Region selection:",
+    "config_na_label": "NA Game Folder:",
+    "config_eu_label": "EU Game Folder",
+
+    "config_theme_system": "System",
+    "config_theme_dark": "Dark",
+    "config_theme_light": "Light",
+
+    "config_color_blue": "Blue",
+    "config_color_darkblue": "Dark-blue",
+    "config_color_green": "Green",
+    
+    "config_region_radio_na": "Classic NA",
+    "config_region_radio_eu": "Classic EU",
+    "config_region_radio_both": "Both",
+
+    "config_select_folder_button": "Select Folder"
+}

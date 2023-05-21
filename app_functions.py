@@ -1,12 +1,60 @@
 from configparser import ConfigParser
 from tkinter import messagebox, filedialog
-import os, os.path, hashlib, winreg, sys, json, logging, threading
+import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale
 
-logging.basicConfig(filename='.\\config\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=logging.DEBUG, filemode='w')
+logging.basicConfig(filename='.\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=logging.DEBUG, filemode='w')
 logging.getLogger().addHandler(logging.StreamHandler())
 
 logging.debug(f"{sys._getframe().f_code.co_name}() -> App initialized.")
 logging.debug(f"{sys._getframe().f_code.co_name}() -> app_functions.py imported.")
+
+# Gets system language to load the correct "lang" file for app translation
+def get_language():
+    try:
+        windll = ctypes.windll.kernel32
+        windll.GetUserDefaultUILanguage()
+        app_lang = locale.windows_locale[windll.GetUserDefaultUILanguage()]
+        lang_path = f".\\config\\lang\\{app_lang}.json"
+        with open(".\\config\\lang\\en_US.json", encoding='utf-8') as f:
+            en_translated_text = json.load(f)
+            f.close
+        if os.path.isfile(lang_path):
+            with open(lang_path, encoding='utf-8') as f:
+                translated_text = json.load(f)
+                f.close
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> ({app_lang}) translation loaded.")
+        else:
+            translated_text = en_translated_text
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> ({app_lang}) translation not found. Loaded default (en_US).")
+        return translated_text, en_translated_text
+    except Exception as e:
+        get_exception(e)
+        return
+load_translated_text = get_language()
+translated_text = load_translated_text[0]
+en_translated_text = load_translated_text[1]
+
+def get_english_name(value):
+    try:
+        for key in translated_text:
+            if translated_text[key] == value:
+                english_name = en_translated_text[key]
+                return english_name
+        return False
+    except Exception as e:
+        get_exception(e)
+        return
+
+def get_lang_name(value):
+    try:
+        for key in en_translated_text:
+            if en_translated_text[key] == value:
+                lang_name = translated_text[key]
+                return lang_name
+        return False
+    except Exception as e:
+        get_exception(e)
+        return
 
 def app_config_read():
     try:
@@ -19,7 +67,7 @@ def app_config_read():
         return (app_config, config_full_path)
     except Exception as e:
         get_exception(e)
-        return
+        return False
 
 load_configs = app_config_read()
 app_config = load_configs[0]
@@ -165,16 +213,15 @@ def check_files_button(file_type_list,
                         else:
                             delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
                             install_backup_buttons_list[type_count].configure(text="Restore", state="normal", font=font_regular_bold)
-                            file_type_label_list[type_count].configure(text=f"'{file_type.capitalize()}' backups found", text_color=text_color_success)
+                            file_type_label_list[type_count].configure(text=f"'{file_type.capitalize()}' backups found.", text_color=text_color_success)
                             return False
                         
                     # Sends the file type and check for regular or backup files
                     # check_files() has to know which files it is going to look for
-                    # TODO if backups already exist, return False
                     check_files_return = check_files(file_type, check_all_backup)
                     print(f"check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} ")
                     if check_files_return == True:
-                        file_type_label_list[type_count].configure(text=f"'{file_type.capitalize()}' files are ready to update.", text_color=text_color_fail, font=font_regular)
+                        file_type_label_list[type_count].configure(text=f"'{file_type.capitalize()}' files are ready to be backed up.", text_color=text_color_fail, font=font_regular)
                         if check_all_backup == "check_backup":
                             install_backup_buttons_list[type_count].configure(text="Create", state="normal", font=font_regular_bold)
                         else:
@@ -183,12 +230,6 @@ def check_files_button(file_type_list,
                     else:
                         file_type_label_list[type_count].configure(text=f"There are no new '{file_type}' files to update.", text_color=text_color_success, font=font_regular)
                         install_backup_buttons_list[type_count].configure(text=f"Up to date", state="disabled")
-                        #install_backup_buttons_list[type_count].configure(font=font_regular)
-                        """
-                        if check_all_backup == "check_backup":
-                            delete_buttons_list[type_count].configure(text=f"Delete", state="disabled")
-                            #delete_buttons_list[type_count].configure(font=font_regular)
-                        """
                 check_files_thread_func = threading.Thread(target=check_files_thread, args=(file_type, type_count))
                 check_files_thread_func.start()
                 #check_files_thread_func.join() # crashes the app =(
@@ -227,12 +268,12 @@ def copy_files_button(file_type, copy_backup, return_label, return_button, delet
                 return_button.configure(text="Create", state="disabled", font=font_regular)
                 delete_button.configure(text="Delete", state="disabled", font=font_regular_bold)
             else:
-                return_label.configure(text=f"Success! '{file_type.capitalize()}' files have been backed up.", text_color=text_color_success)
+                return_label.configure(text=f"Success! '{file_type.capitalize()}' backup files generated.", text_color=text_color_success)
                 return_button.configure(text="Create", state="disabled", font=font_regular)
                 delete_button.configure(text="Delete", state="normal", font=font_regular_bold)
 
         elif copy_backup == "delete":
-            return_label.configure(text=f"Success! '{file_type.capitalize()}' backup files have been deleted.", text_color=text_color_success)
+            return_label.configure(text=f"Success! '{file_type.capitalize()}' backup files deleted.", text_color=text_color_success)
             return_button.configure(text="Create", state="disabled", font=font_regular)
             delete_button.configure(text="Delete", state="disabled", font=font_regular_bold)
     else:
