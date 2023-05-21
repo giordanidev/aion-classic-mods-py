@@ -70,13 +70,16 @@ class createTabs(ctk.CTkTabview):
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs created.")
         
-        if first_run(): change_color_event
+        first_run()
 
         # App tab widgets
         self.appTopFrame = ctk.CTkFrame(appTab)
         self.appTopFrame.grid(row=0, column=0, sticky="new")
         self.appTopFrame.configure(fg_color="transparent")
         self.appTopFrame.grid_columnconfigure(1, weight=1)
+
+        self.infoLabel = ctk.CTkLabel(self.appTopFrame, text="Hello! Please chose your action to begin.")
+        self.infoLabel.grid(row=0, column=0, columnspan=2, padx=5, pady=5, sticky="w")
 
         self.voiceLabel = ctk.CTkLabel(self.appTopFrame, text="KR Voices:")
         self.voiceLabel.grid(row=1, column=0, padx=(0, 5), pady=5, sticky="e")
@@ -91,60 +94,111 @@ class createTabs(ctk.CTkTabview):
         self.fontLabel.configure(font=font_regular_bold)
         #self.fontLabel.grid_remove()
 
-        self.voiceReturnLabel = ctk.CTkLabel(self.appTopFrame, text="Hello! Please press Check All")
+        self.voiceReturnLabel = ctk.CTkLabel(self.appTopFrame, text="Waiting...")
         self.voiceReturnLabel.grid(row=1, column=1, columnspan=2, padx=5, pady=5, sticky="w")
-        self.filterReturnLabel = ctk.CTkLabel(self.appTopFrame, text="or Check All Backups to start.")
+        self.filterReturnLabel = ctk.CTkLabel(self.appTopFrame, text="Waiting...")
         self.filterReturnLabel.grid(row=2, column=1, columnspan=2, padx=5, pady=5, sticky="w")
-        self.fontReturnLabel = ctk.CTkLabel(self.appTopFrame, text="Hope you enjoy!")
+        self.fontReturnLabel = ctk.CTkLabel(self.appTopFrame, text="Waiting...")
         self.fontReturnLabel.grid(row=3, column=1, columnspan=2, padx=5, pady=5, sticky="w")
+
         
-        self.voiceButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled", width=120)
-        self.voiceButton.configure(command=partial(copy_files_button, "voice", "copy", self.voiceReturnLabel, self.voiceButton))
+        self.voiceButton = ctk.CTkButton(self.appTopFrame, text="Install", state="disabled", width=120)
         self.voiceButton.grid(row=1, column=2, padx=(5, 0), pady=5)
 
-        self.filterButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled", width=120)
-        self.filterButton.configure(command=partial(copy_files_button, "filter", "copy", self.filterReturnLabel, self.filterButton))
+        self.filterButton = ctk.CTkButton(self.appTopFrame, text="Install", state="disabled", width=120)
         self.filterButton.grid(row=2, column=2, padx=(5, 0), pady=5)
 
-        self.fontButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled", width=120)
-        self.fontButton.configure(command=partial(copy_files_button, "font", "copy", self.fontReturnLabel, self.fontButton))
+        self.fontButton = ctk.CTkButton(self.appTopFrame, text="Install", state="disabled", width=120)
         self.fontButton.grid(row=3, column=2, padx=(5, 0), pady=5)
 
-        self.voiceBackupButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled", width=85)
-        self.voiceBackupButton.configure(command=partial(copy_files_button, "voice", "create", self.voiceReturnLabel, self.voiceButton))
+
+        self.voiceBackupButton = ctk.CTkButton(self.appTopFrame, text="Create", state="disabled", width=85)
         self.voiceBackupButton.grid(row=1, column=3, padx=(5, 0), pady=5)
 
-        self.filterBackupButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled", width=85)
-        self.filterBackupButton.configure(command=partial(copy_files_button, "filter", "create", self.filterReturnLabel, self.filterButton))
+        self.filterBackupButton = ctk.CTkButton(self.appTopFrame, text="Create", state="disabled", width=85)
         self.filterBackupButton.grid(row=2, column=3, padx=(5, 0), pady=5)
 
-        self.fontBackupButton = ctk.CTkButton(self.appTopFrame, text="Waiting", state="disabled", width=85)
-        self.fontBackupButton.configure(command=partial(copy_files_button, "font", "create", self.fontReturnLabel, self.fontButton))
+        self.fontBackupButton = ctk.CTkButton(self.appTopFrame, text="Create", state="disabled", width=85)
         self.fontBackupButton.grid(row=3, column=3, padx=(5, 0), pady=5)
 
+
         self.voiceDeleteButton = ctk.CTkButton(self.appTopFrame, text="Delete", state="disabled", width=67)
-        self.voiceDeleteButton.configure(command=partial(copy_files_button, "voice", "delete", self.voiceReturnLabel, self.voiceButton))
         self.voiceDeleteButton.grid(row=1, column=4, padx=(5, 0), pady=5)
 
         self.filterDeleteButton = ctk.CTkButton(self.appTopFrame, text="Delete", state="disabled", width=67)
-        self.filterDeleteButton.configure(command=partial(copy_files_button, "filter", "delete", self.filterReturnLabel, self.filterButton))
         self.filterDeleteButton.grid(row=2, column=4, padx=(5, 0), pady=5)
 
         self.fontDeleteButton = ctk.CTkButton(self.appTopFrame, text="Delete", state="disabled", width=67)
-        self.fontDeleteButton.configure(command=partial(copy_files_button, "font", "delete", self.fontReturnLabel, self.fontButton))
         self.fontDeleteButton.grid(row=3, column=4, padx=(5, 0), pady=5)
+        
+        
+        self.voiceButton.configure(command=partial(copy_files_button,
+                                                   "voice",
+                                                   "copy",
+                                                   self.voiceReturnLabel,
+                                                   self.voiceButton,
+                                                   self.voiceDeleteButton))
+        self.filterButton.configure(command=partial(copy_files_button,
+                                                    "filter",
+                                                    "copy",
+                                                    self.filterReturnLabel,
+                                                    self.filterButton,
+                                                    self.filterDeleteButton))
+        self.fontButton.configure(command=partial(copy_files_button,
+                                                  "font",
+                                                  "copy",
+                                                  self.fontReturnLabel,
+                                                  self.fontButton,
+                                                  self.fontDeleteButton))
+        
+        self.voiceBackupButton.configure(command=partial(copy_files_button,
+                                                         "voice",
+                                                         "create",
+                                                         self.voiceReturnLabel,
+                                                         self.voiceBackupButton,
+                                                         self.voiceDeleteButton))
+        self.filterBackupButton.configure(command=partial(copy_files_button,
+                                                          "filter",
+                                                          "create",
+                                                          self.filterReturnLabel,
+                                                          self.filterBackupButton,
+                                                          self.filterDeleteButton))
+        self.fontBackupButton.configure(command=partial(copy_files_button,
+                                                        "font",
+                                                        "create",
+                                                        self.fontReturnLabel,
+                                                        self.fontBackupButton,
+                                                        self.fontDeleteButton))
+        
+        self.voiceDeleteButton.configure(command=partial(copy_files_button,
+                                                         "voice",
+                                                         "delete",
+                                                         self.voiceReturnLabel,
+                                                         self.voiceBackupButton,
+                                                         self.voiceDeleteButton))
+        self.filterDeleteButton.configure(command=partial(copy_files_button,
+                                                          "filter",
+                                                          "delete",
+                                                          self.filterReturnLabel,
+                                                          self.filterBackupButton,
+                                                          self.filterDeleteButton))
+        self.fontDeleteButton.configure(command=partial(copy_files_button,
+                                                        "font",
+                                                        "delete",
+                                                        self.fontReturnLabel,
+                                                        self.fontBackupButton,
+                                                        self.fontDeleteButton))
 
-        self.checkAllButton = ctk.CTkButton(self.appTopFrame, text="Check Files", width=120)
+
+        self.checkAllButton = ctk.CTkButton(self.appTopFrame, text="Check Files", font=font_big_bold, width=120)
         self.checkAllButton.grid(row=0, column=2, padx=(5, 0), pady=5)
-        self.checkAllButton.configure(font=font_big_bold)
 
-        self.checkBackupButton = ctk.CTkButton(self.appTopFrame, text="Check Backup Files", width=157)
+        self.checkBackupButton = ctk.CTkButton(self.appTopFrame, text="Check Backup Files", font=font_big_bold, width=157)
         self.checkBackupButton.grid(row=0, column=3, columnspan=2, padx=(5, 0), pady=5)
-        self.checkBackupButton.configure(font=font_big_bold)
         
         self.checkAllButton.configure(command=partial(check_files_button, 
                                                    ["filter", "font", "voice"], 
-                                                   [self.filterButton, self.fontButton, self.voiceButton], 
+                                                   [self.filterButton, self.fontButton, self.voiceButton],
                                                    "",
                                                    [self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel],
                                                    self.checkAllButton,
@@ -250,7 +304,7 @@ class createTabs(ctk.CTkTabview):
 
 app = App()
 app.iconbitmap("./config/img/Aion-Classic-Mods.ico")
-app.geometry("600x245")
+app.geometry("650x245")
 app.resizable(0, 0)
 app.eval("tk::PlaceWindow . center")
 app.mainloop()

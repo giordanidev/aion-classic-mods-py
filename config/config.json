@@ -7,7 +7,13 @@
         "eu": "E:\\JOGOS\\aionclassic"
     },
     "langs": {
-        "na": [["enu", true]],
-        "eu": [["fra", true], ["eng", false], ["deu", false]]
+        "na": [
+            ["enu", true]
+        ],
+        "eu": [
+            ["fra", true],
+            ["eng", false],
+            ["deu", false]
+        ]
     }
 }

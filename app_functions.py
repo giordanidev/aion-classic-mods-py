@@ -34,6 +34,7 @@ def app_config_write(app_config):
         get_exception(e)
         return
 
+"""
 def get_langs():
     with open('./config/config.json') as config_file:
         data = json.load(config_file)
@@ -41,15 +42,14 @@ def get_langs():
         langs = data["langs"]
     else:
         langs = False
-    print(f"LANGS LANGS LANGS LANGS LANGS LANGS LANGS LANGS LANGS LANGS: {langs}")
     return langs
-get_langs()
 
 def get_regions():
     with open('./config/config.json') as config_file:
         data = json.load(config_file)
     regions = data["regions"]
     return regions
+"""
 
 ###########################################################
 ###########                                     ###########
@@ -130,12 +130,13 @@ def select_directory(path_entry):
             logging.debug(f"ERROR -> {sys._getframe().f_code.co_name}() -> Wrong game folder.")
             return False
 
-# file_type_list: [filter, font, voice] list
-# install_backup_buttons_list: filter, font, voice buttons (Returns install for Check All, Backup/Restore for Backup buttons)
-# delete_buttons_list: filter, font, voice -> delete buttons -> Only used when Checking Backups
-# file_type_label_list: filter, font, voice labels widgets
-# check_all_backup_button: button widget that was pressed
-# check_all_backup "check_all" or "check_backup" -> Used to identify if we are checking for game files or backup files
+# file_type_list :: [filter, font, voice] list
+# install_backup_buttons_list :: filter, font, voice buttons (Returns install for Check All, Backup/Restore for Backup buttons)
+# remove_restore_buttons_list :: filter, font, voice buttons (Returns Remove for Check All/Restore for Backup buttons)
+# delete_buttons_list :: filter, font, voice -> delete buttons -> Only used when Checking Backups
+# file_type_label_list :: filter, font, voice labels widgets
+# check_all_backup_button :: button widget that was pressed
+# check_all_backup :: "check_all" or "check_backup" -> Used to identify if we are checking for game files or backup files
 def check_files_button(file_type_list,
                         install_backup_buttons_list,
                         delete_buttons_list,
@@ -155,31 +156,32 @@ def check_files_button(file_type_list,
                 def check_files_thread(file_type, type_count):
                     logging.debug(f"{sys._getframe().f_code.co_name}() -> thread started.")
                     file_type_label_list[type_count].configure(text=f"Checking '{file_type}' files, please wait!", text_color=text_color_verifying)
-                    install_backup_buttons_list[type_count].configure(text=f"Checking", state="disabled")
-                    install_backup_buttons_list[type_count].configure(font=font_regular)
+                    install_backup_buttons_list[type_count].configure(text="Checking", state="disabled", font=font_regular)
+
                     if check_all_backup == "check_backup":
-                        existing_backup =  check_existing_backup(file_type)
-                        """
-                        if existing_backup:
-                            delete_buttons_list[type_count].configure(text=f"Delete", state="disabled")
-                            delete_buttons_list[type_count].configure(font=font_regular)
-                        """
-                        # Sends the file type and check for regular or backup files
-                        # check_files() has to know which files it is going to look for
-                        # TODO if backups already exist, return False
+                        existing_backup = check_existing_backup(file_type)
+                        if existing_backup == False:
+                            delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
+                        else:
+                            delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
+                            install_backup_buttons_list[type_count].configure(text="Restore", state="normal", font=font_regular_bold)
+                            file_type_label_list[type_count].configure(text=f"'{file_type.capitalize()}' backups found", text_color=text_color_success)
+                            return False
+                        
+                    # Sends the file type and check for regular or backup files
+                    # check_files() has to know which files it is going to look for
+                    # TODO if backups already exist, return False
                     check_files_return = check_files(file_type, check_all_backup)
-                    if check_files_return:
-                        file_type_label_list[type_count].configure(text=f"'{file_type.capitalize()}' files are ready to update.", text_color=text_color_fail)
-                        file_type_label_list[type_count].configure(font=font_regular)
-                        install_backup_buttons_list[type_count].configure(text=f"Install", state="normal")
-                        install_backup_buttons_list[type_count].configure(font=font_big_bold)
+                    print(f"check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} ")
+                    if check_files_return == True:
+                        file_type_label_list[type_count].configure(text=f"'{file_type.capitalize()}' files are ready to update.", text_color=text_color_fail, font=font_regular)
                         if check_all_backup == "check_backup":
-                            if existing_backup == "None":
-                                delete_buttons_list[type_count].configure(text=f"Delete", state="enabled")
-                                delete_buttons_list[type_count].configure(font=font_big_bold)
-                    elif not check_files_return:
-                        file_type_label_list[type_count].configure(text=f"There are no new '{file_type}' files to update.", text_color=text_color_success)
-                        file_type_label_list[type_count].configure(font=font_regular)
+                            install_backup_buttons_list[type_count].configure(text="Create", state="normal", font=font_regular_bold)
+                        else:
+                            install_backup_buttons_list[type_count].configure(text="Install", state="normal", font=font_regular_bold)
+                            
+                    else:
+                        file_type_label_list[type_count].configure(text=f"There are no new '{file_type}' files to update.", text_color=text_color_success, font=font_regular)
                         install_backup_buttons_list[type_count].configure(text=f"Up to date", state="disabled")
                         #install_backup_buttons_list[type_count].configure(font=font_regular)
                         """
@@ -197,20 +199,46 @@ def check_files_button(file_type_list,
     except Exception as e:
         get_exception(e)
         return False
-
-def copy_files_button(file_type, copy_backup, return_label, return_button):
+    
+# copy :: used to copy files to the game folder
+## if there is no backup, one will be created before
+## copying the new files.
+## if files are up to date and backup already exists,
+## turns into a Restore button to replace current files
+## with the backed up files.
+# create :: used to create backup files
+# delete :: used to delete backups
+def copy_files_button(file_type, copy_backup, return_label, return_button, delete_button):
     """
     
     """
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> {return_button.cget('text')} {copy_backup.capitalize()} ({file_type.capitalize()}) button pressed.")
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> {copy_backup.capitalize()} ({file_type.capitalize()}) button pressed.")
     return_label.configure(text=f"Verifying '{file_type.capitalize()}' files.")
     copy_files_return = copy_files(file_type, copy_backup)
-    if copy_files_return:
-        return_label.configure(text=f"Success! '{file_type.capitalize()}' files have been updated.", text_color=text_color_success)
-        return_button.configure(text=f"Up to date", state="disabled", font=font_regular)
+    if not copy_files_return: return False
+    copied = copy_files_return[0]
+    restore = copy_files_return[1]
+    if copied:
+        if copy_backup == "copy":
+            return_label.configure(text=f"Success! '{file_type.capitalize()}' files have been installed.", text_color=text_color_success)
+        elif copy_backup == "create":
+            if restore:
+                return_label.configure(text=f"Success! '{file_type.capitalize()}' files have been restored.", text_color=text_color_success)
+                return_button.configure(text="Create", state="disabled", font=font_regular)
+                delete_button.configure(text="Delete", state="disabled", font=font_regular_bold)
+            else:
+                return_label.configure(text=f"Success! '{file_type.capitalize()}' files have been backed up.", text_color=text_color_success)
+                return_button.configure(text="Create", state="disabled", font=font_regular)
+                delete_button.configure(text="Delete", state="normal", font=font_regular_bold)
+
+        elif copy_backup == "delete":
+            return_label.configure(text=f"Success! '{file_type.capitalize()}' backup files have been deleted.", text_color=text_color_success)
+            return_button.configure(text="Create", state="disabled", font=font_regular)
+            delete_button.configure(text="Delete", state="disabled", font=font_regular_bold)
     else:
-        return_label.configure(text=f"There are no new '{file_type}' files to update.")
-        return_button.configure(text=f"Up to date", state="disabled", font=font_regular)
+        return_label.configure(text=f"There are no new '{file_type}' files to backup.")
+        return_button.configure(text="Up to date", state="disabled", font=font_regular)
+        delete_button.configure(text="Up to date", state="disabled", font=font_regular)
 
 ###########################################################
 ###########                                     ###########
@@ -439,6 +467,26 @@ def get_full_file_path(game_lang, file_path):
             return
     return full_file_path
 
+def get_file_path(game_file_type):
+    app_config = app_config_read()[0]
+    app_region = app_config.get('app', 'region')
+    game_lang = []
+    if not app_region in ("1", "2", "3"):
+        logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() -> app_region :: Region is not set.")
+        return
+    if app_region  in ("1", "3"):
+        game_lang.append("enu")
+    if app_region in ("2", "3"):
+        game_lang.extend(["eng", "fra", "deu"])
+    # Gets all files and hashes them when files already exist in game path
+    file_path = get_game_file_path(game_file_type)
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}.")
+    # Defines assets path
+    assets_full_file_path = [f".\\assets\\{file_path}"]
+    # Returns [full_file_path]. It can be multiple paths depending on regions selected
+    full_file_path = get_full_file_path(game_lang, file_path)
+    return assets_full_file_path, full_file_path
+
 def check_files(game_file_type, check_all_backup):
     """
     Defines regions and languages of which the app will use to
@@ -447,36 +495,24 @@ def check_files(game_file_type, check_all_backup):
     Calls 'get_full_files()' to finish processing the request.
     """
     try:
-        app_config = app_config_read()[0]
-        app_region = app_config.get('app', 'region')
-        game_lang = []
-        if not app_region in ("1", "2", "3"):
-            logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() -> app_region :: Region is not set.")
-            return
-        if app_region  in ("1", "3"):
-            game_lang.append("enu")
-        if app_region in ("2", "3"):
-            game_lang.extend(["eng", "fra", "deu"])
         if game_file_type in ("filter", "font", "voice"):
-            # Gets all files and hashes them when files already exist in game path
-            file_path = get_game_file_path(game_file_type)
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}.")
-            # Defines assets path
-            assets_full_file_path = [f".\\assets\\{file_path}"]
-            # Returns [full_file_path]. It can be multiple paths depending on regions selected
-            full_file_path = get_full_file_path(game_lang, file_path)
             # Returns [[check_hash_list], [copy_files_list]]
-            compared_files = compare_files(assets_full_file_path, full_file_path, check_all_backup)
+            files_path = get_file_path(game_file_type)
+            assets_full_file_path = files_path[0]
+            full_file_path = files_path[1]
+
+            compared_files = get_files(assets_full_file_path, full_file_path, check_all_backup) #compared_files[0] = hash | compared_files[1] = all files
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> compared_files: {len(compared_files)} - {compared_files}")
             
             # TODO CALL EXISTING BACKUPS
-            # SAVE BACKUP FILES + HASHES TO FILE TO COMPARE LATER
             
             def save_files_json(copy_files_check):
                 if len(copy_files_check) == 0:
-                    copy_files_check = None
+                    copy_files_check = {}
                 with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json', 'w', encoding='utf-8') as f:
                     json.dump(copy_files_check, f, ensure_ascii=False, indent=4)
                     f.close
+
             if check_all_backup == "check_all":
                 # Compares duplicated files hashes and adds them to the copy_files_check list if hashes differ
                 copy_files_check = compare_files_hash(compared_files)
@@ -485,15 +521,15 @@ def check_files(game_file_type, check_all_backup):
             elif check_all_backup == "check_backup":
                 copy_files_check = compared_files[1]
                 json_file_name = "backup"
+                save_files_json(copy_files_check)
             else:
                 logging.warning(f"{sys._getframe().f_code.co_name}() -> check_all_delete :: Unknown if Game or Backup files.")
                 return False
             logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_check: {len(copy_files_check)} - {check_all_backup} :: {copy_files_check}")
-            return copy_files_check
             
         else:
             logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} :: Unknown file type.")
-            copy_files_check = None
+            copy_files_check = []
             
         logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_check: {len(copy_files_check)} {copy_files_check}.")
         if len(copy_files_check) <= 0:
@@ -502,21 +538,67 @@ def check_files(game_file_type, check_all_backup):
             return True
         else:
             logging.warning(f"{sys._getframe().f_code.co_name}() -> copy_files_check type: {type(copy_files_check)}.")
+            return False
     except Exception as e:
         get_exception(e)
         return
     
 def check_existing_backup(file_type):
-    with open(f'.\\config\\lists\\{file_type}_backup.json') as f:
-        backup_files_list = json.load(f)
-        f.close
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> backup_files_list: {backup_files_list}.")
-    if backup_files_list:
-        return True
+    backup_path = f".\\config\\lists\\{file_type}_backup.json"
+    if os.path.isfile(backup_path):
+        try:
+            with open(backup_path) as f:
+                backup_files_list = json.load(f)
+                f.close
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> backup_files_list: {len(backup_files_list)} {backup_files_list}.")
+
+            files_path = get_file_path(file_type)
+            assets_dir = files_path[0]
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_dir: {assets_dir}.")
+            full_file_path = files_path[1]
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> full_file_path: {full_file_path}.")
+
+            result = []
+
+            ay_list = []
+            nay_list = []
+            if len(backup_files_list) >= 1:
+                print("backup_files_list >= 1")
+                for assets_dir in assets_dir:
+                    for (dirpath, dirnames, filenames) in os.walk(assets_dir):
+                        for filename in filenames:
+                            relative_path = dirpath.replace(assets_dir, "")
+                            for files_dir in full_file_path:
+                                file_path = files_dir+relative_path+'\\'+filename+'.bkp'
+                                asset_path = files_dir+relative_path+'\\'+filename
+                                if not os.path.exists(file_path):
+                                    logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
+                                    nay_list.extend([[asset_path, file_path]])
+                                else:
+                                    logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path -> check_hash_list[]: AY {file_path}")
+                                    ay_list.extend([[asset_path, file_path]])
+                if len(nay_list) > 0:
+                    print("nay_list > 0")
+                    for nay in nay_list:
+                        ay_list.append(nay)
+                    with open(backup_path, 'w', encoding='utf-8') as f:
+                            json.dump(ay_list, f, ensure_ascii=False, indent=4)
+                            f.close
+                    return False
+                else:
+                    print("nay_list < 0")
+                    return True
+            else:
+                print("backup_files_list < 1")
+                return False
+            
+        except Exception as e:
+            get_exception(e)
+            return False
     else:
         return False
     
-def compare_files(assets_full_file_path, full_file_path, check_all_backup):
+def get_files(assets_full_file_path, full_file_path, check_all_backup):
     logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_full_file_path: {assets_full_file_path} - full_file_path: {full_file_path}")
     try:
         copy_files_list = []
@@ -542,7 +624,7 @@ def compare_files(assets_full_file_path, full_file_path, check_all_backup):
             logging.debug(f"{sys._getframe().f_code.co_name}() -> check_hash_list: {check_hash_list}")
             logging.info(f"{sys._getframe().f_code.co_name}() -> check_hash_list: {len(check_hash_list)} files need to be compared.")
             logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_list: {copy_files_list}")
-            return [check_hash_list, copy_files_list]
+            return check_hash_list, copy_files_list
     except Exception as e:
         get_exception(e)
         return
@@ -579,59 +661,65 @@ def copy_files(game_file_type, copy_backup):
     new files.
     """
     try:
-        if copy_backup == "copy":
+        if copy_backup == "copy": #copy, create, delete
             json_file_name = "install"
         elif copy_backup in ["create", "delete"]:
             json_file_name = "backup"
         else:
-            logging.warning(f"{sys._getframe().f_code.co_name}() :: Unknown if Game or Backup files.")
+            logging.warning(f"{sys._getframe().f_code.co_name}() :: Unknown command.")
             return False
+        
+        existing_backup = check_existing_backup(game_file_type)
+        
+        if existing_backup and copy_backup == "create":
+            logging.warning(f"{sys._getframe().f_code.co_name}() :: Trying to restore backuped files?")
+            alert = show_alert("askquestion", "You are about to delete the current files and replace them with the backup files.\n"+
+                               "This action CANNOT be undone. Do you wish to continue?")
+            if alert == "no":
+                return False
+
         with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json') as f:
             copy_files_list = json.load(f)
             f.close
-        if copy_files_list == None:
-            if copy_backup in ["copy", "create"]:
-                logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_backup} from '.\\config\\lists\\{game_file_type}_{json_file_name}.json'")
-                return False
+        if len(copy_files_list) < 1:
+            logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_backup} from '.\\config\\lists\\{game_file_type}_{json_file_name}.json'")
+            return False
         else:
             logging.debug(f"{sys._getframe().f_code.co_name}() -> {json_file_name} files -> type: {game_file_type}: {copy_files_list}")
             for files in copy_files_list:
-                try:
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> files: {len(files)} {files}.")
-                    asset_file = files[0]
-                    game_file = files[1]
+                logging.debug(f"{sys._getframe().f_code.co_name}() -> files: {len(files)} {files}.")
+                asset_file = files[0]
+                game_file = files[1]
+
+                if not copy_backup == "delete" or existing_backup and copy_backup == "create":
                     if not os.path.isdir(os.path.dirname(game_file)):
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> MKDIR: {os.path.dirname(game_file)}")
-                        try:
-                            os.makedirs(os.path.dirname(game_file))
-                        except Exception as e:
-                            get_exception(e)
-                            return False
-                    if os.path.isfile(game_file):
-                        if copy_backup == "create":
-                            logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: You can't {copy_backup} backups before removing the old ones.'")
-                            show_alert("showerror", f"You can't {copy_backup.split('_')[0]} backups before removing the old ones.")
-                            return False
-                        else:
-                            logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {game_file}")
-                            try:
-                                os.remove(game_file)
-                            except Exception as e:
-                                get_exception(e)
-                                return False
-                    try:
+                        os.makedirs(os.path.dirname(game_file))
+                if existing_backup and copy_backup == "create":
+                    remove_file = asset_file
+                else:
+                    remove_file = game_file
+                logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE????????? {remove_file}")
+                if os.path.isfile(remove_file):
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {remove_file}")
+                    os.remove(remove_file)
+                    if existing_backup and copy_backup == "create":
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> RENAME: {game_file} > {asset_file}")
+                        os.rename(game_file, asset_file)
+                    if copy_backup == "delete":
+                        with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json', 'w', encoding='utf-8') as f:
+                            json.dump({}, f)
+                        f.close
+
+                logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_backup: {copy_backup} | existing_backup: {existing_backup} | copy_backup: {copy_backup}")
+                if not copy_backup == "delete":
+                    if not existing_backup and copy_backup == "create":
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> COPY :: {asset_file} -> {game_file}")
                         os.system(f'copy {asset_file} {game_file}')
-                    except Exception as e:
-                        get_exception(e)
-                        return False
-                except Exception as e:
-                    get_exception(e)
-                    return False
-            with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json', 'w', encoding='utf-8') as f:
-                json.dump([], f, ensure_ascii=False, indent=4)
-                f.close
-            return True
+            if existing_backup and copy_backup == "create":
+                return True, True
+            else:
+             return True, False
     except Exception as e:
         get_exception(e)
         return False
