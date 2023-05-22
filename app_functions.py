@@ -163,19 +163,29 @@ def region_selection(self):
         self.euPathButton.configure(state="normal")
 
 def select_directory(path_entry):
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> {path_entry} ({path_entry}) button pressed.")
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> 'Select Folder' ({path_entry.cget('placeholder_text')}) button pressed.")
 
     game_directory = filedialog.askdirectory().replace("/","\\")
     logging.debug(f"{sys._getframe().f_code.co_name}() -> game_directory: {game_directory}.")
 
     if game_directory:
         placeholder_text = path_entry.cget("placeholder_text")
-        validate_directory_return = validate_directory(game_directory, placeholder_text)
+        if "NA" in placeholder_text.split("\\"):
+            region = "NA"
+            path = "napath"
+        elif "EU" in placeholder_text.split("\\"):
+            region = "EU"
+            path = "eupath"
+        validate_directory_return = validate_directory(game_directory, region)
         logging.debug(f"{sys._getframe().f_code.co_name}() -> validate_directory_return: {validate_directory_return}.")
 
         if validate_directory_return:
             path_entry.delete(0, 'end')
             path_entry.insert(0, game_directory)
+            load_configs = app_config_read()
+            app_config = load_configs[0]
+            app_config.set('app', path, game_directory)
+            app_config_write(app_config)
             return True
 
     else:
@@ -458,21 +468,21 @@ def show_alert(alert_type, message):
     logging.debug(f"{sys._getframe().f_code.co_name}() -> alert_return: {alert_return}.")
     return alert_return
 
-def validate_directory(game_directory, placeholder_text):
-    wrong_directory = "Selected directory is not the correct {_VERSION_} game directory. Please select the root {_VERSION_} game directory."
-    if "NA" in placeholder_text.split("\\"):
+def validate_directory(game_directory, region):
+    wrong_directory = translate_text("functions_wrong_directory")
+    if region == "NA":
         game_path = f"{game_directory}\\bin64\\Aion.bin"
         logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
         if not os.path.isfile(game_path):
-            show_alert("showerror", wrong_directory.replace("{_VERSION_}","NA"))
+            show_alert("showerror", wrong_directory.replace("{VERSION}","NA"))
             return False
         else:
             return True
-    if "EU" in placeholder_text.split("\\"):
+    if region == "EU":
         game_path = f"{game_directory}\\bin64\\aionclassic.bin"
         logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
         if not os.path.isfile(game_path):
-            show_alert("showerror", wrong_directory.replace("{_VERSION_}","EU"))
+            show_alert("showerror", wrong_directory.replace("{VERSION}","EU"))
             return False
         else:
             return True
