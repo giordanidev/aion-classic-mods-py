@@ -12,7 +12,6 @@ logging.debug(f"{sys._getframe().f_code.co_name}() -> app_functions.py imported.
 def get_language():
     try:
         windll = ctypes.windll.kernel32
-        windll.GetUserDefaultUILanguage()
         app_lang = locale.windows_locale[windll.GetUserDefaultUILanguage()]
         lang_path = f".\\config\\lang\\{app_lang}.json"
         with open(".\\config\\lang\\en_US.json", encoding='utf-8') as f:
