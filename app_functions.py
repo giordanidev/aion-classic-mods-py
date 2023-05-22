@@ -34,6 +34,12 @@ load_translated_text = get_language()
 translated_text = load_translated_text[0]
 en_translated_text = load_translated_text[1]
 
+def translate_text(key):
+    if key in translated_text:
+        return translated_text[key]
+    else:
+        return en_translated_text[key]
+
 def get_english_name(value):
     try:
         for key in translated_text:
@@ -80,7 +86,7 @@ def app_config_write(app_config):
             app_config.write(config_write)
     except Exception as e:
         get_exception(e)
-        return
+        return False
 
 """
 def get_langs():
@@ -203,8 +209,8 @@ def check_files_button(file_type_list,
             for file_type in file_type_list:
                 def check_files_thread(file_type, type_count):
                     logging.debug(f"{sys._getframe().f_code.co_name}() -> thread started.")
-                    file_type_label_list[type_count].configure(text=f"Checking '{file_type}' files, please wait!", text_color=text_color_verifying)
-                    install_backup_buttons_list[type_count].configure(text="Checking", state="disabled", font=font_regular)
+                    file_type_label_list[type_count].configure(text=translate_text("app_return_label_verifying"), text_color=text_color_verifying)
+                    install_backup_buttons_list[type_count].configure(text=translate_text("app_button_verifying"), state="disabled", font=font_regular)
 
                     if check_all_backup == "check_backup":
                         existing_backup = check_existing_backup(file_type)
@@ -212,24 +218,24 @@ def check_files_button(file_type_list,
                             delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
                         else:
                             delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
-                            install_backup_buttons_list[type_count].configure(text="Restore", state="normal", font=font_regular_bold)
-                            file_type_label_list[type_count].configure(text=f"'{file_type.capitalize()}' backups found.", text_color=text_color_success)
+                            install_backup_buttons_list[type_count].configure(text=translate_text("app_button_restore"), state="normal", font=font_regular_bold)
+                            file_type_label_list[type_count].configure(text=translate_text("app_return_label_backup_found"), text_color=text_color_success)
                             return False
                         
                     # Sends the file type and check for regular or backup files
                     # check_files() has to know which files it is going to look for
                     check_files_return = check_files(file_type, check_all_backup)
-                    print(f"check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} ")
+                    #print(f"check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} ")
                     if check_files_return == True:
-                        file_type_label_list[type_count].configure(text=f"'{file_type.capitalize()}' files are ready to be backed up.", text_color=text_color_fail, font=font_regular)
+                        file_type_label_list[type_count].configure(text=translate_text("app_return_label_backup_ready"), text_color=text_color_fail, font=font_regular)
                         if check_all_backup == "check_backup":
-                            install_backup_buttons_list[type_count].configure(text="Create", state="normal", font=font_regular_bold)
+                            install_backup_buttons_list[type_count].configure(text=translate_text("app_button_create"), state="normal", font=font_regular_bold)
                         else:
-                            install_backup_buttons_list[type_count].configure(text="Install", state="normal", font=font_regular_bold)
+                            install_backup_buttons_list[type_count].configure(text=translate_text("app_button_isntall"), state="normal", font=font_regular_bold)
                             
                     else:
-                        file_type_label_list[type_count].configure(text=f"There are no new '{file_type}' files to update.", text_color=text_color_success, font=font_regular)
-                        install_backup_buttons_list[type_count].configure(text=f"Up to date", state="disabled")
+                        file_type_label_list[type_count].configure(text=translate_text("app_return_label_uptodate"), text_color=text_color_success, font=font_regular)
+                        install_backup_buttons_list[type_count].configure(text=translate_text("app_button_uptodate"), state="disabled")
                 check_files_thread_func = threading.Thread(target=check_files_thread, args=(file_type, type_count))
                 check_files_thread_func.start()
                 #check_files_thread_func.join() # crashes the app =(
@@ -254,32 +260,32 @@ def copy_files_button(file_type, copy_backup, return_label, return_button, delet
     
     """
     logging.debug(f"{sys._getframe().f_code.co_name}() -> {copy_backup.capitalize()} ({file_type.capitalize()}) button pressed.")
-    return_label.configure(text=f"Verifying '{file_type.capitalize()}' files.")
+    return_label.configure(text=translate_text("app_return_label_verifying"))
     copy_files_return = copy_files(file_type, copy_backup)
     if not copy_files_return: return False
     copied = copy_files_return[0]
     restore = copy_files_return[1]
     if copied:
         if copy_backup == "copy":
-            return_label.configure(text=f"Success! '{file_type.capitalize()}' files have been installed.", text_color=text_color_success)
+            return_label.configure(text=translate_text("app_return_label_install"), text_color=text_color_success)
         elif copy_backup == "create":
             if restore:
-                return_label.configure(text=f"Success! '{file_type.capitalize()}' files have been restored.", text_color=text_color_success)
-                return_button.configure(text="Create", state="disabled", font=font_regular)
-                delete_button.configure(text="Delete", state="disabled", font=font_regular_bold)
+                return_label.configure(text=translate_text("app_return_label_restore"), text_color=text_color_success)
+                return_button.configure(text=translate_text("app_button_create"), state="disabled", font=font_regular)
+                delete_button.configure(text=translate_text("app_button_delete"), state="disabled", font=font_regular_bold)
             else:
-                return_label.configure(text=f"Success! '{file_type.capitalize()}' backup files generated.", text_color=text_color_success)
-                return_button.configure(text="Create", state="disabled", font=font_regular)
-                delete_button.configure(text="Delete", state="normal", font=font_regular_bold)
+                return_label.configure(text=translate_text("app_return_label_generated"), text_color=text_color_success)
+                return_button.configure(text=translate_text("app_button_create"), state="disabled", font=font_regular)
+                delete_button.configure(text=translate_text("app_button_delete"), state="normal", font=font_regular_bold)
 
         elif copy_backup == "delete":
-            return_label.configure(text=f"Success! '{file_type.capitalize()}' backup files deleted.", text_color=text_color_success)
-            return_button.configure(text="Create", state="disabled", font=font_regular)
-            delete_button.configure(text="Delete", state="disabled", font=font_regular_bold)
+            return_label.configure(text=translate_text("app_return_label_deleted"), text_color=text_color_success)
+            return_button.configure(text=translate_text("app_button_create"), state="disabled", font=font_regular)
+            delete_button.configure(text=translate_text("app_button_delete"), state="disabled", font=font_regular_bold)
     else:
-        return_label.configure(text=f"There are no new '{file_type}' files to backup.")
-        return_button.configure(text="Up to date", state="disabled", font=font_regular)
-        delete_button.configure(text="Up to date", state="disabled", font=font_regular)
+        return_label.configure(text=translate_text("app_return_label_uptodate_backup"))
+        return_button.configure(text=translate_text("app_button_uptodate"), state="disabled", font=font_regular)
+        delete_button.configure(text=translate_text("app_button_uptodate"), state="disabled", font=font_regular)
 
 ###########################################################
 ###########                                     ###########
@@ -397,7 +403,8 @@ def check_game_path():
     eu_path = app_config.get('app', 'eupath')
     app_region = app_config.get('app', 'region')
     if not app_region == "0":
-        wrong_directory = "Selected folder is not the correct {VERSION} game folder. Please select the root {VERSION} game folder."
+        wrong_directory = translate_text("functions_wrong_directory")
+        wrong_directory_logs = "Selected folder is not the correct {VERSION} game folder. Please select the root {VERSION} game folder."
         if app_region in ("1", "3"):
             logging.debug(f"{sys._getframe().f_code.co_name}() -> na_path: {na_path}")
             if na_path:
@@ -405,12 +412,12 @@ def check_game_path():
                 if not os.path.isfile(game_path):
                     app_config.set('app', 'napath', "")
                     app_config_write(app_config)
-                    logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'NA')}")
+                    logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory_logs.replace('{VERSION}', 'NA')}")
                     show_alert("showerror", wrong_directory.replace("{VERSION}","NA"))
                     return False
             else:
                 logging.debug(f"{sys._getframe().f_code.co_name}() -> NA game directory is not set.")
-                logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'NA')}")
+                logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory_logs.replace('{VERSION}', 'NA')}")
                 show_alert("showerror", wrong_directory.replace("{VERSION}","NA"))
                 return False
         if app_region in ("2", "3"):
@@ -420,32 +427,32 @@ def check_game_path():
                 if not os.path.isfile(game_path):
                     app_config.set('app', 'eupath', "")
                     app_config_write(app_config)
-                    logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'EU')}")
+                    logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory_logs.replace('{VERSION}', 'EU')}")
                     show_alert("showerror", wrong_directory.replace("{VERSION}","EU"))
                     return False
             else:
-                logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'EU')}")
+                logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory_logs.replace('{VERSION}', 'EU')}")
                 show_alert("showerror", wrong_directory.replace("{VERSION}","EU"))
                 return False
         return True
     else:
-        show_alert("showerror", "You need to select a game region to proceed.")
+        show_alert("showerror", translate_text("functions_show_game_region"))
         return False
     
 # alert_type = showinfo | showwarning | showerror | askquestion | askokcancel | askyesno 
 def show_alert(alert_type, message):
     if alert_type == "showinfo": # returns "ok"
-        alert_return = messagebox.showinfo('Information', message)
+        alert_return = messagebox.showinfo(translate_text("functions_alert_info"), message)
     elif alert_type == "showwarning": # returns "ok"
-        alert_return = messagebox.showwarning('Attention!', message)
+        alert_return = messagebox.showwarning(translate_text("functions_alert_warning"), message)
     elif alert_type == "showerror": # returns "ok"
-        alert_return = messagebox.showerror('Error!', message)
+        alert_return = messagebox.showerror(translate_text("functions_alert_error"), message)
     elif alert_type == "askquestion": # returns "yes" or "no"
-        alert_return = messagebox.askquestion('What would you like to do?', message)
+        alert_return = messagebox.askquestion(translate_text("functions_alert_question"), message)
     elif alert_type == "askokcancel": # returns "True" or "False"
-        alert_return = messagebox.askokcancel('Would you like to cancel?', message)
+        alert_return = messagebox.askokcancel(translate_text("functions_alert_okcancel"), message)
     elif alert_type == "askyesno": # returns "True" or "False"
-        alert_return = messagebox.askyesno('Are you sure?', message)
+        alert_return = messagebox.askyesno(translate_text("functions_alert_yesno"), message)
     else:
         logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown alert type.")
         return
@@ -594,44 +601,41 @@ def check_existing_backup(file_type):
             logging.debug(f"{sys._getframe().f_code.co_name}() -> backup_files_list: {len(backup_files_list)} {backup_files_list}.")
 
             files_path = get_file_path(file_type)
-            assets_dir = files_path[0]
+            assets_dir = files_path[0][0]
             logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_dir: {assets_dir}.")
             full_file_path = files_path[1]
             logging.debug(f"{sys._getframe().f_code.co_name}() -> full_file_path: {full_file_path}.")
 
-            result = []
-
             ay_list = []
             nay_list = []
-            if len(backup_files_list) >= 1:
-                print("backup_files_list >= 1")
-                for assets_dir in assets_dir:
-                    for (dirpath, dirnames, filenames) in os.walk(assets_dir):
-                        for filename in filenames:
-                            relative_path = dirpath.replace(assets_dir, "")
-                            for files_dir in full_file_path:
-                                file_path = files_dir+relative_path+'\\'+filename+'.bkp'
-                                asset_path = files_dir+relative_path+'\\'+filename
-                                if not os.path.exists(file_path):
-                                    logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
-                                    nay_list.extend([[asset_path, file_path]])
-                                else:
-                                    logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path -> check_hash_list[]: AY {file_path}")
-                                    ay_list.extend([[asset_path, file_path]])
-                if len(nay_list) > 0:
-                    print("nay_list > 0")
-                    for nay in nay_list:
-                        ay_list.append(nay)
-                    with open(backup_path, 'w', encoding='utf-8') as f:
-                            json.dump(ay_list, f, ensure_ascii=False, indent=4)
-                            f.close
-                    return False
-                else:
-                    print("nay_list < 0")
-                    return True
+            for (dirpath, dirnames, filenames) in os.walk(assets_dir):
+                for filename in filenames:
+                    relative_path = dirpath.replace(assets_dir, "")
+                    for files_dir in full_file_path:
+                        file_path = files_dir+relative_path+'\\'+filename+'.bkp'
+                        asset_path = files_dir+relative_path+'\\'+filename
+                        if not os.path.exists(file_path):
+                            logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
+                            nay_list.extend([[asset_path, file_path]])
+                        else:
+                            logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path -> check_hash_list[]: AY {file_path}")
+                            ay_list.extend([[asset_path, file_path]])
+            if len(nay_list) > 0:
+                print("nay_list > 0")
+                for nay in nay_list:
+                    ay_list.append(nay)
             else:
-                print("backup_files_list < 1")
+                print("nay_list < 0")
+            
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> ay_list: {ay_list}")
+            with open(backup_path, 'w', encoding='utf-8') as f:
+                    json.dump(ay_list, f, ensure_ascii=False, indent=4)
+                    f.close
+            
+            if len(nay_list) > 0:
                 return False
+            else:
+                return True
             
         except Exception as e:
             get_exception(e)
@@ -714,8 +718,12 @@ def copy_files(game_file_type, copy_backup):
         
         if existing_backup and copy_backup == "create":
             logging.warning(f"{sys._getframe().f_code.co_name}() :: Trying to restore backuped files?")
-            alert = show_alert("askquestion", "You are about to delete the current files and replace them with the backup files.\n"+
-                               "This action CANNOT be undone. Do you wish to continue?")
+            alert = show_alert("askquestion", translate_text("functions_show_restore"))
+            if alert == "no":
+                return False
+        
+        if existing_backup and copy_backup == "delete":
+            alert = show_alert("askquestion", translate_text("functions_show_delete"))
             if alert == "no":
                 return False
 
@@ -769,6 +777,7 @@ def get_exception(e):
     """
     This function keeps track of Exception errors.
     """
+    show_alert("showerror", translate_text("functions_show_critical_error"))
     trace = []
     tb = e.__traceback__
     while tb is not None:

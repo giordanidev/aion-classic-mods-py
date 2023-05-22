@@ -15,7 +15,7 @@ class App(ctk.CTk):
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> App() class initialized.")
 
-        self.title(translated_text["app_title"])
+        self.title(translate_text("app_title"))
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -81,52 +81,52 @@ class createTabs(ctk.CTkTabview):
         self.appTopFrame.configure(fg_color="transparent")
         self.appTopFrame.grid_columnconfigure(1, weight=1)
 
-        self.infoLabel = ctk.CTkLabel(self.appTopFrame, text=translated_text["app_info_label"])
+        self.infoLabel = ctk.CTkLabel(self.appTopFrame, text=translate_text("app_info_label"))
         self.infoLabel.grid(row=0, column=0, columnspan=2, padx=5, pady=5, sticky="w")
         self.infoLabel.grid_remove()
 
-        self.voiceLabel = ctk.CTkLabel(self.appTopFrame, text=translated_text["app_voice_label"], font=font_regular_bold)
+        self.voiceLabel = ctk.CTkLabel(self.appTopFrame, text=translate_text("app_voice_label"), font=font_regular_bold)
         self.voiceLabel.grid(row=1, column=0, padx=(0, 5), pady=5, sticky="e")
-        self.filterLabel = ctk.CTkLabel(self.appTopFrame, text=translated_text["app_filter_label"], font=font_regular_bold)
+        self.filterLabel = ctk.CTkLabel(self.appTopFrame, text=translate_text("app_filter_label"), font=font_regular_bold)
         self.filterLabel.grid(row=2, column=0, padx=(0, 5), pady=5, sticky="e")
-        self.fontLabel = ctk.CTkLabel(self.appTopFrame, text=translated_text["app_font_label"], font=font_regular_bold)
+        self.fontLabel = ctk.CTkLabel(self.appTopFrame, text=translate_text("app_font_label"), font=font_regular_bold)
         self.fontLabel.grid(row=3, column=0, padx=(0, 5), pady=5, sticky="e")
 
-        self.voiceReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translated_text["app_return_label_waiting"])
-        self.voiceReturnLabel.grid(row=1, column=1, columnspan=2, padx=5, pady=5, sticky="w")
-        self.filterReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translated_text["app_return_label_waiting"])
-        self.filterReturnLabel.grid(row=2, column=1, columnspan=2, padx=5, pady=5, sticky="w")
-        self.fontReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translated_text["app_return_label_waiting"])
-        self.fontReturnLabel.grid(row=3, column=1, columnspan=2, padx=5, pady=5, sticky="w")
+        self.voiceReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translate_text("app_return_label_waiting"))
+        self.voiceReturnLabel.grid(row=1, column=1, columnspan=3, padx=5, pady=5, sticky="w")
+        self.filterReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translate_text("app_return_label_waiting"))
+        self.filterReturnLabel.grid(row=2, column=1, columnspan=3, padx=5, pady=5, sticky="w")
+        self.fontReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translate_text("app_return_label_waiting"))
+        self.fontReturnLabel.grid(row=3, column=1, columnspan=3, padx=5, pady=5, sticky="w")
 
         
-        self.voiceButton = ctk.CTkButton(self.appTopFrame, text=translated_text["app_button_install"], state="disabled", width=120)
+        self.voiceButton = ctk.CTkButton(self.appTopFrame, text=translate_text("app_button_install"), state="disabled", width=120)
         self.voiceButton.grid(row=1, column=2, padx=(5, 0), pady=5)
 
-        self.filterButton = ctk.CTkButton(self.appTopFrame, text=translated_text["app_button_install"], state="disabled", width=120)
+        self.filterButton = ctk.CTkButton(self.appTopFrame, text=translate_text("app_button_install"), state="disabled", width=120)
         self.filterButton.grid(row=2, column=2, padx=(5, 0), pady=5)
 
-        self.fontButton = ctk.CTkButton(self.appTopFrame, text=translated_text["app_button_install"], state="disabled", width=120)
+        self.fontButton = ctk.CTkButton(self.appTopFrame, text=translate_text("app_button_install"), state="disabled", width=120)
         self.fontButton.grid(row=3, column=2, padx=(5, 0), pady=5)
 
 
-        self.voiceBackupButton = ctk.CTkButton(self.appTopFrame, text=translated_text["app_button_create"], state="disabled", width=85)
+        self.voiceBackupButton = ctk.CTkButton(self.appTopFrame, text=translate_text("app_button_create"), state="disabled", width=85)
         self.voiceBackupButton.grid(row=1, column=3, padx=(5, 0), pady=5)
 
-        self.filterBackupButton = ctk.CTkButton(self.appTopFrame, text=translated_text["app_button_create"], state="disabled", width=85)
+        self.filterBackupButton = ctk.CTkButton(self.appTopFrame, text=translate_text("app_button_create"), state="disabled", width=85)
         self.filterBackupButton.grid(row=2, column=3, padx=(5, 0), pady=5)
 
-        self.fontBackupButton = ctk.CTkButton(self.appTopFrame, text=translated_text["app_button_create"], state="disabled", width=85)
+        self.fontBackupButton = ctk.CTkButton(self.appTopFrame, text=translate_text("app_button_create"), state="disabled", width=85)
         self.fontBackupButton.grid(row=3, column=3, padx=(5, 0), pady=5)
 
 
-        self.voiceDeleteButton = ctk.CTkButton(self.appTopFrame, text=translated_text["app_button_delete"], state="disabled", width=67)
+        self.voiceDeleteButton = ctk.CTkButton(self.appTopFrame, text=translate_text("app_button_delete"), state="disabled", width=67)
         self.voiceDeleteButton.grid(row=1, column=4, padx=(5, 0), pady=5)
 
-        self.filterDeleteButton = ctk.CTkButton(self.appTopFrame, text=translated_text["app_button_delete"], state="disabled", width=67)
+        self.filterDeleteButton = ctk.CTkButton(self.appTopFrame, text=translate_text("app_button_delete"), state="disabled", width=67)
         self.filterDeleteButton.grid(row=2, column=4, padx=(5, 0), pady=5)
 
-        self.fontDeleteButton = ctk.CTkButton(self.appTopFrame, text=translated_text["app_button_delete"], state="disabled", width=67)
+        self.fontDeleteButton = ctk.CTkButton(self.appTopFrame, text=translate_text("app_button_delete"), state="disabled", width=67)
         self.fontDeleteButton.grid(row=3, column=4, padx=(5, 0), pady=5)
         
         
@@ -188,10 +188,10 @@ class createTabs(ctk.CTkTabview):
                                                         self.fontDeleteButton))
 
 
-        self.checkAllButton = ctk.CTkButton(self.appTopFrame, text=translated_text["app_button_check_all"], font=font_big_bold, width=120)
+        self.checkAllButton = ctk.CTkButton(self.appTopFrame, text=translate_text("app_button_check_all"), font=font_big_bold, width=120)
         self.checkAllButton.grid(row=0, column=2, padx=(5, 0), pady=5)
 
-        self.checkBackupButton = ctk.CTkButton(self.appTopFrame, text=translated_text["app_button_check_all_backups"], font=font_big_bold, width=157)
+        self.checkBackupButton = ctk.CTkButton(self.appTopFrame, text=translate_text("app_button_check_all_backups"), font=font_big_bold, width=157)
         self.checkBackupButton.grid(row=0, column=3, columnspan=2, padx=(5, 0), pady=5)
         
         self.checkAllButton.configure(command=partial(check_files_button, 
@@ -216,15 +216,15 @@ class createTabs(ctk.CTkTabview):
         self.configLeftFrame = ctk.CTkFrame(configTab, fg_color="transparent")
         self.configLeftFrame.grid(row=0, column=0, sticky="ns")
 
-        self.themeLabel = ctk.CTkLabel(self.configLeftFrame, text=translated_text["config_theme_label"], font=font_regular_bold)
+        self.themeLabel = ctk.CTkLabel(self.configLeftFrame, text=translate_text("config_theme_label"), font=font_regular_bold)
         self.themeLabel.grid(row=0, column=0, padx=(0, 5), pady=5, sticky="e")
-        self.colorLabel = ctk.CTkLabel(self.configLeftFrame, text=translated_text["config_color_label"], font=font_regular_bold)
+        self.colorLabel = ctk.CTkLabel(self.configLeftFrame, text=translate_text("config_color_label"), font=font_regular_bold)
         self.colorLabel.grid(row=1, column=0, padx=(0, 5), pady=5, sticky="e")
-        self.regionLabel = ctk.CTkLabel(self.configLeftFrame, text=translated_text["config_region_label"], font=font_regular_bold)
+        self.regionLabel = ctk.CTkLabel(self.configLeftFrame, text=translate_text("config_region_label"), font=font_regular_bold)
         self.regionLabel.grid(row=2, column=0, padx=(0, 5), pady=5, sticky="e")
-        self.naPathLabel = ctk.CTkLabel(self.configLeftFrame, text=translated_text["config_na_label"], font=font_regular_bold)
+        self.naPathLabel = ctk.CTkLabel(self.configLeftFrame, text=translate_text("config_na_label"), font=font_regular_bold)
         self.naPathLabel.grid(row=3, column=0, padx=(0, 5), pady=5, sticky="e")
-        self.euPathLabel = ctk.CTkLabel(self.configLeftFrame, text=translated_text["config_eu_label"], font=font_regular_bold)
+        self.euPathLabel = ctk.CTkLabel(self.configLeftFrame, text=translate_text("config_eu_label"), font=font_regular_bold)
         self.euPathLabel.grid(row=4, column=0, padx=(0, 5), pady=5, sticky="e")
 
         # Config tab widgets > Right
@@ -234,33 +234,33 @@ class createTabs(ctk.CTkTabview):
 
         theme_variable = ctk.StringVar(value="System")
         self.themeButton = ctk.CTkSegmentedButton(self.configRightFrame, command=self.change_theme_event, variable=theme_variable,
-                                                  values=[translated_text["config_theme_system"],
-                                                          translated_text["config_theme_dark"],
-                                                          translated_text["config_theme_light"]])
+                                                  values=[translate_text("config_theme_system"),
+                                                          translate_text("config_theme_dark"),
+                                                          translate_text("config_theme_light")])
         self.themeButton.grid(row=0, column=0, padx=(5, 0), pady=(5, 5), columnspan=4, sticky="ew")
         color_variable = ctk.StringVar(value="Blue")
         self.colorButton = ctk.CTkSegmentedButton(self.configRightFrame, command=change_color_event, variable=color_variable,
-                                                  values=[translated_text["config_color_blue"],
-                                                          translated_text["config_color_darkblue"],
-                                                          translated_text["config_color_green"]])
+                                                  values=[translate_text("config_color_blue"),
+                                                          translate_text("config_color_darkblue"),
+                                                          translate_text("config_color_green")])
         self.colorButton.grid(row=1, column=0, padx=(5, 0), pady=(5, 5), columnspan=4, sticky="ew")
         
         self.regionRadio = tk.IntVar()
 
         self.naRadio = ctk.CTkRadioButton(self.configRightFrame,
-                                                    text=translated_text["config_region_radio_na"],
+                                                    text=translate_text("config_region_radio_na"),
                                                     command=partial(region_selection, self),
                                                     variable=self.regionRadio,
                                                     value=1)
         self.naRadio.grid(row=2, column=0, padx=(5, 0), pady=8, sticky="w")
         self.euRadio = ctk.CTkRadioButton(self.configRightFrame,
-                                                    text=translated_text["config_region_radio_eu"],
+                                                    text=translate_text("config_region_radio_eu"),
                                                     command=partial(region_selection, self),
                                                     variable=self.regionRadio,
                                                     value=2)
         self.euRadio.grid(row=2, column=1, pady=8, sticky="w")
         self.bothRadio = ctk.CTkRadioButton(self.configRightFrame,
-                                                    text=translated_text["config_region_radio_both"],
+                                                    text=translate_text("config_region_radio_both"),
                                                     command=partial(region_selection, self),
                                                     variable=self.regionRadio,
                                                     value=3)
@@ -268,12 +268,12 @@ class createTabs(ctk.CTkTabview):
 
         self.naPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text="C:\\NA\\Game\\Folder")
         self.naPathEntry.grid(row=3, column=0, padx=(5, 0), pady=(5, 5), columnspan=3, sticky="we")
-        self.naPathButton = ctk.CTkButton(self.configRightFrame, text=translated_text["config_select_folder_button"], command=partial(select_directory, self.naPathEntry), width=120)
+        self.naPathButton = ctk.CTkButton(self.configRightFrame, text=translate_text("config_select_folder_button"), command=partial(select_directory, self.naPathEntry), width=120)
         self.naPathButton.grid(row=3, column=3, padx=(5, 0), pady=(5, 5))
 
         self.euPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text="C:\\EU\\Game\\Folder")
         self.euPathEntry.grid(row=4, column=0, padx=(5, 0), pady=(5, 5), columnspan=3, sticky="we")
-        self.euPathButton = ctk.CTkButton(self.configRightFrame, text=translated_text["config_select_folder_button"], command=partial(select_directory, self.euPathEntry), width=120)
+        self.euPathButton = ctk.CTkButton(self.configRightFrame, text=translate_text("config_select_folder_button"), command=partial(select_directory, self.euPathEntry), width=120)
         self.euPathButton.grid(row=4, column=3, padx=(5, 0), pady=(5, 5))
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs populated.")
