@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 from tkinter import messagebox, filedialog
-import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale
+import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale, shutil
 
 logging.basicConfig(filename='.\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=logging.DEBUG, filemode='w')
 logging.getLogger().addHandler(logging.StreamHandler())
@@ -120,6 +120,8 @@ text_color_verifying = ("black", "white")
 font_regular = ("", 12)
 font_regular_bold = ("", 12, "bold")
 font_big_bold = ("", 13, "bold")
+padx_both = 2.5
+pady_both = 2.5
 
 def regionSelection(self):
     try:
@@ -234,13 +236,25 @@ def verifyFilesButton(file_type_list,
 
                     if verify_all_backup == "verify_backup":
                         existing_backup = verifyExistingBackup(file_type)
+                        bkp_found = existing_backup[0]
+                        original_files_exist = existing_backup[1]
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> existing_backup: {existing_backup}.")
-                        if existing_backup == False:
+                        if bkp_found == False:
                             delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
+                            file_type_label_list[type_count].configure(text=translateText("app_return_label_backup_ready"), text_color=text_color_fail)
                         else:
                             delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
+                        if (bkp_found == False) and (original_files_exist == False):
+                            install_backup_buttons_list[type_count].configure(text=translateText("app_button_create"), state="disabled", font=font_regular)
+                            file_type_label_list[type_count].configure(text=translateText("app_return_label_backup_original_files_missing"), text_color=text_color_fail)
+                        elif (bkp_found == False) and (original_files_exist == True):
+                            install_backup_buttons_list[type_count].configure(text=translateText("app_button_create"), state="normal", font=font_regular_bold)
+                            file_type_label_list[type_count].configure(text=translateText("app_return_label_backup_ready"), text_color=text_color_success)
+                        else:
                             install_backup_buttons_list[type_count].configure(text=translateText("app_button_restore"), state="normal", font=font_regular_bold)
                             file_type_label_list[type_count].configure(text=translateText("app_return_label_backup_found"), text_color=text_color_success)
+                            
+                        if False in existing_backup:
                             return False
                         
                     # Sends the file type and verify for regular or backup files
@@ -656,9 +670,9 @@ def verifyExistingBackup(file_type):
     backup_path = f".\\config\\lists\\{file_type}_backup.json"
     if os.path.isfile(backup_path):
         try:
-            with open(backup_path) as f:
-                backup_files_list = json.load(f)
-                f.close
+            with open(backup_path) as backup_files:
+                backup_files_list = json.load(backup_files)
+                backup_files.close
             logging.debug(f"{sys._getframe().f_code.co_name}() -> backup_files_list: {len(backup_files_list)} {backup_files_list}.")
 
             files_path = getFilePath(file_type)
@@ -668,22 +682,26 @@ def verifyExistingBackup(file_type):
             logging.debug(f"{sys._getframe().f_code.co_name}() -> full_file_path: {full_file_path}.")
 
             ay_list = []
-            nay_list = []
+            bkp_not_found_list = []
+            original_files_exist = True
+            return_values = []
             for (dirpath, dirnames, filenames) in os.walk(assets_dir):
                 for filename in filenames:
                     relative_path = dirpath.replace(assets_dir, "")
                     for files_dir in full_file_path:
                         file_path = files_dir+relative_path+'\\'+filename+'.bkp'
                         asset_path = files_dir+relative_path+'\\'+filename
+                        if not os.path.isfile(asset_path):
+                            original_files_exist = False
                         if not os.path.exists(file_path):
                             logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
-                            nay_list.extend([[asset_path, file_path]])
+                            bkp_not_found_list.extend([[asset_path, file_path]])
                         else:
                             logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path -> verify_hash_list[]: AY {file_path}")
                             ay_list.extend([[asset_path, file_path]])
-            if len(nay_list) > 0:
+            if len(bkp_not_found_list) > 0:
                 print("nay_list > 0")
-                for nay in nay_list:
+                for nay in bkp_not_found_list:
                     ay_list.append(nay)
             else:
                 print("nay_list < 0")
@@ -693,16 +711,23 @@ def verifyExistingBackup(file_type):
                     json.dump(ay_list, f, ensure_ascii=False, indent=4)
                     f.close
             
-            if len(nay_list) > 0:
-                return False
+            if len(bkp_not_found_list) > 0:
+                return_values.append(False)
             else:
-                return True
+                return_values.append(True)
+
+            if original_files_exist == True:
+                return_values.append(True)
+            else:
+                return_values.append(False)
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> bkp_not_found: {return_values[0]} | original_files_exist: {return_values[1]}")
+            return return_values
             
         except Exception as e:
             getException(e)
-            return False
+            return False, False
     else:
-        return False
+        return False, False
     
 def getFiles(assets_full_file_path, full_file_path, verify_all_backup):
     logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_full_file_path: {assets_full_file_path} - full_file_path: {full_file_path}")
@@ -779,23 +804,23 @@ def copyFiles(game_file_type, copy_backup):
             logging.warning(f"{sys._getframe().f_code.co_name}() :: Unknown command.")
             return False
         
-        existing_backup = verifyExistingBackup(game_file_type)
+        existing_backup = verifyExistingBackup(game_file_type)[0]
         logging.debug(f"{sys._getframe().f_code.co_name}() -> existing_backup: {existing_backup}.")
         
-        if existing_backup and copy_backup == "create":
+        if (existing_backup == True and copy_backup == "create"):
             logging.warning(f"{sys._getframe().f_code.co_name}() :: Trying to restore backuped files?")
             alert = showAlert("askquestion", translateText("functions_show_restore"))
             if alert == "no":
                 return False
         
-        if existing_backup and copy_backup == "delete":
+        if (existing_backup == True and copy_backup == "delete"):
             alert = showAlert("askquestion", translateText("functions_show_delete"))
             if alert == "no":
                 return False
 
-        with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json') as f:
-            copy_files_list = json.load(f)
-            f.close
+        with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json') as files_list:
+            copy_files_list = json.load(files_list)
+            files_list.close
         if len(copy_files_list) < 1:
             logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_backup} from '.\\config\\lists\\{game_file_type}_{json_file_name}.json'")
             return False
@@ -807,7 +832,7 @@ def copyFiles(game_file_type, copy_backup):
                 asset_file = files[0]
                 game_file = files[1]
 
-                if not copy_backup == "delete" or existing_backup and copy_backup == "create" or copy_backup == "copy":
+                if not copy_backup == "delete" or (existing_backup == True and copy_backup == "create") or copy_backup == "copy":
                     if not os.path.isdir(os.path.dirname(game_file)):
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> MKDIR: {os.path.dirname(game_file)}")
                         os.makedirs(os.path.dirname(game_file))
@@ -820,7 +845,7 @@ def copyFiles(game_file_type, copy_backup):
                     if os.path.isfile(remove_file):
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {remove_file}")
                         os.remove(remove_file)
-                        if existing_backup and copy_backup == "create":
+                        if (existing_backup == True and copy_backup == "create"):
                             logging.debug(f"{sys._getframe().f_code.co_name}() -> RENAME: {game_file} > {asset_file}")
                             os.rename(game_file, asset_file)
                         if copy_backup == "delete":
@@ -829,11 +854,11 @@ def copyFiles(game_file_type, copy_backup):
                             f.close
                 logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_backup: {copy_backup} | existing_backup: {existing_backup}")
                 if not copy_backup == "delete":
-                    if not existing_backup and copy_backup == "create" or copy_backup == "copy":
+                    if (not existing_backup and copy_backup == "create") or copy_backup == "copy":
                         if show_replace_warning == True:
                             logging.debug(f"{sys._getframe().f_code.co_name}() -> SHOW MESSAGE? -> show_replace_warning: {show_replace_warning}")
                             if os.path.isfile(game_file):
-                                if not existing_backup and copy_backup == "copy":
+                                if (not existing_backup and copy_backup == "copy"):
                                     alert = showAlert("askquestion", translateText("functions_show_nobackup"))
                                     if alert == "no":
                                         return False
@@ -841,7 +866,8 @@ def copyFiles(game_file_type, copy_backup):
                                         show_replace_warning = False
                                         logging.debug(f"{sys._getframe().f_code.co_name}() -> SET TO FALSE show_replace_warning: {show_replace_warning}")
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> COPY :: {asset_file} -> {game_file}")
-                        os.system(f'copy {asset_file} {game_file}')
+                        shutil.copy2(asset_file, game_file)
+                        #os.system(f'copy {asset_file} {game_file}')
                 logging.debug(f"FOR END - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files} - FOR END :: show_replace_warning: {show_replace_warning}")
             if existing_backup == True and copy_backup == "create":
                 return True, True

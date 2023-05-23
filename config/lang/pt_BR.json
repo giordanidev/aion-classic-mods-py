@@ -12,17 +12,18 @@
     "app_font_label": "Letras JP:",
 
     "app_return_label_waiting": "Esperando...",
-    "app_return_label_verifying": "Verificando arquivos'...",
+    "app_return_label_verifying": "Verificando arquivos... Por favor, aguarde!",
     "app_return_label_uptodate": "Não há novos arquivos para atualizar.",
     "app_return_label_install": "Successo! Arquivos instalados.",
     "app_return_label_install_ready": "Arquivos estão prontos para ser instalados.",
-    "app_return_label_restore": "Successo! Arquivos restaurados.",
-    "app_return_label_generated": "Successo! 'Backup' gerado.",
-    "app_return_label_deleted": "Successo! 'Backup' deletado.",
-    "app_return_label_uptodate_backup": "Não há novos arquivos de 'backup' para gerar.",
+    "app_return_label_restore": "Successo! Os arquivos originais foram \nrestaurados.",
+    "app_return_label_generated": "Successo! O 'backup' foi gerado.",
+    "app_return_label_deleted": "Successo! 'Backup' removido.",
+    "app_return_label_uptodate_backup": "Não há novos arquivos de 'backup' para \ngerar.",
 
     "app_return_label_backup_ready": "Arquivos estão prontos para 'backup'.",
     "app_return_label_backup_found": "'Backup' encontrado.",
+    "app_return_label_backup_original_files_missing": "Não foi possível criar o 'backup'. Os \narquivos originais não foram encontrados.",
 
     "app_button_verify_all": "Verificar Todos",
     "app_button_verify_all_backups": "Verificar Backups",

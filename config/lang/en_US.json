@@ -1,6 +1,6 @@
 {
     "app_title": "Aion Classic 'Mods' by Load",
-    "app_version": " - v0.2.3beta RC3",
+    "app_version": " - v0.2.4beta RC4",
     "app_info_label": "Please choose an option to begin.",
 
     "voice": "KR voices",
@@ -23,6 +23,7 @@
 
     "app_return_label_backup_ready": "Files are ready to be backed up.",
     "app_return_label_backup_found": "Backup found.",
+    "app_return_label_backup_original_files_missing": "Unable to create backup. Original files \nmissing.",
 
     "app_button_verify_all": "Verify All",
     "app_button_verify_all_backups": "Verify Backups",
