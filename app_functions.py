@@ -305,6 +305,7 @@ def copyFilesButton(file_type, copy_backup, return_label, return_button, delete_
             if copied == True:
                 if copy_backup == "copy":
                     return_label.configure(text=translateText("app_return_label_install"), text_color=text_color_success)
+                    return_button.configure(text=translateText("app_button_uptodate"), state="disabled", font=font_regular)
                 elif copy_backup == "create":
                     if restore == True:
                         return_label.configure(text=translateText("app_return_label_restore"), text_color=text_color_success)
