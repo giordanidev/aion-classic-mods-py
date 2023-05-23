@@ -24,14 +24,14 @@ class App(ctk.CTk):
         ctk.set_appearance_mode(app_config.get('app', 'theme'))
         ctk.set_default_color_theme(app_config.get('app', 'color').lower())
 
-        self.tabsView = createTabs(self, self.change_color_event)
+        self.tabsView = createTabs(self, self.changeColorEvent)
         self.tabsView.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         self.tabsView._segmented_button.grid(sticky="w")
 
         self.current_ui = []
         self.current_ui.append(self.tabsView)
 
-    def change_color_event(self, color):
+    def changeColorEvent(self, color):
 
         en_color = getEnglishTranslation(color)
 
@@ -39,19 +39,19 @@ class App(ctk.CTk):
         app_config = appConfigLoad()[0]
         app_config.set('app', 'color', en_color)
         appConfigSave(app_config)
-        self.reset_current_ui()
+        self.resetCurrentUi()
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Color changed to '{color.capitalize()}'.")
 
-    def reset_current_ui(self):
+    def resetCurrentUi(self):
         for widget in self.current_ui:
             widget.destroy()
-        self.tabsView = createTabs(self, self.change_color_event)
+        self.tabsView = createTabs(self, self.changeColorEvent)
         self.tabsView.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         self.tabsView._segmented_button.grid(sticky="w")
         createTabs.set(self.tabsView, "Config")
 
 class createTabs(ctk.CTkTabview):
-    def __init__(self, master, change_color_event, **kwargs):
+    def __init__(self, master, changeColorEvent, **kwargs):
         super().__init__(master=master, **kwargs)
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> createTabs() class initialized.")
@@ -239,7 +239,7 @@ class createTabs(ctk.CTkTabview):
                                                           translateText("config_theme_light")])
         self.themeButton.grid(row=0, column=0, padx=(5, 0), pady=(5, 5), columnspan=4, sticky="ew")
         color_variable = ctk.StringVar(value="Blue")
-        self.colorButton = ctk.CTkSegmentedButton(self.configRightFrame, command=change_color_event, variable=color_variable,
+        self.colorButton = ctk.CTkSegmentedButton(self.configRightFrame, command=changeColorEvent, variable=color_variable,
                                                   values=[translateText("config_color_blue"),
                                                           translateText("config_color_darkblue"),
                                                           translateText("config_color_green")])
