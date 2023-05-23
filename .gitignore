@@ -1,16 +1,9 @@
 venv/
 __pycache__/
 README.txt
-thread.py
-thread2.py
-popup.py
 build/
 dist/
 main.spec
 output/
-auto-py-to-exe-config.json
 setup.py
-config/logs/
-config/lists/
-jsontest.py
-auto-py-to-exe-backup.json
+Aion-Classic-Mods.json
