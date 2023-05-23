@@ -23,8 +23,8 @@
     "app_return_label_backup_ready": "Arquivos estão prontos para 'backup'.",
     "app_return_label_backup_found": "'Backup' encontrado.",
 
-    "app_button_check_all": "Verificar Todos",
-    "app_button_check_all_backups": "Verificar Backups",
+    "app_button_verify_all": "Verificar Todos",
+    "app_button_verify_all_backups": "Verificar Backups",
     "app_button_verifying": "Verificando..",
     "app_button_install": "Instalar",
     "app_button_create": "Criar",
