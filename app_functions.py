@@ -351,7 +351,11 @@ def getClassicNaPath():
     """
     try:
         a_reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
-        a_key = winreg.OpenKey(a_reg, r'SOFTWARE\\WOW6432Node\\NCWest\\AION_CLASSIC')
+        try:
+            a_key = winreg.OpenKey(a_reg, r'SOFTWARE\\WOW6432Node\\NCWest\\AION_CLASSIC')
+        except:
+            logging.debug(f"{sys._getframe().f_code.co_name}(): Installation path not found. Select manually.")
+            return False
         if a_key:
             classic_na_path = winreg.QueryValueEx(a_key, "BaseDir")[0]
             logging.debug(f"{sys._getframe().f_code.co_name}() -> na_dir: {classic_na_path}")
@@ -363,7 +367,6 @@ def getClassicNaPath():
             return True
     except Exception as e:
         getException(e)
-        logging.debug(f"{sys._getframe().f_code.co_name}(): Installation path not found. Select manually.")
         return False
 
 def getClassicEuPath():
