@@ -15,7 +15,7 @@ class App(ctk.CTk):
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> App() class initialized.")
 
-        self.title(translateText("app_title"))
+        self.title(translateText("app_title") + translateText("app_version"))
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
