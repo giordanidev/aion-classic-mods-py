@@ -14,6 +14,7 @@
     "app_return_label_verifying": "Verificando arquivos'...",
     "app_return_label_uptodate": "Não há novos arquivos para atualizar.",
     "app_return_label_install": "Successo! Arquivos instalados.",
+    "app_return_label_install_ready": "Arquivos estão prontos para ser instalados.",
     "app_return_label_restore": "Successo! Arquivos restaurados.",
     "app_return_label_generated": "Successo! 'Backup' gerado.",
     "app_return_label_deleted": "Successo! 'Backup' deletado.",
@@ -36,7 +37,7 @@
     "config_color_label": "Cor:",
     "config_region_label": "Seleção de região:",
     "config_na_label": "Pasta do Jogo NA:",
-    "config_eu_label": "Pasta do Jogo EU",
+    "config_eu_label": "Pasta do Jogo EU:",
 
     "config_theme_system": "Sistema",
     "config_theme_dark": "Escuro",
@@ -58,6 +59,7 @@
     "functions_show_game_region": "Você precisa selecionar ao menos uma versão do jogo para prosseguir.",
     "functions_show_restore": "Você está prestes a substituir os arquivos do jogo pelos arquivos de 'backup'.\n\nEsta ação NÃO PODE ser desfeita. Tem certeza que deseja continuar?",
     "functions_show_delete": "Você está prestes a deletar os arquivos de 'backup'.\n\nEsta ação NÃO PODE ser desfeita. Tem certeza que deseja continuar?",
+    "functions_show_nobackup": "Você está prestes a substituir os arquivos do jogo sem fazer um 'backup'.\n\nEsta ação NÃO PODE ser desfeita. Tem certeza que deseja continuar?",
     "functions_show_critical_error": "Erro crítico! Por favor, envie o arquivo de log para o criador do aplicativo para verificação.",
 
     "functions_alert_info": "Informação:",

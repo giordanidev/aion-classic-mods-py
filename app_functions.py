@@ -34,10 +34,14 @@ translated_text = load_translated_text[0]
 en_translated_text = load_translated_text[1]
 
 def translate_text(key):
-    if key in translated_text:
-        return translated_text[key]
-    else:
-        return en_translated_text[key]
+    try:
+        if key in translated_text:
+            return translated_text[key]
+        else:
+            return en_translated_text[key]
+    except Exception as e:
+            get_exception(e)
+            return
 
 def get_english_name(value):
     try:
@@ -118,80 +122,88 @@ font_regular_bold = ("", 12, "bold")
 font_big_bold = ("", 13, "bold")
 
 def region_selection(self):
-    app_config = app_config_read()[0]
-    app_config.set('app', 'region', str(self.regionRadio.get()))
-    app_config_write(app_config)
-    if (self.regionRadio.get() == 0):
-        self.naPathLabel.configure(state="disabled")
-        self.naPathEntry.configure(state="disabled")
-        self.naPathButton.configure(state="disabled")
-        self.euPathLabel.configure(state="disabled")
-        self.euPathEntry.configure(state="disabled")
-        self.euPathButton.configure(state="disabled")
-    elif (self.regionRadio.get() == 1):
-        if classic_na_path():
-            self.naPathEntry.delete(0, 'end')
-            self.naPathEntry.insert(0, app_config.get('app', 'napath'))
-        self.naPathLabel.configure(state="normal")
-        self.naPathEntry.configure(state="normal")
-        self.naPathButton.configure(state="normal")
-        self.euPathLabel.configure(state="disabled")
-        self.euPathEntry.configure(state="disabled")
-        self.euPathButton.configure(state="disabled")
-    elif (self.regionRadio.get() == 2):
-        if classic_eu_path():
-            self.euPathEntry.delete(0, 'end')
-            self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
-        self.naPathLabel.configure(state="disabled")
-        self.naPathEntry.configure(state="disabled")
-        self.naPathButton.configure(state="disabled")
-        self.euPathLabel.configure(state="normal")
-        self.euPathEntry.configure(state="normal")
-        self.euPathButton.configure(state="normal")
-    elif (self.regionRadio.get() == 3):
-        if classic_na_path():
-            self.naPathEntry.delete(0, 'end')
-            self.naPathEntry.insert(0, app_config.get('app', 'napath'))
-        if classic_eu_path():
-            self.euPathEntry.delete(0, 'end')
-            self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
-        self.naPathLabel.configure(state="normal")
-        self.naPathEntry.configure(state="normal")
-        self.naPathButton.configure(state="normal")
-        self.euPathLabel.configure(state="normal")
-        self.euPathEntry.configure(state="normal")
-        self.euPathButton.configure(state="normal")
+    try:
+        app_config = app_config_read()[0]
+        app_config.set('app', 'region', str(self.regionRadio.get()))
+        app_config_write(app_config)
+        if (self.regionRadio.get() == 0):
+            self.naPathLabel.configure(state="disabled")
+            self.naPathEntry.configure(state="disabled")
+            self.naPathButton.configure(state="disabled")
+            self.euPathLabel.configure(state="disabled")
+            self.euPathEntry.configure(state="disabled")
+            self.euPathButton.configure(state="disabled")
+        elif (self.regionRadio.get() == 1):
+            if classic_na_path():
+                self.naPathEntry.delete(0, 'end')
+                self.naPathEntry.insert(0, app_config.get('app', 'napath'))
+            self.naPathLabel.configure(state="normal")
+            self.naPathEntry.configure(state="normal")
+            self.naPathButton.configure(state="normal")
+            self.euPathLabel.configure(state="disabled")
+            self.euPathEntry.configure(state="disabled")
+            self.euPathButton.configure(state="disabled")
+        elif (self.regionRadio.get() == 2):
+            if classic_eu_path():
+                self.euPathEntry.delete(0, 'end')
+                self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
+            self.naPathLabel.configure(state="disabled")
+            self.naPathEntry.configure(state="disabled")
+            self.naPathButton.configure(state="disabled")
+            self.euPathLabel.configure(state="normal")
+            self.euPathEntry.configure(state="normal")
+            self.euPathButton.configure(state="normal")
+        elif (self.regionRadio.get() == 3):
+            if classic_na_path():
+                self.naPathEntry.delete(0, 'end')
+                self.naPathEntry.insert(0, app_config.get('app', 'napath'))
+            if classic_eu_path():
+                self.euPathEntry.delete(0, 'end')
+                self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
+            self.naPathLabel.configure(state="normal")
+            self.naPathEntry.configure(state="normal")
+            self.naPathButton.configure(state="normal")
+            self.euPathLabel.configure(state="normal")
+            self.euPathEntry.configure(state="normal")
+            self.euPathButton.configure(state="normal")
+    except Exception as e:
+            get_exception(e)
+            return
 
 def select_directory(path_entry):
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> 'Select Folder' ({path_entry.cget('placeholder_text')}) button pressed.")
+    try:
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> 'Select Folder' ({path_entry.cget('placeholder_text')}) button pressed.")
 
-    game_directory = filedialog.askdirectory().replace("/","\\")
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> game_directory: {game_directory}.")
+        game_directory = filedialog.askdirectory().replace("/","\\")
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> game_directory: {game_directory}.")
 
-    if game_directory:
-        placeholder_text = path_entry.cget("placeholder_text")
-        if "NA" in placeholder_text.split("\\"):
-            region = "NA"
-            path = "napath"
-        elif "EU" in placeholder_text.split("\\"):
-            region = "EU"
-            path = "eupath"
-        validate_directory_return = validate_directory(game_directory, region)
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> validate_directory_return: {validate_directory_return}.")
+        if game_directory:
+            placeholder_text = path_entry.cget("placeholder_text")
+            if "NA" in placeholder_text.split("\\"):
+                region = "NA"
+                path = "napath"
+            elif "EU" in placeholder_text.split("\\"):
+                region = "EU"
+                path = "eupath"
+            validate_directory_return = validate_directory(game_directory, region)
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> validate_directory_return: {validate_directory_return}.")
 
-        if validate_directory_return:
-            path_entry.delete(0, 'end')
-            path_entry.insert(0, game_directory)
-            load_configs = app_config_read()
-            app_config = load_configs[0]
-            app_config.set('app', path, game_directory)
-            app_config_write(app_config)
-            return True
+            if validate_directory_return:
+                path_entry.delete(0, 'end')
+                path_entry.insert(0, game_directory)
+                load_configs = app_config_read()
+                app_config = load_configs[0]
+                app_config.set('app', path, game_directory)
+                app_config_write(app_config)
+                return True
 
-    else:
-        if not check_game_path():
-            logging.debug(f"ERROR -> {sys._getframe().f_code.co_name}() -> Wrong game folder.")
-            return False
+        else:
+            if not check_game_path():
+                logging.debug(f"ERROR -> {sys._getframe().f_code.co_name}() -> Wrong game folder.")
+                return False
+    except Exception as e:
+            get_exception(e)
+            return
 
 # file_type_list :: [filter, font, voice] list
 # install_backup_buttons_list :: filter, font, voice buttons (Returns install for Check All, Backup/Restore for Backup buttons)
@@ -210,7 +222,6 @@ def check_files_button(file_type_list,
     """
     
     """
-    # TODO VERIFY BACKUP FILES
     logging.debug(f"{sys._getframe().f_code.co_name}() -> {check_all_backup_button.cget('text')} button pressed.")
     try:
         if check_game_path():
@@ -234,13 +245,13 @@ def check_files_button(file_type_list,
                     # Sends the file type and check for regular or backup files
                     # check_files() has to know which files it is going to look for
                     check_files_return = check_files(file_type, check_all_backup)
-                    #print(f"check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} check_files_return :: {check_files_return} ")
                     if check_files_return == True:
-                        file_type_label_list[type_count].configure(text=translate_text("app_return_label_backup_ready"), text_color=text_color_fail, font=font_regular)
                         if check_all_backup == "check_backup":
+                            file_type_label_list[type_count].configure(text=translate_text("app_return_label_backup_ready"), text_color=text_color_fail, font=font_regular)
                             install_backup_buttons_list[type_count].configure(text=translate_text("app_button_create"), state="normal", font=font_regular_bold)
                         else:
-                            install_backup_buttons_list[type_count].configure(text=translate_text("app_button_isntall"), state="normal", font=font_regular_bold)
+                            file_type_label_list[type_count].configure(text=translate_text("app_return_label_install_ready"), text_color=text_color_fail, font=font_regular)
+                            install_backup_buttons_list[type_count].configure(text=translate_text("app_button_install"), state="normal", font=font_regular_bold)
                             
                     else:
                         file_type_label_list[type_count].configure(text=translate_text("app_return_label_uptodate"), text_color=text_color_success, font=font_regular)
@@ -268,33 +279,37 @@ def copy_files_button(file_type, copy_backup, return_label, return_button, delet
     """
     
     """
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> {copy_backup.capitalize()} ({file_type.capitalize()}) button pressed.")
-    return_label.configure(text=translate_text("app_return_label_verifying"))
-    copy_files_return = copy_files(file_type, copy_backup)
-    if not copy_files_return: return False
-    copied = copy_files_return[0]
-    restore = copy_files_return[1]
-    if copied:
-        if copy_backup == "copy":
-            return_label.configure(text=translate_text("app_return_label_install"), text_color=text_color_success)
-        elif copy_backup == "create":
-            if restore:
-                return_label.configure(text=translate_text("app_return_label_restore"), text_color=text_color_success)
+    try:
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> {copy_backup.capitalize()} ({file_type.capitalize()}) button pressed.")
+        return_label.configure(text=translate_text("app_return_label_verifying"))
+        copy_files_return = copy_files(file_type, copy_backup)
+        if not copy_files_return: return False
+        copied = copy_files_return[0]
+        restore = copy_files_return[1]
+        if copied:
+            if copy_backup == "copy":
+                return_label.configure(text=translate_text("app_return_label_install"), text_color=text_color_success)
+            elif copy_backup == "create":
+                if restore:
+                    return_label.configure(text=translate_text("app_return_label_restore"), text_color=text_color_success)
+                    return_button.configure(text=translate_text("app_button_create"), state="disabled", font=font_regular)
+                    delete_button.configure(text=translate_text("app_button_delete"), state="disabled", font=font_regular_bold)
+                else:
+                    return_label.configure(text=translate_text("app_return_label_generated"), text_color=text_color_success)
+                    return_button.configure(text=translate_text("app_button_create"), state="disabled", font=font_regular)
+                    delete_button.configure(text=translate_text("app_button_delete"), state="normal", font=font_regular_bold)
+
+            elif copy_backup == "delete":
+                return_label.configure(text=translate_text("app_return_label_deleted"), text_color=text_color_success)
                 return_button.configure(text=translate_text("app_button_create"), state="disabled", font=font_regular)
                 delete_button.configure(text=translate_text("app_button_delete"), state="disabled", font=font_regular_bold)
-            else:
-                return_label.configure(text=translate_text("app_return_label_generated"), text_color=text_color_success)
-                return_button.configure(text=translate_text("app_button_create"), state="disabled", font=font_regular)
-                delete_button.configure(text=translate_text("app_button_delete"), state="normal", font=font_regular_bold)
-
-        elif copy_backup == "delete":
-            return_label.configure(text=translate_text("app_return_label_deleted"), text_color=text_color_success)
-            return_button.configure(text=translate_text("app_button_create"), state="disabled", font=font_regular)
-            delete_button.configure(text=translate_text("app_button_delete"), state="disabled", font=font_regular_bold)
-    else:
-        return_label.configure(text=translate_text("app_return_label_uptodate_backup"))
-        return_button.configure(text=translate_text("app_button_uptodate"), state="disabled", font=font_regular)
-        delete_button.configure(text=translate_text("app_button_uptodate"), state="disabled", font=font_regular)
+        else:
+            return_label.configure(text=translate_text("app_return_label_uptodate_backup"))
+            return_button.configure(text=translate_text("app_button_uptodate"), state="disabled", font=font_regular)
+            delete_button.configure(text=translate_text("app_button_uptodate"), state="disabled", font=font_regular)
+    except Exception as e:
+            get_exception(e)
+            return
 
 ###########################################################
 ###########                                     ###########
@@ -392,13 +407,17 @@ def define_region():
     Defines the region that is used to set which versions of
     the game will have files replaced on request.
     """
-    count_region = 0
-    check_game_path() # Checks if game path selected is accurate.
-    app_config = app_config_read()[0] # Reloads config.
-    if app_config.get('app', 'napath'): count_region += 1
-    if app_config.get('app', 'eupath'): count_region += 2
-    app_config.set('app', 'region', str(count_region))
-    app_config_write(app_config)
+    try:
+        count_region = 0
+        check_game_path() # Checks if game path selected is accurate.
+        app_config = app_config_read()[0] # Reloads config.
+        if app_config.get('app', 'napath'): count_region += 1
+        if app_config.get('app', 'eupath'): count_region += 2
+        app_config.set('app', 'region', str(count_region))
+        app_config_write(app_config)
+    except Exception as e:
+            get_exception(e)
+            return
 
 def check_game_path():
     """
@@ -407,100 +426,116 @@ def check_game_path():
     using the saved path it removes it from config and prompts
     the user to select a new path.
     """
-    app_config = app_config_read()[0]
-    na_path = app_config.get('app', 'napath')
-    eu_path = app_config.get('app', 'eupath')
-    app_region = app_config.get('app', 'region')
-    if not app_region == "0":
-        wrong_directory = translate_text("functions_wrong_directory")
-        wrong_directory_logs = "Selected folder is not the correct {VERSION} game folder. Please select the root {VERSION} game folder."
-        if app_region in ("1", "3"):
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> na_path: {na_path}")
-            if na_path:
-                game_path = f"{na_path}\\bin64\\Aion.bin"
-                if not os.path.isfile(game_path):
-                    app_config.set('app', 'napath', "")
-                    app_config_write(app_config)
+    try:
+        app_config = app_config_read()[0]
+        na_path = app_config.get('app', 'napath')
+        eu_path = app_config.get('app', 'eupath')
+        app_region = app_config.get('app', 'region')
+        if not app_region == "0":
+            wrong_directory = translate_text("functions_wrong_directory")
+            wrong_directory_logs = "Selected folder is not the correct {VERSION} game folder. Please select the root {VERSION} game folder."
+            if app_region in ("1", "3"):
+                logging.debug(f"{sys._getframe().f_code.co_name}() -> na_path: {na_path}")
+                if na_path:
+                    game_path = f"{na_path}\\bin64\\Aion.bin"
+                    if not os.path.isfile(game_path):
+                        app_config.set('app', 'napath', "")
+                        app_config_write(app_config)
+                        logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory_logs.replace('{VERSION}', 'NA')}")
+                        show_alert("showerror", wrong_directory.replace("{VERSION}","NA"))
+                        return False
+                else:
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> NA game directory is not set.")
                     logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory_logs.replace('{VERSION}', 'NA')}")
                     show_alert("showerror", wrong_directory.replace("{VERSION}","NA"))
                     return False
-            else:
-                logging.debug(f"{sys._getframe().f_code.co_name}() -> NA game directory is not set.")
-                logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory_logs.replace('{VERSION}', 'NA')}")
-                show_alert("showerror", wrong_directory.replace("{VERSION}","NA"))
-                return False
-        if app_region in ("2", "3"):
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> eu_path: {eu_path}")
-            if eu_path:
-                game_path = f"{eu_path}\\bin64\\aionclassic.bin"
-                if not os.path.isfile(game_path):
-                    app_config.set('app', 'eupath', "")
-                    app_config_write(app_config)
+            if app_region in ("2", "3"):
+                logging.debug(f"{sys._getframe().f_code.co_name}() -> eu_path: {eu_path}")
+                if eu_path:
+                    game_path = f"{eu_path}\\bin64\\aionclassic.bin"
+                    if not os.path.isfile(game_path):
+                        app_config.set('app', 'eupath', "")
+                        app_config_write(app_config)
+                        logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory_logs.replace('{VERSION}', 'EU')}")
+                        show_alert("showerror", wrong_directory.replace("{VERSION}","EU"))
+                        return False
+                else:
                     logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory_logs.replace('{VERSION}', 'EU')}")
                     show_alert("showerror", wrong_directory.replace("{VERSION}","EU"))
                     return False
-            else:
-                logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory_logs.replace('{VERSION}', 'EU')}")
-                show_alert("showerror", wrong_directory.replace("{VERSION}","EU"))
-                return False
-        return True
-    else:
-        show_alert("showerror", translate_text("functions_show_game_region"))
-        return False
+            return True
+        else:
+            show_alert("showerror", translate_text("functions_show_game_region"))
+            return False
+    except Exception as e:
+            get_exception(e)
+            return
     
 # alert_type = showinfo | showwarning | showerror | askquestion | askokcancel | askyesno 
 def show_alert(alert_type, message):
-    if alert_type == "showinfo": # returns "ok"
-        alert_return = messagebox.showinfo(translate_text("functions_alert_info"), message)
-    elif alert_type == "showwarning": # returns "ok"
-        alert_return = messagebox.showwarning(translate_text("functions_alert_warning"), message)
-    elif alert_type == "showerror": # returns "ok"
-        alert_return = messagebox.showerror(translate_text("functions_alert_error"), message)
-    elif alert_type == "askquestion": # returns "yes" or "no"
-        alert_return = messagebox.askquestion(translate_text("functions_alert_question"), message)
-    elif alert_type == "askokcancel": # returns "True" or "False"
-        alert_return = messagebox.askokcancel(translate_text("functions_alert_okcancel"), message)
-    elif alert_type == "askyesno": # returns "True" or "False"
-        alert_return = messagebox.askyesno(translate_text("functions_alert_yesno"), message)
-    else:
-        logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown alert type.")
-        return
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> alert_return: {alert_return}.")
-    return alert_return
+    try:
+        if alert_type == "showinfo": # returns "ok"
+            alert_return = messagebox.showinfo(translate_text("functions_alert_info"), message)
+        elif alert_type == "showwarning": # returns "ok"
+            alert_return = messagebox.showwarning(translate_text("functions_alert_warning"), message)
+        elif alert_type == "showerror": # returns "ok"
+            alert_return = messagebox.showerror(translate_text("functions_alert_error"), message)
+        elif alert_type == "askquestion": # returns "yes" or "no"
+            alert_return = messagebox.askquestion(translate_text("functions_alert_question"), message)
+        elif alert_type == "askokcancel": # returns "True" or "False"
+            alert_return = messagebox.askokcancel(translate_text("functions_alert_okcancel"), message)
+        elif alert_type == "askyesno": # returns "True" or "False"
+            alert_return = messagebox.askyesno(translate_text("functions_alert_yesno"), message)
+        else:
+            logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown alert type.")
+            return
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> alert_return: {alert_return}.")
+        return alert_return
+    except Exception as e:
+                get_exception(e)
+                return
 
 def validate_directory(game_directory, region):
-    wrong_directory = translate_text("functions_wrong_directory")
-    if region == "NA":
-        game_path = f"{game_directory}\\bin64\\Aion.bin"
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
-        if not os.path.isfile(game_path):
-            show_alert("showerror", wrong_directory.replace("{VERSION}","NA"))
-            return False
-        else:
-            return True
-    if region == "EU":
-        game_path = f"{game_directory}\\bin64\\aionclassic.bin"
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
-        if not os.path.isfile(game_path):
-            show_alert("showerror", wrong_directory.replace("{VERSION}","EU"))
-            return False
-        else:
-            return True
+    try:
+        wrong_directory = translate_text("functions_wrong_directory")
+        if region == "NA":
+            game_path = f"{game_directory}\\bin64\\Aion.bin"
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
+            if not os.path.isfile(game_path):
+                show_alert("showerror", wrong_directory.replace("{VERSION}","NA"))
+                return False
+            else:
+                return True
+        if region == "EU":
+            game_path = f"{game_directory}\\bin64\\aionclassic.bin"
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
+            if not os.path.isfile(game_path):
+                show_alert("showerror", wrong_directory.replace("{VERSION}","EU"))
+                return False
+            else:
+                return True
+    except Exception as e:
+            get_exception(e)
+            return
 
 def get_game_file_path(game_file_type):
     """
     Sets the base path for each asset/file type.
     """
-    if (game_file_type == "filter"):
-        file_path = "data\\Strings"
-    elif (game_file_type == "font"):
-        file_path = "textures\\ui"
-    elif (game_file_type == "voice"):
-        file_path = "sounds\\voice"
-    else:
-        logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown file type.")
-        return
-    return file_path
+    try:
+        if (game_file_type == "filter"):
+            file_path = "data\\Strings"
+        elif (game_file_type == "font"):
+            file_path = "textures\\ui"
+        elif (game_file_type == "voice"):
+            file_path = "sounds\\voice"
+        else:
+            logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown file type.")
+            return
+        return file_path
+    except Exception as e:
+            get_exception(e)
+            return
 
 # TODO change region/language config methods to JSON
 
@@ -509,40 +544,48 @@ def get_full_file_path(game_lang, file_path):
     Gets the full file paths for the selected regions using the
     previously set base file path.
     """
-    check_game_path()
-    app_config = app_config_read()[0]
-    na_path = app_config.get('app', 'napath')
-    eu_path = app_config.get('app', 'eupath')
-    full_file_path = []
-    for lang in game_lang:
-        if lang == "enu":
-            full_file_path.append(f"{na_path}\\l10n\\{lang}\\{file_path}")
-        elif lang in ("eng", "fra", "deu"):
-            full_file_path.append(f"{eu_path}\\l10n\\{lang}\\{file_path}")
-        else:
-            logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown region.")
+    try:
+        check_game_path()
+        app_config = app_config_read()[0]
+        na_path = app_config.get('app', 'napath')
+        eu_path = app_config.get('app', 'eupath')
+        full_file_path = []
+        for lang in game_lang:
+            if lang == "enu":
+                full_file_path.append(f"{na_path}\\l10n\\{lang}\\{file_path}")
+            elif lang in ("eng", "fra", "deu"):
+                full_file_path.append(f"{eu_path}\\l10n\\{lang}\\{file_path}")
+            else:
+                logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown region.")
+                return
+        return full_file_path
+    except Exception as e:
+            get_exception(e)
             return
-    return full_file_path
 
 def get_file_path(game_file_type):
-    app_config = app_config_read()[0]
-    app_region = app_config.get('app', 'region')
-    game_lang = []
-    if not app_region in ("1", "2", "3"):
-        logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() -> app_region :: Region is not set.")
+    try:
+        app_config = app_config_read()[0]
+        app_region = app_config.get('app', 'region')
+        game_lang = []
+        if not app_region in ("1", "2", "3"):
+            logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() -> app_region :: Region is not set.")
+            return
+        if app_region  in ("1", "3"):
+            game_lang.append("enu")
+        if app_region in ("2", "3"):
+            game_lang.extend(["eng", "fra", "deu"])
+        # Gets all files and hashes them when files already exist in game path
+        file_path = get_game_file_path(game_file_type)
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}.")
+        # Defines assets path
+        assets_full_file_path = [f".\\assets\\{file_path}"]
+        # Returns [full_file_path]. It can be multiple paths depending on regions selected
+        full_file_path = get_full_file_path(game_lang, file_path)
+        return assets_full_file_path, full_file_path
+    except Exception as e:
+        get_exception(e)
         return
-    if app_region  in ("1", "3"):
-        game_lang.append("enu")
-    if app_region in ("2", "3"):
-        game_lang.extend(["eng", "fra", "deu"])
-    # Gets all files and hashes them when files already exist in game path
-    file_path = get_game_file_path(game_file_type)
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}.")
-    # Defines assets path
-    assets_full_file_path = [f".\\assets\\{file_path}"]
-    # Returns [full_file_path]. It can be multiple paths depending on regions selected
-    full_file_path = get_full_file_path(game_lang, file_path)
-    return assets_full_file_path, full_file_path
 
 def check_files(game_file_type, check_all_backup):
     """
@@ -691,23 +734,27 @@ def compare_files_hash(compared_files):
     file paths ready to be replaced in [[asset_file, game_file]]
     format.
     """
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> compared_files: {len(compared_files)} {compared_files}.")
-    check_hash_list = compared_files[0]
-    copy_files_list = compared_files[1]
-    for list in check_hash_list:
-        asset_file = list[0]
-        game_file = list[1]
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> asset_file: {asset_file}.")
-        with open(asset_file, 'rb', buffering=0) as f:
-            asset_file_hashed = hashlib.file_digest(f, 'sha256').hexdigest()
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> game_file: {game_file}.")
-        with open(game_file, 'rb', buffering=0) as f:
-            game_file_hashed = hashlib.file_digest(f, 'sha256').hexdigest()
-        if asset_file_hashed != game_file_hashed:
-            copy_files_list.extend([[asset_file, game_file]])
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_list: {len(copy_files_list)} {copy_files_list}.")
-    logging.info(f"{sys._getframe().f_code.co_name}() -> copy_files_list: {len(copy_files_list)} files need to be moved.")
-    return copy_files_list
+    try:
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> compared_files: {len(compared_files)} {compared_files}.")
+        check_hash_list = compared_files[0]
+        copy_files_list = compared_files[1]
+        for list in check_hash_list:
+            asset_file = list[0]
+            game_file = list[1]
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> asset_file: {asset_file}.")
+            with open(asset_file, 'rb', buffering=0) as f:
+                asset_file_hashed = hashlib.file_digest(f, 'sha256').hexdigest()
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> game_file: {game_file}.")
+            with open(game_file, 'rb', buffering=0) as f:
+                game_file_hashed = hashlib.file_digest(f, 'sha256').hexdigest()
+            if asset_file_hashed != game_file_hashed:
+                copy_files_list.extend([[asset_file, game_file]])
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_list: {len(copy_files_list)} {copy_files_list}.")
+        logging.info(f"{sys._getframe().f_code.co_name}() -> copy_files_list: {len(copy_files_list)} files need to be moved.")
+        return copy_files_list
+    except Exception as e:
+        get_exception(e)
+        return False
     
 def copy_files(game_file_type, copy_backup):
     """
@@ -744,34 +791,43 @@ def copy_files(game_file_type, copy_backup):
             return False
         else:
             logging.debug(f"{sys._getframe().f_code.co_name}() -> {json_file_name} files -> type: {game_file_type}: {copy_files_list}")
+            show_replace_warning = True
             for files in copy_files_list:
                 logging.debug(f"{sys._getframe().f_code.co_name}() -> files: {len(files)} {files}.")
                 asset_file = files[0]
                 game_file = files[1]
 
-                if not copy_backup == "delete" or existing_backup and copy_backup == "create":
+                if not copy_backup == "delete" or existing_backup and copy_backup == "create" or copy_backup == "copy":
                     if not os.path.isdir(os.path.dirname(game_file)):
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> MKDIR: {os.path.dirname(game_file)}")
                         os.makedirs(os.path.dirname(game_file))
-                if existing_backup and copy_backup == "create":
-                    remove_file = asset_file
-                else:
-                    remove_file = game_file
-                logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE????????? {remove_file}")
-                if os.path.isfile(remove_file):
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {remove_file}")
-                    os.remove(remove_file)
+                if copy_backup == "delete" or copy_backup == "create":
                     if existing_backup and copy_backup == "create":
-                        logging.debug(f"{sys._getframe().f_code.co_name}() -> RENAME: {game_file} > {asset_file}")
-                        os.rename(game_file, asset_file)
-                    if copy_backup == "delete":
-                        with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json', 'w', encoding='utf-8') as f:
-                            json.dump({}, f)
-                        f.close
-
-                logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_backup: {copy_backup} | existing_backup: {existing_backup} | copy_backup: {copy_backup}")
+                        remove_file = asset_file
+                    else:
+                        remove_file = game_file
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE????????? {remove_file}")
+                    if os.path.isfile(remove_file):
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {remove_file}")
+                        os.remove(remove_file)
+                        if existing_backup and copy_backup == "create":
+                            logging.debug(f"{sys._getframe().f_code.co_name}() -> RENAME: {game_file} > {asset_file}")
+                            os.rename(game_file, asset_file)
+                        if copy_backup == "delete":
+                            with open(f'.\\config\\lists\\{game_file_type}_{json_file_name}.json', 'w', encoding='utf-8') as f:
+                                json.dump({}, f)
+                            f.close
+                logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_backup: {copy_backup} | existing_backup: {existing_backup}")
                 if not copy_backup == "delete":
-                    if not existing_backup and copy_backup == "create":
+                    if not existing_backup and copy_backup == "create" or copy_backup == "copy":
+                        if show_replace_warning:
+                            if os.path.isfile(game_file):
+                                if not existing_backup and copy_backup == "copy":
+                                    alert = show_alert("askquestion", translate_text("functions_show_nobackup"))
+                                    if alert == "no":
+                                        return False
+                                    else:
+                                        show_replace_warning == False
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> COPY :: {asset_file} -> {game_file}")
                         os.system(f'copy {asset_file} {game_file}')
             if existing_backup and copy_backup == "create":

@@ -14,6 +14,7 @@
     "app_return_label_verifying": "Verifying files, please wait!",
     "app_return_label_uptodate": "There are no new files to update.",
     "app_return_label_install": "Success! Files have been installed.",
+    "app_return_label_install_ready": "Files are ready to be installed.",
     "app_return_label_restore": "Success! Files have been restored.",
     "app_return_label_generated": "Success! Backup files generated.",
     "app_return_label_deleted": "Success! Backup files deleted.",
@@ -56,8 +57,9 @@
     "functions_wrong_directory": "Selected folder is not the correct {VERSION} game folder. Please select the root {VERSION} game folder.",
 
     "functions_show_game_region": "You need to select a game region to proceed.",
-    "functions_show_restore": "You are about to replace the current files with the backup files.\n\nThis action CANNOT be undone. Do you wish to continue?",
-    "functions_show_delete": "You are about to delete the backup files.\n\nThis action CANNOT be undone. Do you wish to continue?",
+    "functions_show_restore": "You are about to replace the current files with the backup files.\n\nThis action CANNOT be undone. Are you sure that you want to proceed?",
+    "functions_show_delete": "You are about to delete the backup files.\n\nThis action CANNOT be undone. Are you sure that you want to proceed?",
+    "functions_show_nobackup": "You are about to replace the game files without making a backup.\n\nThis action CANNOT be undone. Are you sure that you want to proceed?",
     "functions_show_critical_error": "A critical error occurred. Please, send the log file to the creator of this app for verification.",
 
     "functions_alert_info": "Information:",
