@@ -256,6 +256,8 @@ def verifyFilesButton(file_type_list,
                             
                         if False in existing_backup:
                             return False
+                        else:
+                            return True
                         
                     # Sends the file type and verify for regular or backup files
                     # verifyFiles() has to know which files it is going to look for
