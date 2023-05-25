@@ -7,3 +7,4 @@ main.spec
 output/
 setup.py
 Aion-Classic-Mods.json
+tests/
