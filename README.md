@@ -30,16 +30,6 @@ The chat filter will try to remove bot spam messages from any chat windows. It d
 This proccess DOES NOT affect cutscene or NPC voices, only combat voices.
 - Completely replaces the voice folders.
 
-### APP IMAGES
-- Main window: 
-
-![Main Window Preview](https://imgur.com/P5mV0Mi.png)
-- Config window: 
-
-![Config Window Preview](https://imgur.com/QmNbLF0.png)
-
-
-
 # PORTUGUÊS
 # Aion-Classic-Mods por LoadRPG
 Me assista no Youtube clicando em [@LoadRPG](https://youtube.com/@LoadRPG) (PT-BR/EN) - Se algum dia eu começar a postar vídeos ou fazer livestreams.
@@ -70,11 +60,3 @@ O filtro irá tentar remover todas as mensagens que contém propagandas de 'Gold
 ## VOZES DE COMBATE COREANAS:
 Esse processo NÃO AFETA 'cutscenes' e vozes de NPCs, apenas vozes de combate.
 - Substitui toda a pasta "voice" do jogo.
-
-### IMAGENS DO APLICATIVO
-- Janela principal: 
-
-![Main Window Preview](https://imgur.com/hRiK8pM.png)
-- Janela de configurações: 
-
-![https://imgur.com/PQOvwJI](https://imgur.com/PQOvwJI.png)
