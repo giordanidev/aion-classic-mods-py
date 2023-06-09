@@ -16,21 +16,11 @@
     "app_return_label_uptodate": "There are no new files to update.",
     "app_return_label_install": "Success! Files have been installed.",
     "app_return_label_install_ready": "Files are ready to be installed.",
-    "app_return_label_restore": "Success! Files have been restored.",
-    "app_return_label_generated": "Success! Backup files generated.",
-    "app_return_label_deleted": "Success! Backup files deleted.",
-    "app_return_label_uptodate_backup": "There are no new files to backup.",
-
-    "app_return_label_backup_ready": "Files are ready to be backed up.",
-    "app_return_label_backup_found": "Backup found.",
-    "app_return_label_backup_original_files_missing": "Unable to create backup. Original files \nmissing.",
+    "app_return_label_deleted": "Success! Files deleted.",
 
     "app_button_verify_all": "Verify All",
-    "app_button_verify_all_backups": "Verify Backups",
     "app_button_verifying": "Verifying..",
     "app_button_install": "Install",
-    "app_button_create": "Create",
-    "app_button_restore": "Restore",
     "app_button_delete": "Delete",
     "app_button_uptodate": "Up to date!",
 
