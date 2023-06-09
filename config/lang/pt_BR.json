@@ -49,7 +49,7 @@
     "functions_wrong_directory": "A pasta selecionada não é a correta para a versão {VERSION}. Por favor, selecione a pasta principal do jogo.",
 
     "functions_show_game_region": "Você precisa selecionar ao menos uma versão do jogo para prosseguir.",
-    "functions_show_delete": "Você está prestes a excluir o(s) arquivo(s) de {_FILETYPE_}.\n\nEsta ação NÃO PODE ser desfeita. Tem certeza que deseja continuar?",
+    "functions_show_delete": "Você está prestes a excluir o(s) arquivo(s) de {FILETYPE}.\n\nEsta ação NÃO PODE ser desfeita. Tem certeza que deseja continuar?",
     "functions_show_critical_error": "Erro crítico! Por favor, envie o arquivo de log para o criador do aplicativo para verificação.",
 
     "functions_alert_info": "Informação:",

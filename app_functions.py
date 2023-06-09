@@ -701,7 +701,7 @@ def copyFiles(game_file_type, copy_delete):
         logging.debug(f"{sys._getframe().f_code.co_name}() -> files -> type: {game_file_type}: {copy_files_list}")
         show_delete_warning = True
         for files in copy_files_list:
-            logging.debug(f"FOR START - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files} - FOR START :: show_replace_warning: {show_delete_warning}")
+            logging.debug(f"FOR START - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files} - FOR START :: show_delete_warning: {show_delete_warning}")
             asset_file = files[0]
             game_file = files[1]
 
@@ -713,7 +713,7 @@ def copyFiles(game_file_type, copy_delete):
                 shutil.copy2(asset_file, game_file)
             elif copy_delete == "delete":
                 if show_delete_warning == True:
-                    alert = showAlert("askquestion", translateText("functions_show_delete"))
+                    alert = showAlert("askquestion", translateText("functions_show_delete").replace('{FILETYPE}', translateText(f"{game_file_type}")))
                     if alert == "no":
                         return False
                     else:
@@ -724,7 +724,7 @@ def copyFiles(game_file_type, copy_delete):
                     logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {remove_file}")
                     os.remove(remove_file)
             logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_backup: {copy_delete}")
-            logging.debug(f"FOR END - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files} - FOR END :: show_replace_warning: {show_delete_warning}")
+            logging.debug(f"FOR END - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files} - FOR END :: show_delete_warning: {show_delete_warning}")
         return True
     except Exception as e:
         getException(e)
@@ -734,7 +734,6 @@ def getException(e):
     """
     This function keeps track of Exception errors.
     """
-    showAlert("showerror", translateText("functions_show_critical_error"))
     trace = []
     tb = e.__traceback__
     while tb is not None:
@@ -749,3 +748,4 @@ def getException(e):
         'message': str(e),
         'trace': trace
     })
+    showAlert("showerror", translateText("functions_show_critical_error")+"\n\n"+str(e))
