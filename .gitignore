@@ -8,3 +8,8 @@ output/
 setup.py
 Aion-Classic-Mods.json
 tests/
+logs/logs.log
+config/config.ini
+config/lists/filter_delete.json
+config/lists/font_delete.json
+config/lists/voice_delete.json

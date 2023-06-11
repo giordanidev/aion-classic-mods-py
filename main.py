@@ -81,9 +81,18 @@ class createTabs(ctk.CTkTabview):
         self.appTopFrame.configure(fg_color="transparent")
         self.appTopFrame.grid_columnconfigure(1, weight=1)
 
-        self.infoLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_info_label"))
+        self.infoLabel = ctk.CTkLabel(self.appTopFrame, text="")
         self.infoLabel.grid(row=0, column=0, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
-        self.infoLabel.grid_remove()
+
+        self.closeClientButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_close_client"), state="disabled", width=90)
+        self.closeClientButton.grid(row=0, column=1, padx=padx_both, pady=pady_both, sticky="e")
+
+        self.closeClientButton.configure(command=partial(forceCloseAion, "close", "client", self.closeClientButton, self.infoLabel))
+
+        self.closeGameButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_close_game"), state="disabled", width=90)
+        self.closeGameButton.grid(row=0, column=2, padx=padx_both, pady=pady_both)
+
+        self.closeGameButton.configure(command=partial(forceCloseAion, "close", "game", self.closeGameButton, self.infoLabel))
 
         self.voiceLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_voice_label"), height=30, font=font_regular_bold)
         self.voiceLabel.grid(row=1, column=0, padx=padx_both, pady=pady_both, sticky="e")
@@ -101,22 +110,22 @@ class createTabs(ctk.CTkTabview):
 
         
         self.voiceButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
-        self.voiceButton.grid(row=1, column=2, padx=padx_both, pady=pady_both)
+        self.voiceButton.grid(row=1, column=3, padx=padx_both, pady=pady_both)
 
         self.filterButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
-        self.filterButton.grid(row=2, column=2, padx=padx_both, pady=pady_both)
+        self.filterButton.grid(row=2, column=3, padx=padx_both, pady=pady_both)
 
         self.fontButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
-        self.fontButton.grid(row=3, column=2, padx=padx_both, pady=pady_both)
+        self.fontButton.grid(row=3, column=3, padx=padx_both, pady=pady_both)
 
         self.voiceDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
-        self.voiceDeleteButton.grid(row=1, column=3, padx=padx_both, pady=pady_both)
+        self.voiceDeleteButton.grid(row=1, column=4, padx=padx_both, pady=pady_both)
 
         self.filterDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
-        self.filterDeleteButton.grid(row=2, column=3, padx=padx_both, pady=pady_both)
+        self.filterDeleteButton.grid(row=2, column=4, padx=padx_both, pady=pady_both)
 
         self.fontDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
-        self.fontDeleteButton.grid(row=3, column=3, padx=padx_both, pady=pady_both)
+        self.fontDeleteButton.grid(row=3, column=4, padx=padx_both, pady=pady_both)
         
         
         
@@ -160,7 +169,7 @@ class createTabs(ctk.CTkTabview):
 
 
         self.verifyAllButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_verify_all"), font=font_big_bold, width=184)
-        self.verifyAllButton.grid(row=0, column=2, columnspan=2, padx=padx_both, pady=pady_both)
+        self.verifyAllButton.grid(row=0, column=3, columnspan=2, padx=padx_both, pady=pady_both)
         
         self.verifyAllButton.configure(command=partial(verifyFilesButton, 
                                                    ["filter", "font", "voice"], 

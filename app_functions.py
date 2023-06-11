@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 from tkinter import messagebox, filedialog
-import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale, shutil
+import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale, shutil, psutil, time
 
 logging.basicConfig(filename='.\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=logging.DEBUG, filemode='w')
 logging.getLogger().addHandler(logging.StreamHandler())
@@ -729,6 +729,45 @@ def copyFiles(game_file_type, copy_delete):
     except Exception as e:
         getException(e)
         return False
+    
+def forceCloseAion(action, game_client, close_button, return_label):
+    running_apps = psutil.process_iter(['pid','name']) #returns names of running processes
+    found = False
+
+    if game_client == "client":
+        app_name = ["aion", "aionclassic"]
+    elif game_client == "game":
+        app_name = ["gfservice", "gfclient"]
+
+    for app in running_apps:
+        sys_app = app.info.get('name').split('.')
+        sys_app_name = sys_app[0].lower()
+
+        if sys_app_name in app_name and "bin" in sys_app:
+            if action == "close":
+                pid = app.info.get('pid') #returns PID of the given app if found running
+            
+                try: #deleting the app if asked app is running.(It raises error for some windows apps)
+                    app_pid = psutil.Process(pid)
+                    app_pid.terminate()
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> Aion process '{sys_app_name}.bin ({app_pid})' closed!")
+                    found = True
+                except Exception as e:
+                    getException(e)
+                    return False
+            elif action == "check":
+                close_button.configure(state="normal")
+        else: pass
+    
+    if found == False:
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> Aion process not found!")
+        close_button.configure(state="disabled")
+        return_label.configure(text=translateText("app_info_aion_notfound"), font=font_regular)
+
+def forceCloseAion_thread(action, game_client, close_button, return_label):
+    while 1 :
+        forceCloseAion(action, game_client, close_button, return_label)
+        time.sleep(10)
     
 def getException(e):
     """

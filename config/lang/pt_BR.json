@@ -23,6 +23,8 @@
     "app_button_install": "Instalar",
     "app_button_delete": "Excluir",
     "app_button_uptodate": "Atualizado!",
+    "app_button_close_game": "Fechar Aion",
+    "app_button_close_client": "Fechar Launcher",
     
 
     "config_theme_label": "Tema:",
