@@ -236,12 +236,13 @@ def verifyFilesButton(file_type_list,
                     # Sends the file type and verify
                     verify_files_return = verifyFiles(file_type)
                     if verify_files_return == True:
-                        file_type_label_list[type_count].configure(text=translateText("app_return_label_install_ready"), text_color=text_color_fail, font=font_regular)
+                        file_type_label_list[type_count].configure(text=translateText("app_return_label_install_ready"), text_color=text_color_fail)
                         install_buttons_list[type_count].configure(text=translateText("app_button_install"), state="normal", font=font_regular_bold)
+                        delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
                     else:
-                        file_type_label_list[type_count].configure(text=translateText("app_return_label_uptodate"), text_color=text_color_success, font=font_regular)
-                        install_buttons_list[type_count].configure(text=translateText("app_button_uptodate"), state="disabled")
-                        delete_buttons_list[type_count].configure(state="normal")
+                        file_type_label_list[type_count].configure(text=translateText("app_return_label_uptodate"), text_color=text_color_success)
+                        install_buttons_list[type_count].configure(text=translateText("app_button_uptodate"), state="disabled", font=font_regular)
+                        delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
                 verifyFilesThreaded_func = threading.Thread(target=verifyFilesThreaded, args=(file_type, type_count))
                 verifyFilesThreaded_func.start()
                 #verifyFilesThreaded_func.join() # crashes the app =(
@@ -734,34 +735,43 @@ def forceCloseAion(action, game_client, close_button, return_label):
     running_apps = psutil.process_iter(['pid','name']) #returns names of running processes
     found = False
 
-    if game_client == "client":
+    if game_client == "game":
         app_name = ["aion", "aionclassic"]
-    elif game_client == "game":
+        app_extension = "bin"
+        app_check_phrase = translateText("app_return_label_game_found")
+        app_close_phrase = translateText("app_return_label_game_closed")
+    elif game_client == "client":
         app_name = ["gfservice", "gfclient"]
+        app_extension = "exe"
+        app_check_phrase = translateText("app_return_label_launcher_found")
+        app_close_phrase = translateText("app_return_label_launcher_closed")
 
     for app in running_apps:
         sys_app = app.info.get('name').split('.')
         sys_app_name = sys_app[0].lower()
 
-        if sys_app_name in app_name and "bin" in sys_app:
+        if sys_app_name in app_name and app_extension in sys_app:
             if action == "close":
                 pid = app.info.get('pid') #returns PID of the given app if found running
             
                 try: #deleting the app if asked app is running.(It raises error for some windows apps)
                     app_pid = psutil.Process(pid)
                     app_pid.terminate()
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> Aion process '{sys_app_name}.bin ({app_pid})' closed!")
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> Process '{sys_app_name}.{app_extension} ({app_pid})' closed!")
+                    close_button.configure(state="disabled", font=font_regular)
+                    return_label.configure(text=app_close_phrase, text_color=text_color_success, font=font_regular)
                     found = True
                 except Exception as e:
                     getException(e)
                     return False
             elif action == "check":
-                close_button.configure(state="normal")
+                close_button.configure(state="normal", font=font_regular_bold)
+                return_label.configure(text=app_check_phrase, text_color=text_color_success, font=font_regular)
         else: pass
     
     if found == False:
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Aion process not found!")
-        close_button.configure(state="disabled")
+        close_button.configure(state="disabled", font=font_regular)
         return_label.configure(text=translateText("app_info_aion_notfound"), font=font_regular)
 
 def forceCloseAion_thread(action, game_client, close_button, return_label):

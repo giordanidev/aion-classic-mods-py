@@ -17,6 +17,10 @@
     "app_return_label_install": "Successo! Arquivos instalados.",
     "app_return_label_install_ready": "Arquivos estão prontos para ser instalados.",
     "app_return_label_deleted": "Successo! Arquivos excluídos.",
+    "app_return_label_launcher_found": "Launcher do jogo está aberto.",
+    "app_return_label_launcher_closed": "O Launcher foi fechado.",
+    "app_return_label_game_found": "O jogo está aberto.",
+    "app_return_label_game_closed": "O jogo foi fechado.",
 
     "app_button_verify_all": "Verificar Todos",
     "app_button_verifying": "Verificando..",
