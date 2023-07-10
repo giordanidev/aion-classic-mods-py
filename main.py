@@ -100,6 +100,8 @@ class createTabs(ctk.CTkTabview):
         self.filterLabel.grid(row=2, column=0, padx=padx_both, pady=pady_both, sticky="e")
         self.fontLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_font_label"), height=30, font=font_regular_bold)
         self.fontLabel.grid(row=3, column=0, padx=padx_both, pady=pady_both, sticky="e")
+        self.translationLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_translation_label"), height=30, font=font_regular_bold)
+        self.translationLabel.grid(row=4, column=0, padx=padx_both, pady=pady_both, sticky="e")
 
         self.voiceReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
         self.voiceReturnLabel.grid(row=1, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
@@ -107,25 +109,27 @@ class createTabs(ctk.CTkTabview):
         self.filterReturnLabel.grid(row=2, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
         self.fontReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
         self.fontReturnLabel.grid(row=3, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
+        self.translationReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
+        self.translationReturnLabel.grid(row=4, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
 
         
         self.voiceButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
         self.voiceButton.grid(row=1, column=3, padx=padx_both, pady=pady_both)
-
         self.filterButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
         self.filterButton.grid(row=2, column=3, padx=padx_both, pady=pady_both)
-
         self.fontButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
         self.fontButton.grid(row=3, column=3, padx=padx_both, pady=pady_both)
+        self.translationButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
+        self.translationButton.grid(row=4, column=3, padx=padx_both, pady=pady_both)
 
         self.voiceDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
         self.voiceDeleteButton.grid(row=1, column=4, padx=padx_both, pady=pady_both)
-
         self.filterDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
         self.filterDeleteButton.grid(row=2, column=4, padx=padx_both, pady=pady_both)
-
         self.fontDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
         self.fontDeleteButton.grid(row=3, column=4, padx=padx_both, pady=pady_both)
+        self.translationDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
+        self.translationDeleteButton.grid(row=4, column=4, padx=padx_both, pady=pady_both)
         
         
         
@@ -147,6 +151,12 @@ class createTabs(ctk.CTkTabview):
                                                   self.fontReturnLabel,
                                                   self.fontButton,
                                                   self.fontDeleteButton))
+        self.translationButton.configure(command=partial(copyFilesButton,
+                                                  "font",
+                                                  "copy",
+                                                  self.translationReturnLabel,
+                                                  self.translationButton,
+                                                  self.translationDeleteButton))
 
         self.voiceDeleteButton.configure(command=partial(copyFilesButton,
                                                          "voice",
@@ -166,6 +176,12 @@ class createTabs(ctk.CTkTabview):
                                                         self.fontReturnLabel,
                                                         self.fontButton,
                                                         self.fontDeleteButton))
+        self.translationDeleteButton.configure(command=partial(copyFilesButton,
+                                                        "font",
+                                                        "delete",
+                                                        self.translationReturnLabel,
+                                                        self.translationButton,
+                                                        self.translationDeleteButton))
 
 
         self.verifyAllButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_verify_all"), font=font_big_bold, width=184)
@@ -193,6 +209,8 @@ class createTabs(ctk.CTkTabview):
         self.naPathLabel.grid(row=3, column=0, padx=padx_both, pady=pady_both, sticky="e")
         self.euPathLabel = ctk.CTkLabel(self.configLeftFrame, text=translateText("config_eu_label"), font=font_regular_bold)
         self.euPathLabel.grid(row=4, column=0, padx=padx_both, pady=pady_both, sticky="e")
+        self.euLauncherLabel = ctk.CTkLabel(self.configLeftFrame, text=translateText("config_eulauncher_label"), font=font_regular_bold)
+        self.euLauncherLabel.grid(row=5, column=0, padx=padx_both, pady=pady_both, sticky="e")
 
         # Config tab widgets > Right
         self.configRightFrame = ctk.CTkFrame(configTab, fg_color="transparent")
@@ -243,6 +261,11 @@ class createTabs(ctk.CTkTabview):
         self.euPathButton = ctk.CTkButton(self.configRightFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.euPathEntry), width=120)
         self.euPathButton.grid(row=4, column=3, padx=padx_both, pady=pady_both)
 
+        self.euLauncherPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text="C:\\EU\\Launcher\\Folder")
+        self.euLauncherPathEntry.grid(row=5, column=0, padx=padx_both, pady=pady_both, columnspan=3, sticky="we")
+        self.euLauncherPathButton = ctk.CTkButton(self.configRightFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.euLauncherPathEntry), width=120)
+        self.euLauncherPathButton.grid(row=5, column=3, padx=padx_both, pady=pady_both)
+
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs populated.")
 
         # DEFAULT VALUES
@@ -277,7 +300,7 @@ class createTabs(ctk.CTkTabview):
 
 app = App()
 app.iconbitmap("./config/img/Aion-Classic-Mods.ico")
-app.geometry("570x245")
+app.geometry("570x252")
 app.resizable(0, 0)
 app.eval("tk::PlaceWindow . center")
 app.mainloop()

@@ -6,10 +6,12 @@
     "voice": "KR voices",
     "filter": "Chat Filter",
     "font": "JP fonts",
+    "translation": "PTBR Translation",
 
     "app_voice_label": "KR Voices:",
     "app_filter_label": "Chat Filter:",
     "app_font_label": "JP Fonts:",
+    "app_translation_label": "PTBR Translation:",
 
     "app_return_label_waiting": "Waiting...",
     "app_return_label_verifying": "Verifying files, please wait!",
@@ -23,8 +25,9 @@
     "app_return_label_game_closed": "The game was closed.",
 
     "app_button_verify_all": "Verify All",
-    "app_button_verifying": "Verifying..",
+    "app_button_verifying": "Verifying...",
     "app_button_install": "Install",
+    "app_button_download": "Download",
     "app_button_delete": "Delete",
     "app_button_uptodate": "Up to date!",
     "app_button_close_game": "Close Aion",
@@ -36,6 +39,7 @@
     "config_region_label": "Region selection:",
     "config_na_label": "NA Game Folder:",
     "config_eu_label": "EU Game Folder",
+    "config_eulauncher_label": "EU Launcher Folder:",
 
     "config_theme_system": "System",
     "config_theme_dark": "Dark",

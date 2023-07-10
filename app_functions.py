@@ -380,6 +380,33 @@ def getClassicEuPath():
     except Exception as e:
         getException(e)
         return False
+    
+def getClassicEuLauncherPath():
+    """
+    Attempts to get the installation path for the Gameforge Client (Launcher)
+    and save it to the 'config.ini' file.
+
+    If it fails it will prompt the user to select a path manually.
+    """
+    try:
+        a_reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
+        try:
+            a_key = winreg.OpenKey(a_reg, r'SOFTWARE\\WOW6432Node\\Gameforge4d\\GameforgeClient\\MainApp\\Libraries\\c')
+        except:
+            logging.debug(f"{sys._getframe().f_code.co_name}(): Installation path not found. Select manually.")
+            return False
+        if a_key:
+            classic_eu_launcher_path = winreg.QueryValueEx(a_key, "LibraryLocation")[0]
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> classic_eu_launcher_path: {classic_eu_launcher_path}")
+            if classic_eu_launcher_path[len(classic_eu_launcher_path)-1] == "\\":
+                classic_eu_launcher_path = classic_eu_launcher_path.rstrip(classic_eu_launcher_path[-1])
+            app_config = appConfigLoad()[0]
+            app_config.set('app', 'eulauncherpath', classic_eu_launcher_path)
+            appConfigSave(app_config)
+            return True
+    except Exception as e:
+        getException(e)
+        return False
 
 def defineRegion():
     """
