@@ -1,6 +1,9 @@
+from __future__ import (division, absolute_import, print_function, unicode_literals)
 from configparser import ConfigParser
 from tkinter import messagebox, filedialog
-import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale, shutil, psutil, time
+import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale, shutil, psutil, time, tempfile
+import urllib.request as urllib2
+import urllib.parse as urlparse
 
 logging.basicConfig(filename='.\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=logging.DEBUG, filemode='w')
 logging.getLogger().addHandler(logging.StreamHandler())
@@ -229,7 +232,7 @@ def verifyFilesButton(file_type_list,
             type_count = 0
             for file_type in file_type_list:
                 def verifyFilesThreaded(file_type, type_count):
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> thread started.")
+                    logging.debug(f"({file_type}) {sys._getframe().f_code.co_name}() -> thread started.")
                     file_type_label_list[type_count].configure(text=translateText("app_return_label_verifying"), text_color=text_color_verifying)
                     install_buttons_list[type_count].configure(text=translateText("app_button_verifying"), state="disabled", font=font_regular)
 
@@ -239,10 +242,18 @@ def verifyFilesButton(file_type_list,
                         file_type_label_list[type_count].configure(text=translateText("app_return_label_install_ready"), text_color=text_color_fail)
                         install_buttons_list[type_count].configure(text=translateText("app_button_install"), state="normal", font=font_regular_bold)
                         delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
+                        if (file_type == "translation"):
+                            file_type_label_list[type_count].configure(text=translateText("app_return_label_update"), text_color=text_color_success)
+                            install_buttons_list[type_count].configure(text=translateText("app_button_download"), state="normal", font=font_regular_bold)
+                            delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
                     else:
                         file_type_label_list[type_count].configure(text=translateText("app_return_label_uptodate"), text_color=text_color_success)
                         install_buttons_list[type_count].configure(text=translateText("app_button_uptodate"), state="disabled", font=font_regular)
                         delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
+                        if (file_type == "translation"):
+                            file_type_label_list[type_count].configure(text=translateText("app_return_label_update"), text_color=text_color_success)
+                            install_buttons_list[type_count].configure(text=translateText("app_button_download"), state="normal", font=font_regular_bold)
+                            delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
                 verifyFilesThreaded_func = threading.Thread(target=verifyFilesThreaded, args=(file_type, type_count))
                 verifyFilesThreaded_func.start()
                 #verifyFilesThreaded_func.join() # crashes the app =(
@@ -270,17 +281,20 @@ def copyFilesButton(file_type, copy_delete, return_label, return_button, delete_
         logging.debug(f"{sys._getframe().f_code.co_name}() -> {copy_delete.capitalize()} ({file_type.capitalize()}) button pressed.")
         return_label.configure(text=translateText("app_return_label_verifying"))
         def copyFilesThreaded():
-            copy_files_return = copyFiles(file_type, copy_delete)
+            copy_files_return = copyFiles(file_type, copy_delete, return_label)
             if copy_files_return == False:
                 return False
             elif copy_files_return == True:
                 if copy_delete == "copy":
                     return_label.configure(text=translateText("app_return_label_install"), text_color=text_color_success)
                     return_button.configure(text=translateText("app_button_uptodate"), state="disabled", font=font_regular)
+                    delete_button.configure(state="normal", font=font_regular_bold)
+                    if (file_type == "translation"):
+                        return_button.configure(text=translateText("app_button_download"), state="normal", font=font_regular_bold)
                 elif copy_delete == "delete":
                     return_label.configure(text=translateText("app_return_label_deleted"), text_color=text_color_success)
                     return_button.configure(state="disabled", font=font_regular)
-                    delete_button.configure(state="disabled", font=font_regular_bold)
+                    delete_button.configure(state="disabled", font=font_regular)
         copyFilesThreaded_func = threading.Thread(target=copyFilesThreaded)
         copyFilesThreaded_func.start()
     except Exception as e:
@@ -302,6 +316,8 @@ def firstRun():
             getClassicNaPath()
             logging.debug(f"{sys._getframe().f_code.co_name}() -> getClassicEuPath() initialized.")
             getClassicEuPath()
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> getClassicEuLauncherPath() initialized.")
+            getClassicEuLauncherPath()
             logging.debug(f"{sys._getframe().f_code.co_name}() -> verifyGamePath() initialized.")
             verifyGamePath()
             logging.debug(f"{sys._getframe().f_code.co_name}() -> defineRegion() initialized.")
@@ -537,6 +553,8 @@ def getRelativeFilePath(game_file_type):
             file_path = "textures\\ui"
         elif (game_file_type == "voice"):
             file_path = "sounds\\voice"
+        elif (game_file_type == "translation"):
+            file_path = "data"
         else:
             logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown file type.")
             return
@@ -603,14 +621,14 @@ def verifyFiles(game_file_type):
     Calls 'get_full_files()' to finish processing the request.
     """
     try:
-        if game_file_type in ("filter", "font", "voice"):
+        if game_file_type in ("filter", "font", "voice", "translation"):
             # Returns [[verify_hash_list], [copy_files_list]]
             files_path = getFilePath(game_file_type)
             assets_full_file_path = files_path[0]
             full_file_path = files_path[1]
 
-            compared_files = getFiles(assets_full_file_path, full_file_path) #compared_files[0] = hash | compared_files[1] = all files
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> compared_files: {len(compared_files)} - {compared_files}")
+            compared_files = getFiles(assets_full_file_path, full_file_path, game_file_type) #compared_files[0] = hash | compared_files[1] = all files
+            logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> compared_files: {len(compared_files)} - {compared_files}")
             
             def saveFilesJson(copy_files_verify):
                 install_files = copy_files_verify[0]
@@ -631,46 +649,63 @@ def verifyFiles(game_file_type):
             copy_files_verify = compareFilesHash(compared_files)
             saveFilesJson(copy_files_verify)
 
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_verify: {len(copy_files_verify)} - {copy_files_verify}")
+            logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> copy_files_verify: {len(copy_files_verify)} - {copy_files_verify}")
             
         else:
-            logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} :: Unknown file type.")
+            logging.error(f"ERROR -> ({game_file_type}) {sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} :: Unknown file type.")
             copy_files_verify = {}
             
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_verify: {len(copy_files_verify)} {copy_files_verify}.")
+        logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> copy_files_verify: {len(copy_files_verify)} {copy_files_verify}.")
         if len(copy_files_verify[0]) <= 0:
             return False
         elif len(copy_files_verify[0]) >= 1:
             return True
         else:
-            logging.warning(f"{sys._getframe().f_code.co_name}() -> copy_files_verify type: {type(copy_files_verify)}.")
+            logging.warning(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> copy_files_verify type: {type(copy_files_verify)}.")
             return False
     except Exception as e:
         getException(e)
         return False
     
-def getFiles(assets_full_file_path, full_file_path):
+def getFiles(assets_full_file_path, full_file_path, game_file_type):
     logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_full_file_path: {assets_full_file_path} - full_file_path: {full_file_path}")
     try:
         copy_files_list = []
         verify_hash_list = []
         for assets_dir in assets_full_file_path:
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_dir: {assets_dir}.")
-            for (dirpath, dirnames, filenames) in os.walk(assets_dir):
-                for filename in filenames:
-                    relative_path = dirpath.replace(assets_dir, "")
-                    for files_dir in full_file_path:
-                        file_path = files_dir+relative_path+'\\'+filename
-                        asset_path = assets_dir+relative_path+'\\'+filename
-                        if not os.path.exists(file_path):
-                            logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
-                            copy_files_list.extend([[asset_path, file_path]])
-                        else:
-                            logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path -> verify_hash_list[]: AY {file_path}")
-                            verify_hash_list.extend([[asset_path, file_path]])
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> verify_hash_list: {verify_hash_list}")
-            logging.info(f"{sys._getframe().f_code.co_name}() -> verify_hash_list: {len(verify_hash_list)} files need to be compared.")
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_files_list: {copy_files_list}")
+            logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> assets_dir: {assets_dir}.")
+            if (game_file_type == "translation"):
+                for file in os.listdir(assets_dir):
+                    logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> os.listdir(assets_dir): {os.listdir(assets_dir)} type(file)): {type(file)} NOT file:{file}.")
+                    logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> os.listdir(assets_dir): {os.listdir(assets_dir)} type(file)): {type(file)} file: {file}.")
+                    if (file.endswith('.pak')):
+                        logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file: {file}.")
+                        for files_dir in full_file_path:
+                            file_path = files_dir+'\\'+file
+                            asset_path = assets_dir+'\\'+file
+                            if not os.path.exists(file_path):
+                                logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
+                                copy_files_list.extend([[asset_path, file_path]])
+                            else:
+                                logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path -> verify_hash_list[]: AY {file_path}")
+                                verify_hash_list.extend([[asset_path, file_path]])
+                                copy_files_list.extend([[asset_path, file_path]])
+            else:
+                for (dirpath, dirnames, filenames) in os.walk(assets_dir):
+                    for filename in filenames:
+                        relative_path = dirpath.replace(assets_dir, "")
+                        for files_dir in full_file_path:
+                            file_path = files_dir+relative_path+'\\'+filename
+                            asset_path = assets_dir+relative_path+'\\'+filename
+                            if not os.path.exists(file_path):
+                                logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
+                                copy_files_list.extend([[asset_path, file_path]])
+                            else:
+                                logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path -> verify_hash_list[]: AY {file_path}")
+                                verify_hash_list.extend([[asset_path, file_path]])
+            logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> verify_hash_list: {verify_hash_list}")
+            logging.info(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> verify_hash_list: {len(verify_hash_list)} files need to be compared.")
+            logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> copy_files_list: {copy_files_list}")
             return verify_hash_list, copy_files_list
     except Exception as e:
         getException(e)
@@ -706,13 +741,15 @@ def compareFilesHash(compared_files):
         getException(e)
         return False
     
-def copyFiles(game_file_type, copy_delete):
+def copyFiles(game_file_type, copy_delete, return_label):
     """
     Creates directories, removes old/different files, copies
     new files.
     """
     try:
         if copy_delete == "copy":
+            if (game_file_type == "translation"):
+                    downloadFile(game_file_type, return_label)
             with open(f'.\\config\\lists\\{game_file_type}_install.json') as files_list:
                 copy_files_list = json.load(files_list)
                 files_list.close
@@ -757,6 +794,58 @@ def copyFiles(game_file_type, copy_delete):
     except Exception as e:
         getException(e)
         return False
+    
+def downloadFile(file_type, return_label):
+    """ 
+    Download and save a file specified by url to dest directory,
+    """
+    file_path = getFilePath(file_type)[0]
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}")
+
+    if (file_type == "translation"):
+        url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/teste/data_ptbr.pak"
+        dest = file_path[0]
+    u = urllib2.urlopen(url)
+
+    scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
+    
+    filename = os.path.basename(path)
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> filename: {filename}")
+
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> dest: {dest}")
+    if dest:
+        filepath = os.path.join(dest, filename)
+
+    with open(filepath, 'wb') as f:
+        meta = u.info()
+        meta_func = meta.getheaders if hasattr(meta, 'getheaders') else meta.get_all
+        meta_length = meta_func("Content-Length")
+        file_size = None
+        if meta_length:
+            file_size = int(meta_length[0])
+            
+        print(f"Testing with {file_size} Bytes download")
+        print("Downloading: {0} Bytes: {1}".format(url, file_size))
+
+        file_size_dl = 0
+        block_sz = 8192
+        while True:
+            buffer = u.read(block_sz)
+            if not buffer:
+                break
+
+            file_size_dl += len(buffer)
+            f.write(buffer)
+
+            status = f"{translateText('app_button_downloading')} {filename}:"
+            if file_size:
+                status += " {0:3.0f}%".format(file_size_dl * 100 / file_size)
+            status += chr(13)
+            print(status, end="")
+            return_label.configure(text=status, text_color=text_color_success)
+        print()
+
+    return filepath
     
 def forceCloseAion(action, game_client, close_button, return_label):
     running_apps = psutil.process_iter(['pid','name']) #returns names of running processes

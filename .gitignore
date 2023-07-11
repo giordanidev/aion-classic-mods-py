@@ -1,14 +1,5 @@
 venv/
 __pycache__/
-README.txt
-build/
-dist/
-main.spec
-output/
-setup.py
-Aion-Classic-Mods.json
 logs/logs.log
 config/config.ini
-config/lists/filter_delete.json
-config/lists/font_delete.json
-config/lists/voice_delete.json
+config/lists/

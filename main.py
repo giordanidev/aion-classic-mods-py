@@ -119,7 +119,7 @@ class createTabs(ctk.CTkTabview):
         self.filterButton.grid(row=2, column=3, padx=padx_both, pady=pady_both)
         self.fontButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
         self.fontButton.grid(row=3, column=3, padx=padx_both, pady=pady_both)
-        self.translationButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
+        self.translationButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_download"), state="disabled", width=90)
         self.translationButton.grid(row=4, column=3, padx=padx_both, pady=pady_both)
 
         self.voiceDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
@@ -152,7 +152,7 @@ class createTabs(ctk.CTkTabview):
                                                   self.fontButton,
                                                   self.fontDeleteButton))
         self.translationButton.configure(command=partial(copyFilesButton,
-                                                  "font",
+                                                  "translation",
                                                   "copy",
                                                   self.translationReturnLabel,
                                                   self.translationButton,
@@ -177,7 +177,7 @@ class createTabs(ctk.CTkTabview):
                                                         self.fontButton,
                                                         self.fontDeleteButton))
         self.translationDeleteButton.configure(command=partial(copyFilesButton,
-                                                        "font",
+                                                        "translation",
                                                         "delete",
                                                         self.translationReturnLabel,
                                                         self.translationButton,
@@ -188,10 +188,10 @@ class createTabs(ctk.CTkTabview):
         self.verifyAllButton.grid(row=0, column=3, columnspan=2, padx=padx_both, pady=pady_both)
         
         self.verifyAllButton.configure(command=partial(verifyFilesButton, 
-                                                   ["filter", "font", "voice"], 
-                                                   [self.filterButton, self.fontButton, self.voiceButton],
-                                                   [self.filterDeleteButton, self.fontDeleteButton, self.voiceDeleteButton],
-                                                   [self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel],
+                                                   ["filter", "font", "voice", "translation"], 
+                                                   [self.filterButton, self.fontButton, self.voiceButton, self.translationButton],
+                                                   [self.filterDeleteButton, self.fontDeleteButton, self.voiceDeleteButton, self.translationDeleteButton],
+                                                   [self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel, self.translationReturnLabel],
                                                    self.verifyAllButton,
                                                    self))
 
@@ -275,6 +275,7 @@ class createTabs(ctk.CTkTabview):
                       f"region: {app_config.get('app', 'region')} | "+
                       f"napath: {app_config.get('app', 'napath')} | "+
                       f"eupath: {app_config.get('app', 'eupath')} | "+
+                      f"eulauncherpath: {app_config.get('app', 'eulauncherpath')} | "+
                       f"color: {app_config.get('app', 'color')}")
         if app_config.get('app', 'theme'):
             lang_theme = getLangTranslation(app_config.get('app', 'theme'))
@@ -285,6 +286,7 @@ class createTabs(ctk.CTkTabview):
         if app_config.get('app', 'region'): self.regionRadio.set(app_config.get('app', 'region'))
         if app_config.get('app', 'napath'): self.naPathEntry.insert(0, app_config.get('app', 'napath'))
         if app_config.get('app', 'eupath'): self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
+        if app_config.get('app', 'eulauncherpath'): self.euLauncherPathEntry.insert(0, app_config.get('app', 'eulauncherpath'))
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values read.")
 

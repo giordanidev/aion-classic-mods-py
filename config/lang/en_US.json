@@ -1,6 +1,6 @@
 {
     "app_title": "Aion Classic 'Mods' by Load",
-    "app_version": " - v1.1.0",
+    "app_version": " - v1.2.0",
     "app_info_label": "Please choose an option to begin.",
 
     "voice": "KR voices",
@@ -16,6 +16,7 @@
     "app_return_label_waiting": "Waiting...",
     "app_return_label_verifying": "Verifying files, please wait!",
     "app_return_label_uptodate": "There are no new files to update.",
+    "app_return_label_update": "Update available.",
     "app_return_label_install": "Success! Files have been installed.",
     "app_return_label_install_ready": "Files are ready to be installed.",
     "app_return_label_deleted": "Success! Files deleted.",
@@ -28,6 +29,7 @@
     "app_button_verifying": "Verifying...",
     "app_button_install": "Install",
     "app_button_download": "Download",
+    "app_button_downloading": "Downloading",
     "app_button_delete": "Delete",
     "app_button_uptodate": "Up to date!",
     "app_button_close_game": "Close Aion",
