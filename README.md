@@ -60,3 +60,7 @@ O filtro irá tentar remover todas as mensagens que contém propagandas de 'Gold
 ## VOZES DE COMBATE COREANAS:
 Esse processo NÃO AFETA 'cutscenes' e vozes de NPCs, apenas vozes de combate.
 - Substitui todos os sons de voz de combate do jogo.
+
+## IMAGENS DO APP
+![Prévia APP](https://i.imgur.com/JqFd5d9.png)
+![Prévia APP](https://i.imgur.com/XRvTxe6.png)
