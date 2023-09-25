@@ -658,7 +658,7 @@ def verifyFiles(game_file_type):
         getException(e)
         return False
     
-def getFiles(assets_full_file_path, full_file_path, game_file_type):
+def getFiles(assets_full_file_path, full_file_path):
     logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_full_file_path: {assets_full_file_path} - full_file_path: {full_file_path}")
     try:
         copy_files_list = []
@@ -669,8 +669,8 @@ def getFiles(assets_full_file_path, full_file_path, game_file_type):
                 for filename in filenames:
                     relative_path = dirpath.replace(assets_dir, "")
                     for files_dir in full_file_path:
-                        file_path = files_dir+relative_path+'\\'+filename
-                        asset_path = assets_dir+relative_path+'\\'+filename
+                        file_path = '.\\'+files_dir+relative_path+'\\'+filename
+                        asset_path = '.\\'+assets_dir+relative_path+'\\'+filename
                         if not os.path.exists(file_path):
                             logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
                             copy_files_list.extend([[asset_path, file_path]])
