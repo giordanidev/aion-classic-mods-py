@@ -778,18 +778,13 @@ def downloadFile(file_type, return_label):
     logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}")
 
     if (file_type == "filter"):
-        urls = ["https://github.com/giordanidev/aion-classic-mods-py/raw/master/assets/Data/Strings/aionfilterline_load.pak"]
+        urls = ["https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/aionfilterline.zip"]
     elif (file_type == "font"):
-        urls = ["https://github.com/giordanidev/aion-classic-mods-py/raw/master/assets/textures/ui/hit_number_jp.pak"]
+        urls = ["https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/hit_number.zip"]
     elif (file_type == "voice"):
-        urls = ["https://github.com/giordanidev/aion-classic-mods-py/raw/master/assets/sounds/voice/attack/attack_kr.pak",
-                "https://github.com/giordanidev/aion-classic-mods-py/raw/master/assets/sounds/voice/cast/cast_kr.pak",
-                "https://github.com/giordanidev/aion-classic-mods-py/raw/master/assets/sounds/voice/damage/damage_kr.pak",
-                "https://github.com/giordanidev/aion-classic-mods-py/raw/master/assets/sounds/voice/defence/defence_kr.pak",
-                "https://github.com/giordanidev/aion-classic-mods-py/raw/master/assets/sounds/voice/login/login_kr.pak",
-                "https://github.com/giordanidev/aion-classic-mods-py/raw/master/assets/sounds/voice/motion/motion_kr.pak"]
+        urls = ["https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/voice.zip"]
     elif (file_type == "translation"):
-        urls = ["https://github.com/giordanidev/aion-classic-mods-py/raw/master/assets/Data/data_ptBR.pak"]
+        urls = ["https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/data_ptBR.zip"]
 
     for url in urls:
         u = urllib2.urlopen(url)
