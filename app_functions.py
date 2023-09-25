@@ -851,7 +851,8 @@ def downloadFile(file_type, return_label):
             print()
 
     return filepath
-    
+
+"""
 def forceCloseAion(action, game_client, close_button, return_label):
     running_apps = psutil.process_iter(['pid','name']) #returns names of running processes
     found = False
@@ -899,7 +900,8 @@ def forceCloseAion_thread(action, game_client, close_button, return_label):
     while 1 :
         forceCloseAion(action, game_client, close_button, return_label)
         time.sleep(10)
-    
+"""
+
 def getException(e):
     """
     This function keeps track of Exception errors.
