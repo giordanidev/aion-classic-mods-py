@@ -1,7 +1,7 @@
 from __future__ import (division, absolute_import, print_function, unicode_literals)
 from configparser import ConfigParser
 from tkinter import messagebox, filedialog
-import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale, shutil, psutil, time, tempfile
+import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale, shutil, psutil, time, tempfile, zipfile
 import urllib.request as urllib2
 import urllib.parse as urlparse
 
@@ -282,11 +282,9 @@ def copyFilesButton(file_type, copy_delete, return_label, return_button, delete_
                     return_label.configure(text=translateText("app_return_label_install"), text_color=text_color_success)
                     return_button.configure(text=translateText("app_button_uptodate"), state="disabled", font=font_regular)
                     delete_button.configure(state="normal", font=font_regular_bold)
-                    if (file_type == "translation"):
-                        return_button.configure(text=translateText("app_button_download"), state="normal", font=font_regular_bold)
                 elif copy_delete == "delete":
                     return_label.configure(text=translateText("app_return_label_deleted"), text_color=text_color_success)
-                    return_button.configure(state="disabled", font=font_regular)
+                    return_button.configure(state="normal", font=font_regular)
                     delete_button.configure(state="disabled", font=font_regular)
         copyFilesThreaded_func = threading.Thread(target=copyFilesThreaded)
         copyFilesThreaded_func.start()
@@ -667,35 +665,18 @@ def getFiles(assets_full_file_path, full_file_path, game_file_type):
         verify_hash_list = []
         for assets_dir in assets_full_file_path:
             logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> assets_dir: {assets_dir}.")
-            if (game_file_type == "translation"):
-                for file in os.listdir(assets_dir):
-                    logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> os.listdir(assets_dir): {os.listdir(assets_dir)} type(file)): {type(file)} NOT file:{file}.")
-                    logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> os.listdir(assets_dir): {os.listdir(assets_dir)} type(file)): {type(file)} file: {file}.")
-                    if (file.endswith('.pak')):
-                        logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file: {file}.")
-                        for files_dir in full_file_path:
-                            file_path = files_dir+'\\'+file
-                            asset_path = assets_dir+'\\'+file
-                            if not os.path.exists(file_path):
-                                logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
-                                copy_files_list.extend([[asset_path, file_path]])
-                            else:
-                                logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path -> verify_hash_list[]: AY {file_path}")
-                                verify_hash_list.extend([[asset_path, file_path]])
-                                copy_files_list.extend([[asset_path, file_path]])
-            else:
-                for (dirpath, dirnames, filenames) in os.walk(assets_dir):
-                    for filename in filenames:
-                        relative_path = dirpath.replace(assets_dir, "")
-                        for files_dir in full_file_path:
-                            file_path = files_dir+relative_path+'\\'+filename
-                            asset_path = assets_dir+relative_path+'\\'+filename
-                            if not os.path.exists(file_path):
-                                logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
-                                copy_files_list.extend([[asset_path, file_path]])
-                            else:
-                                logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path -> verify_hash_list[]: AY {file_path}")
-                                verify_hash_list.extend([[asset_path, file_path]])
+            for (dirpath, dirnames, filenames) in os.walk(assets_dir):
+                for filename in filenames:
+                    relative_path = dirpath.replace(assets_dir, "")
+                    for files_dir in full_file_path:
+                        file_path = files_dir+relative_path+'\\'+filename
+                        asset_path = assets_dir+relative_path+'\\'+filename
+                        if not os.path.exists(file_path):
+                            logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
+                            copy_files_list.extend([[asset_path, file_path]])
+                        else:
+                            logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path -> verify_hash_list[]: AY {file_path}")
+                            verify_hash_list.extend([[asset_path, file_path]])
             logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> verify_hash_list: {verify_hash_list}")
             logging.info(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> verify_hash_list: {len(verify_hash_list)} files need to be compared.")
             logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> copy_files_list: {copy_files_list}")
@@ -742,6 +723,7 @@ def copyFiles(game_file_type, copy_delete, return_label):
     try:
         if copy_delete == "copy":
             downloadFile(game_file_type, return_label)
+            verifyFiles(game_file_type)
             with open(f'.\\config\\lists\\{game_file_type}_install.json') as files_list:
                 copy_files_list = json.load(files_list)
                 files_list.close
@@ -807,7 +789,7 @@ def downloadFile(file_type, return_label):
                 "https://github.com/giordanidev/aion-classic-mods-py/raw/master/assets/sounds/voice/login/login_kr.pak",
                 "https://github.com/giordanidev/aion-classic-mods-py/raw/master/assets/sounds/voice/motion/motion_kr.pak"]
     elif (file_type == "translation"):
-        urls = ["https://github.com/giordanidev/aion-classic-ptbr/raw/main/teste/data_ptbr.pak"]
+        urls = ["https://github.com/giordanidev/aion-classic-mods-py/raw/master/assets/Data/data_ptBR.pak"]
 
     for url in urls:
         u = urllib2.urlopen(url)
