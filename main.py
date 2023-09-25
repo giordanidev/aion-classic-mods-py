@@ -87,12 +87,12 @@ class createTabs(ctk.CTkTabview):
         self.closeClientButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_close_client"), state="disabled", width=90)
         self.closeClientButton.grid(row=0, column=1, padx=padx_both, pady=pady_both, sticky="e")
 
-        self.closeClientButton.configure(command=partial(forceCloseAion, "close", "client", self.closeClientButton, self.infoLabel))
+        """self.closeClientButton.configure(command=partial(forceCloseAion, "close", "client", self.closeClientButton, self.infoLabel))"""
 
         self.closeGameButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_close_game"), state="disabled", width=90)
         self.closeGameButton.grid(row=0, column=2, padx=padx_both, pady=pady_both)
 
-        self.closeGameButton.configure(command=partial(forceCloseAion, "close", "game", self.closeGameButton, self.infoLabel))
+        """self.closeGameButton.configure(command=partial(forceCloseAion, "close", "game", self.closeGameButton, self.infoLabel))"""
 
         self.voiceLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_voice_label"), height=30, font=font_regular_bold)
         self.voiceLabel.grid(row=1, column=0, padx=padx_both, pady=pady_both, sticky="e")
