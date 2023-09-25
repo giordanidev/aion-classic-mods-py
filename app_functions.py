@@ -242,18 +242,11 @@ def verifyFilesButton(file_type_list,
                         file_type_label_list[type_count].configure(text=translateText("app_return_label_install_ready"), text_color=text_color_fail)
                         install_buttons_list[type_count].configure(text=translateText("app_button_install"), state="normal", font=font_regular_bold)
                         delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
-                        if (file_type == "translation"):
-                            file_type_label_list[type_count].configure(text=translateText("app_return_label_update"), text_color=text_color_success)
-                            install_buttons_list[type_count].configure(text=translateText("app_button_download"), state="normal", font=font_regular_bold)
-                            delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
                     else:
-                        file_type_label_list[type_count].configure(text=translateText("app_return_label_uptodate"), text_color=text_color_success)
-                        install_buttons_list[type_count].configure(text=translateText("app_button_uptodate"), state="disabled", font=font_regular)
+                        file_type_label_list[type_count].configure(text=translateText("app_return_label_update"), text_color=text_color_success)
+                        install_buttons_list[type_count].configure(text=translateText("app_button_download"), state="normal", font=font_regular)
                         delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
-                        if (file_type == "translation"):
-                            file_type_label_list[type_count].configure(text=translateText("app_return_label_update"), text_color=text_color_success)
-                            install_buttons_list[type_count].configure(text=translateText("app_button_download"), state="normal", font=font_regular_bold)
-                            delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
+                        
                 verifyFilesThreaded_func = threading.Thread(target=verifyFilesThreaded, args=(file_type, type_count))
                 verifyFilesThreaded_func.start()
                 #verifyFilesThreaded_func.join() # crashes the app =(
@@ -800,50 +793,58 @@ def downloadFile(file_type, return_label):
     Download and save a file specified by url to dest directory,
     """
     file_path = getFilePath(file_type)[0]
+    dest = file_path[0]
     logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}")
 
-    if (file_type == "translation"):
-        url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/teste/data_ptbr.pak"
-        dest = file_path[0]
-    u = urllib2.urlopen(url)
+    if (file_type == "filter"):
+        urls = ["https://github.com/giordanidev/aion-classic-ptbr/raw/main/teste/data_ptbr.pak"]
+    elif (file_type == "font"):
+        urls = ["https://github.com/giordanidev/aion-classic-ptbr/raw/main/teste/data_ptbr.pak"]
+    elif (file_type == "voice"):
+        urls = ["https://github.com/giordanidev/aion-classic-ptbr/raw/main/teste/data_ptbr.pak"]
+    elif (file_type == "translation"):
+        urls = ["https://github.com/giordanidev/aion-classic-ptbr/raw/main/teste/data_ptbr.pak"]
 
-    scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
-    
-    filename = os.path.basename(path)
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> filename: {filename}")
+    for url in urls:
+        u = urllib2.urlopen(url)
 
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> dest: {dest}")
-    if dest:
-        filepath = os.path.join(dest, filename)
+        scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
+        
+        filename = os.path.basename(path)
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> filename: {filename}")
 
-    with open(filepath, 'wb') as f:
-        meta = u.info()
-        meta_func = meta.getheaders if hasattr(meta, 'getheaders') else meta.get_all
-        meta_length = meta_func("Content-Length")
-        file_size = None
-        if meta_length:
-            file_size = int(meta_length[0])
-            
-        print(f"Testing with {file_size} Bytes download")
-        print("Downloading: {0} Bytes: {1}".format(url, file_size))
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> dest: {dest}")
+        if dest:
+            filepath = os.path.join(dest, filename)
 
-        file_size_dl = 0
-        block_sz = 8192
-        while True:
-            buffer = u.read(block_sz)
-            if not buffer:
-                break
+        with open(filepath, 'wb') as f:
+            meta = u.info()
+            meta_func = meta.getheaders if hasattr(meta, 'getheaders') else meta.get_all
+            meta_length = meta_func("Content-Length")
+            file_size = None
+            if meta_length:
+                file_size = int(meta_length[0])
+                
+            print(f"Testing with {file_size} Bytes download")
+            print("Downloading: {0} Bytes: {1}".format(url, file_size))
 
-            file_size_dl += len(buffer)
-            f.write(buffer)
+            file_size_dl = 0
+            block_sz = 8192
+            while True:
+                buffer = u.read(block_sz)
+                if not buffer:
+                    break
 
-            status = f"{translateText('app_button_downloading')} {filename}:"
-            if file_size:
-                status += " {0:3.0f}%".format(file_size_dl * 100 / file_size)
-            status += chr(13)
-            print(status, end="")
-            return_label.configure(text=status, text_color=text_color_success)
-        print()
+                file_size_dl += len(buffer)
+                f.write(buffer)
+
+                status = f"{translateText('app_button_downloading')} {filename}:"
+                if file_size:
+                    status += " {0:3.0f}%".format(file_size_dl * 100 / file_size)
+                status += chr(13)
+                print(status, end="")
+                return_label.configure(text=status, text_color=text_color_success)
+            print()
 
     return filepath
     
