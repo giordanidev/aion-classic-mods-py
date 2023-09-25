@@ -239,11 +239,11 @@ def verifyFilesButton(file_type_list,
                     # Sends the file type and verify
                     verify_files_return = verifyFiles(file_type)
                     if verify_files_return == True:
-                        file_type_label_list[type_count].configure(text=translateText("app_return_label_install_ready"), text_color=text_color_fail)
-                        install_buttons_list[type_count].configure(text=translateText("app_button_install"), state="normal", font=font_regular_bold)
+                        file_type_label_list[type_count].configure(text=translateText("app_return_label_update"), text_color=text_color_success)
+                        install_buttons_list[type_count].configure(text=translateText("app_button_download"), state="normal", font=font_regular_bold)
                         delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
                     else:
-                        file_type_label_list[type_count].configure(text=translateText("app_return_label_update"), text_color=text_color_success)
+                        file_type_label_list[type_count].configure(text=translateText("app_return_label_download_ready"), text_color=text_color_success)
                         install_buttons_list[type_count].configure(text=translateText("app_button_download"), state="normal", font=font_regular)
                         delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
                         
@@ -596,7 +596,7 @@ def getFilePath(game_file_type):
         file_path = getRelativeFilePath(game_file_type)
         logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}.")
         # Defines assets path
-        assets_full_file_path = [f".\\assets\\{file_path}"]
+        assets_full_file_path = [f"\\assets\\{file_path}"]
         # Returns [full_file_path]. It can be multiple paths depending on regions selected
         full_file_path = getFullFilePath(game_lang, file_path)
         return assets_full_file_path, full_file_path
@@ -721,17 +721,18 @@ def copyFiles(game_file_type, copy_delete, return_label):
     new files.
     """
     try:
+        curr_dir = os.getcwd()
         if copy_delete == "copy":
             downloadFile(game_file_type, return_label)
             verifyFiles(game_file_type)
-            with open(f'.\\config\\lists\\{game_file_type}_install.json') as files_list:
+            with open(f'{curr_dir}\\config\\lists\\{game_file_type}_install.json') as files_list:
                 copy_files_list = json.load(files_list)
                 files_list.close
             if len(copy_files_list) < 1:
                 logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_delete} from '.\\config\\lists\\{game_file_type}_install.json'")
                 return False
         elif copy_delete == "delete":
-            with open(f'.\\config\\lists\\{game_file_type}_delete.json') as files_list:
+            with open(f'{curr_dir}\\config\\lists\\{game_file_type}_delete.json') as files_list:
                 copy_files_list = json.load(files_list)
                 files_list.close
             if len(copy_files_list) < 1:
@@ -774,58 +775,77 @@ def downloadFile(file_type, return_label):
     Download and save a file specified by url to dest directory,
     """
     file_path = getFilePath(file_type)[0]
-    dest = file_path[0]
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path[0]: {file_path[0]}")
+    curr_dir = os.getcwd()
+    dest = curr_dir+file_path[0]
+    
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> dest: {dest}")
+    if not os.path.isdir(dest):
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> MKDIR: {dest}")
+        os.makedirs(dest)
+
     logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}")
 
     if (file_type == "filter"):
-        urls = ["https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/aionfilterline.zip"]
+        url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/aionfilterline.zip"
     elif (file_type == "font"):
-        urls = ["https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/hit_number.zip"]
+        url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/hit_number.zip"
     elif (file_type == "voice"):
-        urls = ["https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/voice.zip"]
+        url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/voice.zip"
     elif (file_type == "translation"):
-        urls = ["https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/data_ptBR.zip"]
+        url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/data_ptBR.zip"
 
-    for url in urls:
-        u = urllib2.urlopen(url)
+    u = urllib2.urlopen(url)
 
-        scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
-        
-        filename = os.path.basename(path)
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> filename: {filename}")
+    scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
+    
+    filename = os.path.basename(path)
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> filename: {filename}")
 
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> dest: {dest}")
-        if dest:
-            filepath = os.path.join(dest, filename)
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> dest: {dest}")
+    if dest:
+        filepath = os.path.join(dest, filename)
+    else:
+        return False
 
-        with open(filepath, 'wb') as f:
-            meta = u.info()
-            meta_func = meta.getheaders if hasattr(meta, 'getheaders') else meta.get_all
-            meta_length = meta_func("Content-Length")
-            file_size = None
-            if meta_length:
-                file_size = int(meta_length[0])
-                
-            print(f"Testing with {file_size} Bytes download")
-            print("Downloading: {0} Bytes: {1}".format(url, file_size))
+    with open(filepath, 'wb') as f:
+        meta = u.info()
+        meta_func = meta.getheaders if hasattr(meta, 'getheaders') else meta.get_all
+        meta_length = meta_func("Content-Length")
+        file_size = None
+        if meta_length:
+            file_size = int(meta_length[0])
+            
+        print(f"Testing with {file_size} Bytes download")
+        print("Downloading: {0} Bytes: {1}".format(url, file_size))
 
-            file_size_dl = 0
-            block_sz = 8192
-            while True:
-                buffer = u.read(block_sz)
-                if not buffer:
-                    break
+        file_size_dl = 0
+        block_sz = 8192
+        while True:
+            buffer = u.read(block_sz)
+            if not buffer:
+                break
 
-                file_size_dl += len(buffer)
-                f.write(buffer)
+            file_size_dl += len(buffer)
+            f.write(buffer)
 
-                status = f"{translateText('app_button_downloading')} {filename}:"
-                if file_size:
-                    status += " {0:3.0f}%".format(file_size_dl * 100 / file_size)
-                status += chr(13)
-                print(status, end="")
-                return_label.configure(text=status, text_color=text_color_success)
-            print()
+            status = f"{translateText('app_button_downloading')} {filename}:"
+            if file_size:
+                status += " {0:3.0f}%".format(file_size_dl * 100 / file_size)
+            status += chr(13)
+            print(status, end="")
+            return_label.configure(text=status, text_color=text_color_success)
+        print()
+    
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> filepath: {filepath}")
+    with zipfile.ZipFile(filepath, 'r') as zip_files:
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> extracting")
+        zip_files.extractall(dest)
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> extracting DONE")
+
+    if os.path.isfile(filepath):
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {filepath}")
+        os.remove(filepath)
 
     return filepath
 

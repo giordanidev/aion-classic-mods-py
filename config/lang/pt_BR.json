@@ -18,7 +18,7 @@
     "app_return_label_uptodate": "Não há novos arquivos para atualizar.",
     "app_return_label_update": "Atualização disponível.",
     "app_return_label_install": "Successo! Arquivos instalados.",
-    "app_return_label_install_ready": "Arquivos estão prontos para ser instalados.",
+    "app_return_label_download_ready": "Arquivos estão prontos para ser baixados.",
     "app_return_label_deleted": "Successo! Arquivos excluídos.",
     "app_return_label_launcher_found": "Launcher do jogo está aberto.",
     "app_return_label_launcher_closed": "O Launcher foi fechado.",
