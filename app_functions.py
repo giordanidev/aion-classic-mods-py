@@ -741,15 +741,14 @@ def copyFiles(game_file_type, copy_delete, return_label):
     """
     try:
         if copy_delete == "copy":
-            if (game_file_type == "translation"):
-                    downloadFile(game_file_type, return_label)
+            downloadFile(game_file_type, return_label)
             with open(f'.\\config\\lists\\{game_file_type}_install.json') as files_list:
                 copy_files_list = json.load(files_list)
                 files_list.close
             if len(copy_files_list) < 1:
                 logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_delete} from '.\\config\\lists\\{game_file_type}_install.json'")
                 return False
-        if copy_delete == "delete":
+        elif copy_delete == "delete":
             with open(f'.\\config\\lists\\{game_file_type}_delete.json') as files_list:
                 copy_files_list = json.load(files_list)
                 files_list.close
