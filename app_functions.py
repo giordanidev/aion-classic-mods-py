@@ -11,6 +11,9 @@ logging.getLogger().addHandler(logging.StreamHandler())
 logging.debug(f"{sys._getframe().f_code.co_name}() -> App initialized.")
 logging.debug(f"{sys._getframe().f_code.co_name}() -> app_functions.py imported.")
 
+# GLOBAL VARIABLES
+copy_delete_files = ""
+
 # Gets system language to load the correct "lang" file for app translation
 def getLang():
     try:
@@ -237,15 +240,15 @@ def verifyFilesButton(file_type_list,
                     install_buttons_list[type_count].configure(text=translateText("app_button_verifying"), state="disabled", font=font_regular)
 
                     # Sends the file type and verify
-                    verify_files_return = verifyFiles(file_type)
+                    verify_files_return = verifyFiles(file_type, "verify")
                     if verify_files_return == True:
                         file_type_label_list[type_count].configure(text=translateText("app_return_label_update"), text_color=text_color_success)
+                        install_buttons_list[type_count].configure(text=translateText("app_button_update"), state="normal", font=font_regular_bold)
+                        delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
+                    else:
+                        file_type_label_list[type_count].configure(text=translateText("app_return_label_download"), text_color=text_color_success)
                         install_buttons_list[type_count].configure(text=translateText("app_button_download"), state="normal", font=font_regular_bold)
                         delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
-                    else:
-                        file_type_label_list[type_count].configure(text=translateText("app_return_label_download_ready"), text_color=text_color_success)
-                        install_buttons_list[type_count].configure(text=translateText("app_button_download"), state="normal", font=font_regular)
-                        delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
                         
                 verifyFilesThreaded_func = threading.Thread(target=verifyFilesThreaded, args=(file_type, type_count))
                 verifyFilesThreaded_func.start()
@@ -274,17 +277,17 @@ def copyFilesButton(file_type, copy_delete, return_label, return_button, delete_
         logging.debug(f"{sys._getframe().f_code.co_name}() -> {copy_delete.capitalize()} ({file_type.capitalize()}) button pressed.")
         return_label.configure(text=translateText("app_return_label_verifying"))
         def copyFilesThreaded():
-            copy_files_return = copyFiles(file_type, copy_delete, return_label)
+            copy_files_return = copyDeleteFiles(file_type, copy_delete, return_label)
             if copy_files_return == False:
                 return False
             elif copy_files_return == True:
                 if copy_delete == "copy":
                     return_label.configure(text=translateText("app_return_label_install"), text_color=text_color_success)
-                    return_button.configure(text=translateText("app_button_uptodate"), state="disabled", font=font_regular)
+                    return_button.configure(text=translateText("app_button_update"), state="disabled", font=font_regular)
                     delete_button.configure(state="normal", font=font_regular_bold)
                 elif copy_delete == "delete":
                     return_label.configure(text=translateText("app_return_label_deleted"), text_color=text_color_success)
-                    return_button.configure(state="normal", font=font_regular)
+                    return_button.configure(text=translateText("app_button_download"), state="normal", font=font_regular_bold)
                     delete_button.configure(state="disabled", font=font_regular)
         copyFilesThreaded_func = threading.Thread(target=copyFilesThreaded)
         copyFilesThreaded_func.start()
@@ -330,11 +333,7 @@ def getClassicNaPath():
     """
     try:
         a_reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
-        try:
-            a_key = winreg.OpenKey(a_reg, r'SOFTWARE\\WOW6432Node\\NCWest\\AION_CLASSIC')
-        except:
-            logging.debug(f"{sys._getframe().f_code.co_name}(): Installation path not found. Select manually.")
-            return False
+        a_key = winreg.OpenKey(a_reg, r'SOFTWARE\\WOW6432Node\\NCWest\\AION_CLASSIC')
         if a_key:
             classic_na_path = winreg.QueryValueEx(a_key, "BaseDir")[0]
             logging.debug(f"{sys._getframe().f_code.co_name}() -> na_dir: {classic_na_path}")
@@ -605,95 +604,63 @@ def getFilePath(game_file_type):
         getException(e)
         return False
 
-def verifyFiles(game_file_type):
+def verifyFiles(game_file_type, copy_delete):
     """
-    Defines regions and languages of which the app will use to
-    look for files.
-
-    Calls 'get_full_files()' to finish processing the request.
+    Verifies if files exist in the game directory or not.
+    If they do not exist, then the Remove button will not be anabled.
+    If they exist, both the Download and Remove buttons will be anabled.
     """
     try:
         if game_file_type in ("filter", "font", "voice", "translation"):
             # Returns [[verify_hash_list], [copy_files_list]]
             files_path = getFilePath(game_file_type)
-            assets_full_file_path = files_path[0]
-            full_file_path = files_path[1]
+            available_files = getFiles(files_path[0], files_path[1], copy_delete) # assets file path | game file path
+            # available_files = asset files | game folder files
 
-            compared_files = getFiles(assets_full_file_path, full_file_path, game_file_type) #compared_files[0] = hash | compared_files[1] = all files
-            logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> compared_files: {len(compared_files)} - {compared_files}")
-            
-            def saveFilesJson(copy_files_verify):
-                install_files = copy_files_verify[0]
-                delete_files = copy_files_verify[1]
-                if len(install_files) == 0:
-                    install_files = {}
-                with open(f'.\\config\\lists\\{game_file_type}_install.json', 'w', encoding='utf-8') as f:
-                    json.dump(install_files, f, ensure_ascii=False, indent=4)
-                    f.close
-
-                if len(delete_files) == 0:
-                    delete_files = {}
-                with open(f'.\\config\\lists\\{game_file_type}_delete.json', 'w', encoding='utf-8') as f:
-                    json.dump(delete_files, f, ensure_ascii=False, indent=4)
-                    f.close
-
-            # Compares duplicated files hashes and adds them to the copy_files_verify list if hashes differ
-            copy_files_verify = compareFilesHash(compared_files)
-            saveFilesJson(copy_files_verify)
-
-            logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> copy_files_verify: {len(copy_files_verify)} - {copy_files_verify}")
-            
-        else:
-            logging.error(f"ERROR -> ({game_file_type}) {sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} :: Unknown file type.")
-            copy_files_verify = {}
-            
-        logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> copy_files_verify: {len(copy_files_verify)} {copy_files_verify}.")
-        if len(copy_files_verify[0]) <= 0:
-            return False
-        elif len(copy_files_verify[0]) >= 1:
+            if not available_files:
+                logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> asset files not available.")
+                return "assets"
+            elif len(available_files) >= 1:
+                for files in available_files:
+                    if not os.path.isfile(files[1]):
+                        logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> only asset files available: {len(available_files[0])} - {available_files[0]}")
+                        return "game_files"
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> files[1]: {files[1]}")
             return True
-        else:
-            logging.warning(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> copy_files_verify type: {type(copy_files_verify)}.")
-            return False
     except Exception as e:
         getException(e)
         return False
     
-def getFiles(assets_full_file_path, full_file_path):
+def getFiles(assets_full_file_path, full_file_path, copy_delete):
     logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_full_file_path: {assets_full_file_path} - full_file_path: {full_file_path}")
     try:
         copy_files_list = []
-        verify_hash_list = []
         for assets_dir in assets_full_file_path:
             logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> assets_dir: {assets_dir}.")
             for (dirpath, dirnames, filenames) in os.walk(assets_dir):
+                logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> FILENAMES: {filenames}.")
                 for filename in filenames:
                     relative_path = dirpath.replace(assets_dir, "")
                     for files_dir in full_file_path:
                         file_path = files_dir+relative_path+'\\'+filename
                         asset_path = assets_dir+relative_path+'\\'+filename
-                        if not os.path.exists(file_path):
-                            logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
-                            copy_files_list.extend([[asset_path, file_path]])
-                        else:
-                            logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path -> verify_hash_list[]: AY {file_path}")
-                            verify_hash_list.extend([[asset_path, file_path]])
-            logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> verify_hash_list: {verify_hash_list}")
-            logging.info(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> verify_hash_list: {len(verify_hash_list)} files need to be compared.")
+                        copy_files_list.extend([[asset_path, file_path]])
+                        logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path: {file_path}")
             logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> copy_files_list: {copy_files_list}")
-            return verify_hash_list, copy_files_list
+            return copy_files_list
     except Exception as e:
         getException(e)
         return False
-    
+"""
+####### MAY USE IT IN THE FUTURE AGAIN!
 def compareFilesHash(compared_files):
-    """
+    """"""
     Compares duplicated files hashes and adds them to the
     copy_files_verify list if hashes differ.
     Returns a single list of files with both assets and game
     file paths ready to be replaced in [[asset_file, game_file]]
     format.
-    """
+    """"""
     try:
         logging.debug(f"{sys._getframe().f_code.co_name}() -> compared_files: {len(compared_files)} {compared_files}.")
         verify_hash_list = compared_files[0]
@@ -715,33 +682,33 @@ def compareFilesHash(compared_files):
     except Exception as e:
         getException(e)
         return False
-    
-def copyFiles(game_file_type, copy_delete, return_label):
+"""
+
+def copyDeleteFiles(game_file_type, copy_delete, return_label):
     """
-    Creates directories, removes old/different files, copies
-    new files.
+    Creates directories; removes old/different files, copies
+    and deletes files.
     """
     try:
-        curr_dir = os.getcwd()
+
         if copy_delete == "copy":
-            downloadFile(game_file_type, return_label)
-            verifyFiles(game_file_type)
-            with open(f'{curr_dir}\\config\\lists\\{game_file_type}_install.json') as files_list:
-                copy_files_list = json.load(files_list)
-                files_list.close
-            if len(copy_files_list) < 1:
-                logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_delete} from '.\\config\\lists\\{game_file_type}_install.json'")
+            downloaded_files = downloadFiles(game_file_type, return_label)
+            extractFiles(downloaded_files[0], downloaded_files[1]) # file path | destination in app assets folder
+            files_path = getFilePath(game_file_type)
+            copy_delete_files = getFiles(files_path[0], files_path[1], copy_delete) # assets path | game files path)
+            if len(copy_delete_files) < 1:
+                logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_delete} from 'copy_delete_files'")
                 return False
         elif copy_delete == "delete":
-            with open(f'{curr_dir}\\config\\lists\\{game_file_type}_delete.json') as files_list:
-                copy_files_list = json.load(files_list)
-                files_list.close
-            if len(copy_files_list) < 1:
-                logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_delete} from '.\\config\\lists\\{game_file_type}_delete.json'")
+            files_path = getFilePath(game_file_type)
+            copy_delete_files = getFiles(files_path[0], files_path[1], copy_delete) # assets path | game files path)
+            if len(copy_delete_files) < 1:
+                logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_delete} from 'copy_delete_files'")
                 return False
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> files -> type: {game_file_type}: {copy_files_list}")
+            
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> files -> type: {game_file_type}: {copy_delete_files}")
         show_delete_warning = True
-        for files in copy_files_list:
+        for files in copy_delete_files: # [0] = asset | [1] = game
             logging.debug(f"FOR START - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files} - FOR START :: show_delete_warning: {show_delete_warning}")
             asset_file = files[0]
             game_file = files[1]
@@ -759,11 +726,13 @@ def copyFiles(game_file_type, copy_delete, return_label):
                         return False
                     else:
                         show_delete_warning = False
-                remove_file = game_file
-                logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE????????? {remove_file}")
-                if os.path.isfile(remove_file):
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {remove_file}")
-                    os.remove(remove_file)
+                logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE? '{asset_file}'-'{game_file}'")
+                if os.path.isfile(game_file):
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: '{game_file}'")
+                    os.remove(game_file)
+                if os.path.isfile(asset_file):
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: '{asset_file}'")
+                    os.remove(asset_file)
             logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_backup: {copy_delete}")
             logging.debug(f"FOR END - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files} - FOR END :: show_delete_warning: {show_delete_warning}")
         return True
@@ -771,14 +740,13 @@ def copyFiles(game_file_type, copy_delete, return_label):
         getException(e)
         return False
     
-def downloadFile(file_type, return_label):
+def downloadFiles(file_type, return_label):
     """ 
-    Download and save a file specified by url to dest directory,
+    Download and save a file specified by url to 'dest' directory.
     """
     file_path = getFilePath(file_type)[0]
     logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path[0]: {file_path[0]}")
-    curr_dir = os.getcwd()
-    dest = curr_dir+file_path[0]
+    dest = file_path[0]
     
     logging.debug(f"{sys._getframe().f_code.co_name}() -> dest: {dest}")
     if not os.path.isdir(dest):
@@ -837,7 +805,9 @@ def downloadFile(file_type, return_label):
             print(status, end="")
             return_label.configure(text=status, text_color=text_color_success)
         print()
-    
+    return filepath, dest
+
+def extractFiles(filepath, dest):
     logging.debug(f"{sys._getframe().f_code.co_name}() -> filepath: {filepath}")
     with zipfile.ZipFile(filepath, 'r') as zip_files:
         logging.debug(f"{sys._getframe().f_code.co_name}() -> extracting")
@@ -848,9 +818,8 @@ def downloadFile(file_type, return_label):
         logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {filepath}")
         os.remove(filepath)
 
-    return filepath
-
 """
+#MAY OR MAY NOT USE IT IN THE FUTURE. FOR NOW, IT STAYS HERE!
 def forceCloseAion(action, game_client, close_button, return_label):
     running_apps = psutil.process_iter(['pid','name']) #returns names of running processes
     found = False

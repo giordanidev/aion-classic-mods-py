@@ -18,7 +18,7 @@
     "app_return_label_uptodate": "There are no new files to update.",
     "app_return_label_update": "Update available.",
     "app_return_label_install": "Success! Files have been installed.",
-    "app_return_label_download_ready": "Files are ready to be downloaded.",
+    "app_return_label_download": "Files are ready to be downloaded.",
     "app_return_label_deleted": "Success! Files deleted.",
     "app_return_label_launcher_found": "Game launcher is open.",
     "app_return_label_launcher_closed": "Game launcher was closed.",
@@ -31,7 +31,7 @@
     "app_button_download": "Download",
     "app_button_downloading": "Downloading",
     "app_button_delete": "Delete",
-    "app_button_uptodate": "Up to date!",
+    "app_button_update": "Update",
     "app_button_close_game": "Close Aion",
     "app_button_close_client": "Close Launcher",
 
