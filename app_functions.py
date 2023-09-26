@@ -582,6 +582,7 @@ def getFullFilePath(game_lang, file_path):
 
 def getFilePath(game_file_type):
     try:
+        curr_dir = os.getcwd()
         app_config = appConfigLoad()[0]
         app_region = app_config.get('app', 'region')
         game_lang = []
@@ -596,7 +597,7 @@ def getFilePath(game_file_type):
         file_path = getRelativeFilePath(game_file_type)
         logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}.")
         # Defines assets path
-        assets_full_file_path = [f"\\assets\\{file_path}"]
+        assets_full_file_path = [f"{curr_dir}\\assets\\{file_path}"]
         # Returns [full_file_path]. It can be multiple paths depending on regions selected
         full_file_path = getFullFilePath(game_lang, file_path)
         return assets_full_file_path, full_file_path
@@ -669,8 +670,8 @@ def getFiles(assets_full_file_path, full_file_path):
                 for filename in filenames:
                     relative_path = dirpath.replace(assets_dir, "")
                     for files_dir in full_file_path:
-                        file_path = '.\\'+files_dir+relative_path+'\\'+filename
-                        asset_path = '.\\'+assets_dir+relative_path+'\\'+filename
+                        file_path = files_dir+relative_path+'\\'+filename
+                        asset_path = assets_dir+relative_path+'\\'+filename
                         if not os.path.exists(file_path):
                             logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path -> copy_files_list[]: NAY {file_path}")
                             copy_files_list.extend([[asset_path, file_path]])
