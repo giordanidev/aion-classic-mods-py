@@ -708,6 +708,7 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
             
         logging.debug(f"{sys._getframe().f_code.co_name}() -> files -> type: {game_file_type}: {copy_delete_files}")
         show_delete_warning = True
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_delete_files: {copy_delete_files}")
         for files in copy_delete_files: # [0] = asset | [1] = game
             logging.debug(f"FOR START - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files} - FOR START :: show_delete_warning: {show_delete_warning}")
             asset_file = files[0]
@@ -735,6 +736,7 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
                     os.remove(asset_file)
             logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_backup: {copy_delete}")
             logging.debug(f"FOR END - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files} - FOR END :: show_delete_warning: {show_delete_warning}")
+        copy_delete_files = []
         return True
     except Exception as e:
         getException(e)
