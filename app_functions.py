@@ -762,7 +762,7 @@ def downloadFiles(file_type, return_label):
     elif (file_type == "voice"):
         url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/voice.zip"
     elif (file_type == "translation"):
-        url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/data_ptBR.zip"
+        url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/arquivo/data_ptBR.zip"
 
     u = urllib2.urlopen(url)
 
