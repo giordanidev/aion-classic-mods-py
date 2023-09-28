@@ -1,0 +1,20 @@
+{
+    "voice": ["sounds\\voice\\attack\\attack_kr.pak", "sounds\\voice\\cast\\cast_kr.pak", "sounds\\voice\\damage\\damage_kr.pak",
+              "sounds\\voice\\defense\\defence_kr.pak", "sounds\\voice\\login\\login_kr.pak", "sounds\\voice\\motion\\motion_kr.pak"],
+    "filter": ["data\\Strings\\aionfilterchat.dat", "data\\Strings\\aionfilterchat_load.pak", "data\\Strings\\aionfilterline.dat",
+               "data\\Strings\\aionfilterline_load.pak"],
+    "font": ["textures\\ui\\hit_number_jp.pak"],
+    "translation": ["data\\data_ptBR.pak"],
+    "asmo_skin": ["data\\custompreset\\face2siel.pak", "data\\custompreset\\face3df15.pak", "data\\custompreset\\face4df17.pak",
+                  "data\\custompreset\\face5df26.pak", "data\\custompreset\\face6richelle.pak", "data\\custompreset\\face7palentine.pak",
+                  "data\\custompreset\\face8df5.pak", "data\\custompreset\\face9df6.pak", "data\\custompreset\\face10asmo.pak",
+                  "data\\custompreset\\face11skuld.pak", "data\\custompreset\\face12df3.pak", "data\\custompreset\\face13df12.pak",
+                  "data\\custompreset\\face14df13.pak", "data\\custompreset\\face15df16.pak", "data\\custompreset\\face16df18.pak",
+                  "data\\custompreset\\face17df20.pak", "data\\custompreset\\face18df21.pak", "data\\custompreset\\face19df22.pak",
+                  "data\\custompreset\\face20df23.pak", "data\\custompreset\\face21df24.pak", "data\\custompreset\\face22df25.pak",
+                  "data\\custompreset\\face23df27.pak", "data\\custompreset\\face24df4.pak", "data\\custompreset\\face25df11.pak",
+                  "data\\custompreset\\face28tanned.pak", "data\\custompreset\\face30garnon.pak", "data\\custompreset\\Face31.pak",
+                  "data\\custompreset\\face33df33.pak", "data\\custompreset\\face34df34.pak", "data\\custompreset\\face35df35.pak",
+                  "data\\custompreset\\Face36.pak", "data\\custompreset\\Face37.pak", "data\\custompreset\\Face38.pak",
+                  "data\\custompreset\\Face39.pak", "data\\custompreset\\Face40.pak"]
+}

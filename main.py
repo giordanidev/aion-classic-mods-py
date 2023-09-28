@@ -188,10 +188,10 @@ class createTabs(ctk.CTkTabview):
         self.verifyAllButton.grid(row=0, column=3, columnspan=2, padx=padx_both, pady=pady_both)
         
         self.verifyAllButton.configure(command=partial(verifyFilesButton, 
-                                                   ["filter", "font", "voice", "translation"], 
-                                                   [self.filterButton, self.fontButton, self.voiceButton, self.translationButton],
-                                                   [self.filterDeleteButton, self.fontDeleteButton, self.voiceDeleteButton, self.translationDeleteButton],
-                                                   [self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel, self.translationReturnLabel],
+                                                   ["translation", "filter", "font", "voice"], 
+                                                   [self.translationButton, self.filterButton, self.fontButton, self.voiceButton],
+                                                   [self.translationDeleteButton, self.filterDeleteButton, self.fontDeleteButton, self.voiceDeleteButton],
+                                                   [self.translationReturnLabel, self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel],
                                                    self.verifyAllButton,
                                                    self))
 

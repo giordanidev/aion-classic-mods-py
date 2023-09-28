@@ -1,7 +1,7 @@
 from __future__ import (division, absolute_import, print_function, unicode_literals)
 from configparser import ConfigParser
 from tkinter import messagebox, filedialog
-import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale, shutil, psutil, time, tempfile, zipfile
+import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale, shutil, time, tempfile, zipfile #, psutil
 import urllib.request as urllib2
 import urllib.parse as urlparse
 
@@ -545,6 +545,8 @@ def getRelativeFilePath(game_file_type):
             file_path = "sounds\\voice"
         elif (game_file_type == "translation"):
             file_path = "data"
+        elif (game_file_type == "asmo_skin"):
+            file_path = "data\\custompreset"
         else:
             logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown file type.")
             return
@@ -582,6 +584,10 @@ def getFullFilePath(game_lang, file_path):
 def getFilePath(game_file_type):
     try:
         curr_dir = os.getcwd()
+        #TODO
+        #with open(".\\download\\files.json", encoding='utf-8') as f:
+        #    download_files = json.load(f)
+        #    f.close
         app_config = appConfigLoad()[0]
         app_region = app_config.get('app', 'region')
         game_lang = []
@@ -613,6 +619,8 @@ def verifyFiles(game_file_type, copy_delete):
     try:
         if game_file_type in ("filter", "font", "voice", "translation"):
             # Returns [[verify_hash_list], [copy_files_list]]
+            #TODO
+            #USE FILES IN files.json
             files_path = getFilePath(game_file_type)
             available_files = getFiles(files_path[0], files_path[1], copy_delete) # assets file path | game file path
             # available_files = asset files | game folder files
@@ -622,11 +630,20 @@ def verifyFiles(game_file_type, copy_delete):
                 return "assets"
             elif len(available_files) >= 1:
                 for files in available_files:
-                    if not os.path.isfile(files[1]):
-                        logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> only asset files available: {len(available_files[0])} - {available_files[0]}")
-                        return "game_files"
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> files[1]: {files[1]}")
-            return True
+                    found = False
+                    logging.debug(f"START WHILE - {sys._getframe().f_code.co_name}() -> files: {len(download_files[game_file_type])} {download_files[game_file_type]}")
+                    for file in download_files[game_file_type]:
+                        logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> file: {file} game_file: {files[1]}")
+                        if file in files[1]:
+                            logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> VERDADE!")
+                            found = True
+                            break
+                    if found == False:
+                        if not os.path.isfile(files[1]):
+                            logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> only asset files available: {len(available_files[0])} - {available_files[0]}")
+                            return "game_files"
+                    logging.debug(f"END WHILE - {sys._getframe().f_code.co_name}() -> found: {found}")
+            return found
     except Exception as e:
         getException(e)
         return False
@@ -693,6 +710,9 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
 
         if copy_delete == "copy":
             downloaded_files = downloadFiles(game_file_type, return_label)
+            with open(".\\download\\files.json", encoding='utf-8') as f:
+                download_files = json.load(f)
+                f.close
             extractFiles(downloaded_files[0], downloaded_files[1]) # file path | destination in app assets folder
             files_path = getFilePath(game_file_type)
             copy_delete_files = getFiles(files_path[0], files_path[1], copy_delete) # assets path | game files path)
@@ -702,6 +722,9 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
         elif copy_delete == "delete":
             files_path = getFilePath(game_file_type)
             copy_delete_files = getFiles(files_path[0], files_path[1], copy_delete) # assets path | game files path)
+            with open(".\\download\\files.json", encoding='utf-8') as f:
+                download_files = json.load(f)
+                f.close
             if len(copy_delete_files) < 1:
                 logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_delete} from 'copy_delete_files'")
                 return False
@@ -714,28 +737,37 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
             asset_file = files[0]
             game_file = files[1]
 
-            if copy_delete == "copy":
-                if not os.path.isdir(os.path.dirname(game_file)):
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> MKDIR: {os.path.dirname(game_file)}")
-                    os.makedirs(os.path.dirname(game_file))
-                logging.debug(f"{sys._getframe().f_code.co_name}() -> COPY :: {asset_file} -> {game_file}")
-                shutil.copy2(asset_file, game_file)
-            elif copy_delete == "delete":
-                if show_delete_warning == True:
-                    alert = showAlert("askquestion", translateText("functions_show_delete").replace('{FILETYPE}', translateText(f"{game_file_type}")))
-                    if alert == "no":
-                        return False
-                    else:
-                        show_delete_warning = False
-                logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE? '{asset_file}'-'{game_file}'")
-                if os.path.isfile(game_file):
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: '{game_file}'")
-                    os.remove(game_file)
-                if os.path.isfile(asset_file):
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: '{asset_file}'")
-                    os.remove(asset_file)
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_backup: {copy_delete}")
-            logging.debug(f"FOR END - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files} - FOR END :: show_delete_warning: {show_delete_warning}")
+            found = False
+            logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> files: {len(download_files[game_file_type])} {download_files[game_file_type]}")
+            for file in download_files[game_file_type]:
+                logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> file: {file} asset_file: {asset_file}")
+                if file in asset_file:
+                    logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> VERDADE!")
+                    found = True
+                    break
+            if found == True:
+                if copy_delete == "copy":
+                    if not os.path.isdir(os.path.dirname(game_file)):
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> MKDIR: {os.path.dirname(game_file)}")
+                        os.makedirs(os.path.dirname(game_file))
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> COPY :: {asset_file} -> {game_file}")
+                    shutil.copy2(asset_file, game_file)
+                elif copy_delete == "delete":
+                    if show_delete_warning == True:
+                        alert = showAlert("askquestion", translateText("functions_show_delete").replace('{FILETYPE}', translateText(f"{game_file_type}")))
+                        if alert == "no":
+                            return False
+                        else:
+                            show_delete_warning = False
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE? '{asset_file}'-'{game_file}'")
+                    if os.path.isfile(game_file):
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: '{game_file}'")
+                        os.remove(game_file)
+                    if os.path.isfile(asset_file):
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: '{asset_file}'")
+                        os.remove(asset_file)
+                logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_backup: {copy_delete}")
+                logging.debug(f"FOR END - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files} - FOR END :: show_delete_warning: {show_delete_warning}")
         copy_delete_files = []
         return True
     except Exception as e:
@@ -765,6 +797,8 @@ def downloadFiles(file_type, return_label):
         url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/voice.zip"
     elif (file_type == "translation"):
         url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/arquivo/data_ptBR.zip"
+    elif (file_type == "asmo_skin"):
+        url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/asmo_skin.zip"
 
     u = urllib2.urlopen(url)
 
