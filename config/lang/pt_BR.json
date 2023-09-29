@@ -7,11 +7,13 @@
     "filter": "Filtro de 'Chat'",
     "font": "Letras JP",
     "translation": "Tradução PTBR",
+    "asmo_skin": "Cor de Pele Asmo",
 
     "app_voice_label": "Vozes KR:",
     "app_filter_label": "Filtro de 'Chat':",
     "app_font_label": "Letras JP:",
     "app_translation_label": "Tradução PTBR:",
+    "app_asmo_skin_label": "Cor de Pele Asmo:",
 
     "app_return_label_waiting": "Esperando...",
     "app_return_label_verifying": "Verificando arquivos... Por favor, aguarde!",

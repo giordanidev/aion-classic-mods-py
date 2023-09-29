@@ -102,6 +102,8 @@ class createTabs(ctk.CTkTabview):
         self.fontLabel.grid(row=3, column=0, padx=padx_both, pady=pady_both, sticky="e")
         self.translationLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_translation_label"), height=30, font=font_regular_bold)
         self.translationLabel.grid(row=4, column=0, padx=padx_both, pady=pady_both, sticky="e")
+        self.asmo_skinLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_asmo_skin_label"), height=30, font=font_regular_bold)
+        self.asmo_skinLabel.grid(row=5, column=0, padx=padx_both, pady=pady_both, sticky="e")
 
         self.voiceReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
         self.voiceReturnLabel.grid(row=1, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
@@ -111,6 +113,8 @@ class createTabs(ctk.CTkTabview):
         self.fontReturnLabel.grid(row=3, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
         self.translationReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
         self.translationReturnLabel.grid(row=4, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
+        self.asmo_skinReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
+        self.asmo_skinReturnLabel.grid(row=5, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
 
         
         self.voiceButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
@@ -121,6 +125,8 @@ class createTabs(ctk.CTkTabview):
         self.fontButton.grid(row=3, column=3, padx=padx_both, pady=pady_both)
         self.translationButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_download"), state="disabled", width=90)
         self.translationButton.grid(row=4, column=3, padx=padx_both, pady=pady_both)
+        self.asmo_skinButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_download"), state="disabled", width=90)
+        self.asmo_skinButton.grid(row=5, column=3, padx=padx_both, pady=pady_both)
 
         self.voiceDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
         self.voiceDeleteButton.grid(row=1, column=4, padx=padx_both, pady=pady_both)
@@ -130,6 +136,8 @@ class createTabs(ctk.CTkTabview):
         self.fontDeleteButton.grid(row=3, column=4, padx=padx_both, pady=pady_both)
         self.translationDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
         self.translationDeleteButton.grid(row=4, column=4, padx=padx_both, pady=pady_both)
+        self.asmo_skinDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
+        self.asmo_skinDeleteButton.grid(row=5, column=4, padx=padx_both, pady=pady_both)
         
         
         
@@ -157,6 +165,12 @@ class createTabs(ctk.CTkTabview):
                                                   self.translationReturnLabel,
                                                   self.translationButton,
                                                   self.translationDeleteButton))
+        self.asmo_skinButton.configure(command=partial(copyFilesButton,
+                                                  "asmo_skin",
+                                                  "copy",
+                                                  self.asmo_skinReturnLabel,
+                                                  self.asmo_skinButton,
+                                                  self.asmo_skinDeleteButton))
 
         self.voiceDeleteButton.configure(command=partial(copyFilesButton,
                                                          "voice",
@@ -182,16 +196,22 @@ class createTabs(ctk.CTkTabview):
                                                         self.translationReturnLabel,
                                                         self.translationButton,
                                                         self.translationDeleteButton))
+        self.asmo_skinDeleteButton.configure(command=partial(copyFilesButton,
+                                                        "asmo_skin",
+                                                        "delete",
+                                                        self.asmo_skinReturnLabel,
+                                                        self.asmo_skinButton,
+                                                        self.asmo_skinDeleteButton))
 
 
         self.verifyAllButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_verify_all"), font=font_big_bold, width=184)
         self.verifyAllButton.grid(row=0, column=3, columnspan=2, padx=padx_both, pady=pady_both)
         
         self.verifyAllButton.configure(command=partial(verifyFilesButton, 
-                                                   ["translation", "filter", "font", "voice"], 
-                                                   [self.translationButton, self.filterButton, self.fontButton, self.voiceButton],
-                                                   [self.translationDeleteButton, self.filterDeleteButton, self.fontDeleteButton, self.voiceDeleteButton],
-                                                   [self.translationReturnLabel, self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel],
+                                                   ["translation", "filter", "font", "voice", "asmo_skin"], 
+                                                   [self.translationButton, self.filterButton, self.fontButton, self.voiceButton, self.asmo_skinButton],
+                                                   [self.translationDeleteButton, self.filterDeleteButton, self.fontDeleteButton, self.voiceDeleteButton, self.asmo_skinDeleteButton],
+                                                   [self.translationReturnLabel, self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel, self.asmo_skinReturnLabel],
                                                    self.verifyAllButton,
                                                    self))
 
@@ -290,12 +310,12 @@ class createTabs(ctk.CTkTabview):
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values read.")
 
-        verifyFilesButton(["filter", "font", "voice", "translation"], 
-                            [self.filterButton, self.fontButton, self.voiceButton, self.translationButton],
-                            [self.filterDeleteButton, self.fontDeleteButton, self.voiceDeleteButton, self.translationDeleteButton],
-                            [self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel, self.translationReturnLabel],
-                            self.verifyAllButton,
-                            self)
+        verifyFilesButton(["translation", "filter", "font", "voice", "asmo_skin"], 
+                        [self.translationButton, self.filterButton, self.fontButton, self.voiceButton, self.asmo_skinButton],
+                        [self.translationDeleteButton, self.filterDeleteButton, self.fontDeleteButton, self.voiceDeleteButton, self.asmo_skinDeleteButton],
+                        [self.translationReturnLabel, self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel, self.asmo_skinReturnLabel],
+                        self.verifyAllButton,
+                        self)
 
     def change_theme_event(self, value):
 
@@ -309,7 +329,7 @@ class createTabs(ctk.CTkTabview):
 
 app = App()
 app.iconbitmap("./config/img/Aion-Classic-Mods.ico")
-app.geometry("570x252")
+app.geometry("570x267")
 app.resizable(0, 0)
 app.eval("tk::PlaceWindow . center")
 app.mainloop()

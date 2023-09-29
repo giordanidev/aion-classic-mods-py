@@ -595,7 +595,7 @@ def verifyFiles(game_file_type, copy_delete):
     If they exist, both the Download and Remove buttons will be anabled.
     """
     try:
-        if game_file_type in ("filter", "font", "voice", "translation"):
+        if game_file_type in ("filter", "font", "voice", "translation", "asmo_skin"):
             # Returns [[verify_hash_list], [copy_files_list]]
             #TODO
             #USE FILES IN files.json
@@ -622,6 +622,8 @@ def verifyFiles(game_file_type, copy_delete):
                             return "game_files"
                     logging.debug(f"END WHILE - {sys._getframe().f_code.co_name}() -> found: {found}")
             return found
+        else:
+            return False
     except Exception as e:
         getException(e)
         return False
