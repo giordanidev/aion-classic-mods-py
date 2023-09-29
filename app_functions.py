@@ -532,32 +532,9 @@ def validateDirectory(game_directory, region):
         getException(e)
         return False
 
-def getRelativeFilePath(game_file_type):
-    """
-    Sets the base path for each asset/file type.
-    """
-    try:
-        if (game_file_type == "filter"):
-            file_path = "data\\Strings"
-        elif (game_file_type == "font"):
-            file_path = "textures\\ui"
-        elif (game_file_type == "voice"):
-            file_path = "sounds\\voice"
-        elif (game_file_type == "translation"):
-            file_path = "data"
-        elif (game_file_type == "asmo_skin"):
-            file_path = "data\\custompreset"
-        else:
-            logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown file type.")
-            return
-        return file_path
-    except Exception as e:
-        getException(e)
-        return False
-
 # TODO change region/language config methods to JSON
 
-def getFullFilePath(game_lang, file_path):
+def getGameFilePath(game_lang):
     """
     Gets the full file paths for the selected regions using the
     previously set base file path.
@@ -570,9 +547,9 @@ def getFullFilePath(game_lang, file_path):
         full_file_path = []
         for lang in game_lang:
             if lang == "enu":
-                full_file_path.append(f"{na_path}\\l10n\\{lang}\\{file_path}")
+                full_file_path.append(f"{na_path}\\l10n\\{lang}")
             elif lang in ("eng", "fra", "deu"):
-                full_file_path.append(f"{eu_path}\\l10n\\{lang}\\{file_path}")
+                full_file_path.append(f"{eu_path}\\l10n\\{lang}")
             else:
                 logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown region.")
                 return
@@ -583,11 +560,7 @@ def getFullFilePath(game_lang, file_path):
 
 def getFilePath(game_file_type):
     try:
-        curr_dir = os.getcwd()
-        #TODO
-        #with open(".\\download\\files.json", encoding='utf-8') as f:
-        #    download_files = json.load(f)
-        #    f.close
+        logging.debug(f"{sys._getframe().f_code.co_name}() START -> game_file_type: {game_file_type}.")
         app_config = appConfigLoad()[0]
         app_region = app_config.get('app', 'region')
         game_lang = []
@@ -598,14 +571,19 @@ def getFilePath(game_file_type):
             game_lang.append("enu")
         if app_region in ("2", "3"):
             game_lang.extend(["eng", "fra", "deu"])
+            
+        curr_dir = os.getcwd()
+        with open(".\\config\\files.json", encoding='utf-8') as f:
+            download_files = json.load(f)
+            f.close
         # Gets all files and hashes them when files already exist in game path
-        file_path = getRelativeFilePath(game_file_type)
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}.")
+        files = download_files[game_file_type]
         # Defines assets path
-        assets_full_file_path = [f"{curr_dir}\\assets\\{file_path}"]
+        assets_path = f"{curr_dir}\\assets"
         # Returns [full_file_path]. It can be multiple paths depending on regions selected
-        full_file_path = getFullFilePath(game_lang, file_path)
-        return assets_full_file_path, full_file_path
+        game_path = getGameFilePath(game_lang)
+        logging.debug(f"{sys._getframe().f_code.co_name}() END -> assets_path: {assets_path} || game_path: {game_path} || files: {files}.")
+        return assets_path, game_path, files
     except Exception as e:
         getException(e)
         return False
@@ -710,7 +688,7 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
 
         if copy_delete == "copy":
             downloaded_files = downloadFiles(game_file_type, return_label)
-            with open(".\\download\\files.json", encoding='utf-8') as f:
+            with open(".\\config\\files.json", encoding='utf-8') as f:
                 download_files = json.load(f)
                 f.close
             extractFiles(downloaded_files[0], downloaded_files[1]) # file path | destination in app assets folder
@@ -722,7 +700,7 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
         elif copy_delete == "delete":
             files_path = getFilePath(game_file_type)
             copy_delete_files = getFiles(files_path[0], files_path[1], copy_delete) # assets path | game files path)
-            with open(".\\download\\files.json", encoding='utf-8') as f:
+            with open(".\\config\\files.json", encoding='utf-8') as f:
                 download_files = json.load(f)
                 f.close
             if len(copy_delete_files) < 1:
