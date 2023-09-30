@@ -310,13 +310,6 @@ class createTabs(ctk.CTkTabview):
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values read.")
 
-        verifyFilesButton(["translation", "filter", "font", "voice", "asmo_skin"], 
-                        [self.translationButton, self.filterButton, self.fontButton, self.voiceButton, self.asmo_skinButton],
-                        [self.translationDeleteButton, self.filterDeleteButton, self.fontDeleteButton, self.voiceDeleteButton, self.asmo_skinDeleteButton],
-                        [self.translationReturnLabel, self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel, self.asmo_skinReturnLabel],
-                        self.verifyAllButton,
-                        self)
-
     def change_theme_event(self, value):
 
         en_theme = getEnglishTranslation(value)

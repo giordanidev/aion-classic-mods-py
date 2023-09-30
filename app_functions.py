@@ -1,7 +1,7 @@
 from __future__ import (division, absolute_import, print_function, unicode_literals)
 from configparser import ConfigParser
 from tkinter import messagebox, filedialog
-import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale, shutil, time, tempfile, zipfile #, psutil
+import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale, shutil, time, tempfile, zipfile#, psutil
 import urllib.request as urllib2
 import urllib.parse as urlparse
 
@@ -240,7 +240,7 @@ def verifyFilesButton(file_type_list,
                     install_buttons_list[type_count].configure(text=translateText("app_button_verifying"), state="disabled", font=font_regular)
 
                     # Sends the file type and verify
-                    verify_files_return = verifyFiles(file_type, "verify")
+                    verify_files_return = verifyFiles(file_type)
                     if verify_files_return == True:
                         file_type_label_list[type_count].configure(text=translateText("app_return_label_update"), text_color=text_color_success)
                         install_buttons_list[type_count].configure(text=translateText("app_button_update"), state="normal", font=font_regular_bold)
@@ -283,7 +283,7 @@ def copyFilesButton(file_type, copy_delete, return_label, return_button, delete_
             elif copy_files_return == True:
                 if copy_delete == "copy":
                     return_label.configure(text=translateText("app_return_label_install"), text_color=text_color_success)
-                    return_button.configure(text=translateText("app_button_update"), state="disabled", font=font_regular)
+                    return_button.configure(text=translateText("app_button_update"), state="enabled", font=font_regular_bold)
                     delete_button.configure(state="normal", font=font_regular_bold)
                 elif copy_delete == "delete":
                     return_label.configure(text=translateText("app_return_label_deleted"), text_color=text_color_success)
@@ -578,7 +578,7 @@ def getFilePath(game_file_type):
             f.close
         # Gets all files and hashes them when files already exist in game path
         files = download_files[game_file_type]
-        # Defines assets path
+
         assets_path = f"{curr_dir}\\assets"
         # Returns [full_file_path]. It can be multiple paths depending on regions selected
         game_path = getGameFilePath(game_lang)
@@ -588,7 +588,7 @@ def getFilePath(game_file_type):
         getException(e)
         return False
 
-def verifyFiles(game_file_type, copy_delete):
+def verifyFiles(game_file_type):
     """
     Verifies if files exist in the game directory or not.
     If they do not exist, then the Remove button will not be anabled.
@@ -597,10 +597,8 @@ def verifyFiles(game_file_type, copy_delete):
     try:
         if game_file_type in ("filter", "font", "voice", "translation", "asmo_skin"):
             # Returns [[verify_hash_list], [copy_files_list]]
-            #TODO
-            #USE FILES IN files.json
             files_path = getFilePath(game_file_type)
-            available_files = getFiles(files_path[0], files_path[1], copy_delete) # assets file path | game file path
+            available_files = getFiles(files_path[0], files_path[1], files_path[2]) # assets path | game file | file names
             # available_files = asset files | game folder files
 
             if not available_files:
@@ -608,19 +606,17 @@ def verifyFiles(game_file_type, copy_delete):
                 return "assets"
             elif len(available_files) >= 1:
                 for files in available_files:
+                    logging.debug(f"START WHILE - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files}")
                     found = False
-                    logging.debug(f"START WHILE - {sys._getframe().f_code.co_name}() -> files: {len(download_files[game_file_type])} {download_files[game_file_type]}")
-                    for file in download_files[game_file_type]:
-                        logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> file: {file} game_file: {files[1]}")
-                        if file in files[1]:
-                            logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> VERDADE!")
-                            found = True
-                            break
+                    if os.path.isfile(files[1]):
+                        logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> VERDADE!")
+                        found = True
+                        break
                     if found == False:
                         if not os.path.isfile(files[1]):
                             logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> only asset files available: {len(available_files[0])} - {available_files[0]}")
                             return "game_files"
-                    logging.debug(f"END WHILE - {sys._getframe().f_code.co_name}() -> found: {found}")
+                logging.debug(f"END WHILE - {sys._getframe().f_code.co_name}() -> found: {found}")
             return found
         else:
             return False
@@ -628,23 +624,28 @@ def verifyFiles(game_file_type, copy_delete):
         getException(e)
         return False
     
-def getFiles(assets_full_file_path, full_file_path, copy_delete):
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_full_file_path: {assets_full_file_path} - full_file_path: {full_file_path}")
+def getFiles(assets_path, game_path, file_names):
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_path: {assets_path} - game_path: {game_path}")
     try:
         copy_files_list = []
-        for assets_dir in assets_full_file_path:
-            logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> assets_dir: {assets_dir}.")
-            for (dirpath, dirnames, filenames) in os.walk(assets_dir):
-                logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> FILENAMES: {filenames}.")
-                for filename in filenames:
-                    relative_path = dirpath.replace(assets_dir, "")
-                    for files_dir in full_file_path:
-                        file_path = files_dir+relative_path+'\\'+filename
-                        asset_path = assets_dir+relative_path+'\\'+filename
-                        copy_files_list.extend([[asset_path, file_path]])
-                        logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> file_path: {file_path}")
-            logging.debug(f"({assets_dir}) {sys._getframe().f_code.co_name}() -> copy_files_list: {copy_files_list}")
-            return copy_files_list
+        logging.debug(f"({assets_path}) {sys._getframe().f_code.co_name}() -> assets_path: {assets_path}.")
+        logging.debug(f"({assets_path}) {sys._getframe().f_code.co_name}() -> file_names: {file_names}.")
+        for game_dir in game_path:
+            for filename in file_names:
+                assets_file = assets_path+filename
+                game_file = game_dir+filename
+                if os.path.isfile(assets_file):
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> ASSETS FILE FOUND.")
+                    copy_files_list.extend([[assets_file, game_file]])
+                    if os.path.isfile(game_file):
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> GAME FILE FOUND.")
+                        logging.debug(f"({assets_path}) {sys._getframe().f_code.co_name}() -> game_file: {game_file}")
+                    else:
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> GAME FILE NOT FOUND.")
+                else:
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> ASSETS FILE NOT FOUND.")
+        logging.debug(f"({assets_path}) {sys._getframe().f_code.co_name}() -> copy_files_list: {copy_files_list}")
+        return copy_files_list
     except Exception as e:
         getException(e)
         return False
@@ -690,22 +691,16 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
 
         if copy_delete == "copy":
             downloaded_files = downloadFiles(game_file_type, return_label)
-            with open(".\\config\\files.json", encoding='utf-8') as f:
-                download_files = json.load(f)
-                f.close
             extractFiles(downloaded_files[0], downloaded_files[1]) # file path | destination in app assets folder
             files_path = getFilePath(game_file_type)
-            copy_delete_files = getFiles(files_path[0], files_path[1], copy_delete) # assets path | game files path)
-            if len(copy_delete_files) < 1:
+            copy_delete_files = getFiles(files_path[0], files_path[1], files_path[2]) # assets path | game files path)
+            if not copy_delete_files:
                 logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_delete} from 'copy_delete_files'")
                 return False
         elif copy_delete == "delete":
             files_path = getFilePath(game_file_type)
-            copy_delete_files = getFiles(files_path[0], files_path[1], copy_delete) # assets path | game files path)
-            with open(".\\config\\files.json", encoding='utf-8') as f:
-                download_files = json.load(f)
-                f.close
-            if len(copy_delete_files) < 1:
+            copy_delete_files = getFiles(files_path[0], files_path[1], files_path[2]) # assets path | game files path)
+            if not copy_delete_files:
                 logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_delete} from 'copy_delete_files'")
                 return False
             
@@ -718,8 +713,8 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
             game_file = files[1]
 
             found = False
-            logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> files: {len(download_files[game_file_type])} {download_files[game_file_type]}")
-            for file in download_files[game_file_type]:
+            logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files}")
+            for file in files[0]:
                 logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> file: {file} asset_file: {asset_file}")
                 if file in asset_file:
                     logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> VERDADE!")
@@ -759,8 +754,21 @@ def downloadFiles(file_type, return_label):
     Download and save a file specified by url to 'dest' directory.
     """
     file_path = getFilePath(file_type)[0]
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path[0]: {file_path[0]}")
-    dest = file_path[0]
+    # Defines assets path
+    if file_type == "filter":
+        assets_dir = "\\data\\Strings"
+    if file_type == "font":
+        assets_dir = "\\textures\\ui"
+    if file_type == "voice":
+        assets_dir = "\\sounds\\voice"
+    if file_type == "translation":
+        assets_dir = "\\data"
+    if file_type == "asmo_skin":
+        assets_dir = "\\data\\custompreset"
+    
+    file_path = file_path+assets_dir
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}")
+    dest = file_path
     
     logging.debug(f"{sys._getframe().f_code.co_name}() -> dest: {dest}")
     if not os.path.isdir(dest):
@@ -770,7 +778,7 @@ def downloadFiles(file_type, return_label):
     logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}")
 
     if (file_type == "filter"):
-        url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/aionfilterline.zip"
+        url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/aionfilter.zip"
     elif (file_type == "font"):
         url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/hit_number.zip"
     elif (file_type == "voice"):
