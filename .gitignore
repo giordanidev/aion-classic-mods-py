@@ -3,3 +3,4 @@ __pycache__/
 logs/logs.log
 config/config.ini
 config/lists/
+output/
