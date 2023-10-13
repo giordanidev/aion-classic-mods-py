@@ -51,7 +51,7 @@ def main():
         print(file.namelist())
     
     shutil.copy2(file_name, dest_path)
-    print('Arquivo temporário copiado para a pasta "download".')
+    print('Novo arquivo zip copiado para a pasta "download".')
 
     os.remove(file_name)
     os.remove('aionfilterchat_load.pak')
