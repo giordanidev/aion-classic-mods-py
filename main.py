@@ -94,108 +94,129 @@ class createTabs(ctk.CTkTabview):
 
         """self.closeGameButton.configure(command=partial(forceCloseAion, "close", "game", self.closeGameButton, self.infoLabel))"""
 
+
+        
+        
+        #VOICE
         self.voiceLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_voice_label"), height=30, font=font_regular_bold)
         self.voiceLabel.grid(row=1, column=0, padx=padx_both, pady=pady_both, sticky="e")
-        self.filterLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_filter_label"), height=30, font=font_regular_bold)
-        self.filterLabel.grid(row=2, column=0, padx=padx_both, pady=pady_both, sticky="e")
-        self.fontLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_font_label"), height=30, font=font_regular_bold)
-        self.fontLabel.grid(row=3, column=0, padx=padx_both, pady=pady_both, sticky="e")
-        self.translationLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_translation_label"), height=30, font=font_regular_bold)
-        self.translationLabel.grid(row=4, column=0, padx=padx_both, pady=pady_both, sticky="e")
-        self.asmo_skinLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_asmo_skin_label"), height=30, font=font_regular_bold)
-        self.asmo_skinLabel.grid(row=5, column=0, padx=padx_both, pady=pady_both, sticky="e")
-
         self.voiceReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
         self.voiceReturnLabel.grid(row=1, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
-        self.filterReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
-        self.filterReturnLabel.grid(row=2, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
-        self.fontReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
-        self.fontReturnLabel.grid(row=3, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
-        self.translationReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
-        self.translationReturnLabel.grid(row=4, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
-        self.asmo_skinReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
-        self.asmo_skinReturnLabel.grid(row=5, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
-
-        
         self.voiceButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
         self.voiceButton.grid(row=1, column=3, padx=padx_both, pady=pady_both)
-        self.filterButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
-        self.filterButton.grid(row=2, column=3, padx=padx_both, pady=pady_both)
-        self.fontButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
-        self.fontButton.grid(row=3, column=3, padx=padx_both, pady=pady_both)
-        self.translationButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_download"), state="disabled", width=90)
-        self.translationButton.grid(row=4, column=3, padx=padx_both, pady=pady_both)
-        self.asmo_skinButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_download"), state="disabled", width=90)
-        self.asmo_skinButton.grid(row=5, column=3, padx=padx_both, pady=pady_both)
-
         self.voiceDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
         self.voiceDeleteButton.grid(row=1, column=4, padx=padx_both, pady=pady_both)
-        self.filterDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
-        self.filterDeleteButton.grid(row=2, column=4, padx=padx_both, pady=pady_both)
-        self.fontDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
-        self.fontDeleteButton.grid(row=3, column=4, padx=padx_both, pady=pady_both)
-        self.translationDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
-        self.translationDeleteButton.grid(row=4, column=4, padx=padx_both, pady=pady_both)
-        self.asmo_skinDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
-        self.asmo_skinDeleteButton.grid(row=5, column=4, padx=padx_both, pady=pady_both)
-        
-        
-        
         self.voiceButton.configure(command=partial(copyFilesButton,
                                                    "voice",
                                                    "copy",
                                                    self.voiceReturnLabel,
                                                    self.voiceButton,
                                                    self.voiceDeleteButton))
-        self.filterButton.configure(command=partial(copyFilesButton,
-                                                    "filter",
-                                                    "copy",
-                                                    self.filterReturnLabel,
-                                                    self.filterButton,
-                                                    self.filterDeleteButton))
-        self.fontButton.configure(command=partial(copyFilesButton,
-                                                  "font",
-                                                  "copy",
-                                                  self.fontReturnLabel,
-                                                  self.fontButton,
-                                                  self.fontDeleteButton))
-        self.translationButton.configure(command=partial(copyFilesButton,
-                                                  "translation",
-                                                  "copy",
-                                                  self.translationReturnLabel,
-                                                  self.translationButton,
-                                                  self.translationDeleteButton))
-        self.asmo_skinButton.configure(command=partial(copyFilesButton,
-                                                  "asmo_skin",
-                                                  "copy",
-                                                  self.asmo_skinReturnLabel,
-                                                  self.asmo_skinButton,
-                                                  self.asmo_skinDeleteButton))
-
         self.voiceDeleteButton.configure(command=partial(copyFilesButton,
                                                          "voice",
                                                          "delete",
                                                          self.voiceReturnLabel,
                                                          self.voiceButton,
                                                          self.voiceDeleteButton))
+        #FILTER
+        self.filterLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_filter_label"), height=30, font=font_regular_bold)
+        self.filterLabel.grid(row=2, column=0, padx=padx_both, pady=pady_both, sticky="e")
+        self.filterReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
+        self.filterReturnLabel.grid(row=2, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
+        self.filterButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
+        self.filterButton.grid(row=2, column=3, padx=padx_both, pady=pady_both)
+        self.filterDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
+        self.filterDeleteButton.grid(row=2, column=4, padx=padx_both, pady=pady_both)
+        self.filterButton.configure(command=partial(copyFilesButton,
+                                                    "filter",
+                                                    "copy",
+                                                    self.filterReturnLabel,
+                                                    self.filterButton,
+                                                    self.filterDeleteButton))
         self.filterDeleteButton.configure(command=partial(copyFilesButton,
                                                           "filter",
                                                           "delete",
                                                           self.filterReturnLabel,
                                                           self.filterButton,
                                                           self.filterDeleteButton))
+        #FONT
+        self.fontLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_font_label"), height=30, font=font_regular_bold)
+        self.fontLabel.grid(row=3, column=0, padx=padx_both, pady=pady_both, sticky="e")
+        self.fontReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
+        self.fontReturnLabel.grid(row=3, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
+        self.fontButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
+        self.fontButton.grid(row=3, column=3, padx=padx_both, pady=pady_both)
+        self.fontDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
+        self.fontDeleteButton.grid(row=3, column=4, padx=padx_both, pady=pady_both)
+        self.fontButton.configure(command=partial(copyFilesButton,
+                                                  "font",
+                                                  "copy",
+                                                  self.fontReturnLabel,
+                                                  self.fontButton,
+                                                  self.fontDeleteButton))
         self.fontDeleteButton.configure(command=partial(copyFilesButton,
                                                         "font",
                                                         "delete",
                                                         self.fontReturnLabel,
                                                         self.fontButton,
                                                         self.fontDeleteButton))
+        #TRANSLATION NA
+        self.translationLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_translation_label"), height=30, font=font_regular_bold)
+        self.translationLabel.grid(row=4, column=0, padx=padx_both, pady=pady_both, sticky="e")
+        self.translationReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
+        self.translationReturnLabel.grid(row=4, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
+        self.translationButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_download"), state="disabled", width=90)
+        self.translationButton.grid(row=4, column=3, padx=padx_both, pady=pady_both)
+        self.translationDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
+        self.translationDeleteButton.grid(row=4, column=4, padx=padx_both, pady=pady_both)
+        self.translationButton.configure(command=partial(copyFilesButton,
+                                                  "translation",
+                                                  "copy",
+                                                  self.translationReturnLabel,
+                                                  self.translationButton,
+                                                  self.translationDeleteButton))
         self.translationDeleteButton.configure(command=partial(copyFilesButton,
                                                         "translation",
                                                         "delete",
                                                         self.translationReturnLabel,
                                                         self.translationButton,
                                                         self.translationDeleteButton))
+        #TRANSLATION EU
+        self.translationEuLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_translationEu_label"), height=30, font=font_regular_bold)
+        self.translationEuLabel.grid(row=4, column=0, padx=padx_both, pady=pady_both, sticky="e")
+        self.translationEuReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
+        self.translationEuReturnLabel.grid(row=4, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
+        self.translationEuButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_download"), state="disabled", width=90)
+        self.translationEuButton.grid(row=4, column=3, padx=padx_both, pady=pady_both)
+        self.translationEuDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
+        self.translationEuDeleteButton.grid(row=4, column=4, padx=padx_both, pady=pady_both)
+        self.translationEuButton.configure(command=partial(copyFilesButton,
+                                                  "translationEu",
+                                                  "copy",
+                                                  self.translationEuReturnLabel,
+                                                  self.translationEuButton,
+                                                  self.translationEuDeleteButton))
+        self.translationDeleteButton.configure(command=partial(copyFilesButton,
+                                                        "translationEu",
+                                                        "delete",
+                                                        self.translationEuReturnLabel,
+                                                        self.translationEuButton,
+                                                        self.translationEuDeleteButton))
+        #ASMO SKIN FOR ELYOS
+        self.asmo_skinLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_asmo_skin_label"), height=30, font=font_regular_bold)
+        self.asmo_skinLabel.grid(row=5, column=0, padx=padx_both, pady=pady_both, sticky="e")
+        self.asmo_skinReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
+        self.asmo_skinReturnLabel.grid(row=5, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
+        self.asmo_skinButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_download"), state="disabled", width=90)
+        self.asmo_skinButton.grid(row=5, column=3, padx=padx_both, pady=pady_both)
+        self.asmo_skinDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
+        self.asmo_skinDeleteButton.grid(row=5, column=4, padx=padx_both, pady=pady_both)
+        self.asmo_skinButton.configure(command=partial(copyFilesButton,
+                                                  "asmo_skin",
+                                                  "copy",
+                                                  self.asmo_skinReturnLabel,
+                                                  self.asmo_skinButton,
+                                                  self.asmo_skinDeleteButton))
         self.asmo_skinDeleteButton.configure(command=partial(copyFilesButton,
                                                         "asmo_skin",
                                                         "delete",
