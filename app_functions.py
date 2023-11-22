@@ -1,7 +1,7 @@
 from __future__ import (division, absolute_import, print_function, unicode_literals)
 from configparser import ConfigParser
 from tkinter import messagebox, filedialog
-import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale, shutil, time, tempfile, zipfile#, psutil
+import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale, shutil, time, tempfile, zipfile, psutil
 import urllib.request as urllib2
 import urllib.parse as urlparse
 
@@ -416,7 +416,7 @@ def getClassicEuLauncherPath():
 
 def defineRegion():
     """
-    #TODO redo region handling wish JSON
+    #TODO redo config handling with JSON
 
     Defines the region that is used to set which versions of
     the game will have files replaced on request.
@@ -595,7 +595,7 @@ def verifyFiles(game_file_type):
     If they exist, both the Download and Remove buttons will be anabled.
     """
     try:
-        if game_file_type in ("filter", "font", "voice", "translation", "asmo_skin"):
+        if game_file_type in ("filter", "font", "voice", "translation", "translation_eu", "asmo_skin"):
             # Returns [[verify_hash_list], [copy_files_list]]
             files_path = getFilePath(game_file_type)
             available_files = getFiles(files_path[0], files_path[1], files_path[2]) # assets path | game file | file names
@@ -712,35 +712,37 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
             asset_file = files[0]
             game_file = files[1]
 
-            found = False
             logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files}")
-            for file in files[0]:
-                logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> file: {file} asset_file: {asset_file}")
-                if file in asset_file:
-                    logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> VERDADE!")
-                    found = True
-                    break
-            if found == True:
-                if copy_delete == "copy":
-                    if not os.path.isdir(os.path.dirname(game_file)):
-                        logging.debug(f"{sys._getframe().f_code.co_name}() -> MKDIR: {os.path.dirname(game_file)}")
-                        os.makedirs(os.path.dirname(game_file))
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> COPY :: {asset_file} -> {game_file}")
-                    shutil.copy2(asset_file, game_file)
-                elif copy_delete == "delete":
-                    if show_delete_warning == True:
-                        alert = showAlert("askquestion", translateText("functions_show_delete").replace('{FILETYPE}', translateText(f"{game_file_type}")))
-                        if alert == "no":
+            if copy_delete == "copy":
+                #TODO ADD EU/NA VERIFICATION
+                if game_file_type == "translation":
+                    for idioma in ["eng", "fra", "deu"]:
+                        if idioma in game_file.split("\\"):
+                            logging.debug(f"{sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} and idioma: {idioma} -> do NOT copy")
                             return False
-                        else:
-                            show_delete_warning = False
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE? '{asset_file}'-'{game_file}'")
-                    if os.path.isfile(game_file):
-                        logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: '{game_file}'")
-                        os.remove(game_file)
-                    if os.path.isfile(asset_file):
-                        logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: '{asset_file}'")
-                        os.remove(asset_file)
+                if game_file_type == "translation_eu" and "enu" in game_file.split("\\"):
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} and idioma: enu -> do NOT copy")
+                    return False
+                
+                if not os.path.isdir(os.path.dirname(game_file)):
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> MKDIR: {os.path.dirname(game_file)}")
+                    os.makedirs(os.path.dirname(game_file))
+                logging.debug(f"{sys._getframe().f_code.co_name}() -> COPY :: {asset_file} -> {game_file}")
+                shutil.copy2(asset_file, game_file)
+            elif copy_delete == "delete":
+                if show_delete_warning == True:
+                    alert = showAlert("askquestion", translateText("functions_show_delete").replace('{FILETYPE}', translateText(f"{game_file_type}")))
+                    if alert == "no":
+                        return False
+                    else:
+                        show_delete_warning = False
+                logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE? '{asset_file}'-'{game_file}'")
+                if os.path.isfile(game_file):
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: '{game_file}'")
+                    os.remove(game_file)
+                if os.path.isfile(asset_file):
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: '{asset_file}'")
+                    os.remove(asset_file)
                 logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_backup: {copy_delete}")
                 logging.debug(f"FOR END - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files} - FOR END :: show_delete_warning: {show_delete_warning}")
         copy_delete_files = []
@@ -761,7 +763,7 @@ def downloadFiles(file_type, return_label):
         assets_dir = "\\textures\\ui"
     if file_type == "voice":
         assets_dir = "\\sounds\\voice"
-    if file_type == "translation":
+    if file_type in ["translation", "translation_eu"]:
         assets_dir = "\\data"
     if file_type == "asmo_skin":
         assets_dir = "\\data\\custompreset"
@@ -784,7 +786,9 @@ def downloadFiles(file_type, return_label):
     elif (file_type == "voice"):
         url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/voice.zip"
     elif (file_type == "translation"):
-        url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/arquivo/data_ptBR.zip"
+        url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/_arquivo/z_Data_na_ptBR.zip"
+    elif (file_type == "translation_eu"):
+        url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/_arquivo/z_data_eu_ptBR.zip"
     elif (file_type == "asmo_skin"):
         url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/asmo_skin.zip"
 
@@ -842,7 +846,6 @@ def extractFiles(filepath, dest):
         logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {filepath}")
         os.remove(filepath)
 
-"""
 #MAY OR MAY NOT USE IT IN THE FUTURE. FOR NOW, IT STAYS HERE!
 def forceCloseAion(action, game_client, close_button, return_label):
     running_apps = psutil.process_iter(['pid','name']) #returns names of running processes
@@ -891,7 +894,6 @@ def forceCloseAion_thread(action, game_client, close_button, return_label):
     while 1 :
         forceCloseAion(action, game_client, close_button, return_label)
         time.sleep(10)
-"""
 
 def getException(e):
     """

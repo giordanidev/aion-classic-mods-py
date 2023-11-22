@@ -6,13 +6,15 @@
     "voice": "KR voices",
     "filter": "Chat Filter",
     "font": "JP fonts",
-    "translation": "PTBR Translation",
+    "translation": "PTBR Translation NA",
+    "translation_eu": "PTBR Translation EU",
     "asmo_skin": "Asmo Skin Color",
 
     "app_voice_label": "KR Voices:",
     "app_filter_label": "Chat Filter:",
     "app_font_label": "JP Fonts:",
-    "app_translation_label": "PTBR Translation:",
+    "app_translation_label": "PTBR Translation NA:",
+    "app_translation_eu_label": "PTBR Translation EU:",
     "app_asmo_skin_label": "Asmo Skin Color:",
 
     "app_return_label_waiting": "Waiting...",
@@ -57,7 +59,7 @@
     "config_region_radio_eu": "Classic EU",
     "config_region_radio_both": "Both",
 
-    "config_select_folder_button": "Select Folder",
+    "config_select_folder_button": "Select",
 
 
     "functions_wrong_directory": "Selected folder is not the correct {VERSION} game folder. Please select the root {VERSION} game folder.",

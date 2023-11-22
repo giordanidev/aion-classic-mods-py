@@ -87,12 +87,12 @@ class createTabs(ctk.CTkTabview):
         self.closeClientButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_close_client"), state="disabled", width=90)
         self.closeClientButton.grid(row=0, column=1, padx=padx_both, pady=pady_both, sticky="e")
 
-        """self.closeClientButton.configure(command=partial(forceCloseAion, "close", "client", self.closeClientButton, self.infoLabel))"""
+        self.closeClientButton.configure(command=partial(forceCloseAion, "close", "client", self.closeClientButton, self.infoLabel))
 
         self.closeGameButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_close_game"), state="disabled", width=90)
         self.closeGameButton.grid(row=0, column=2, padx=padx_both, pady=pady_both)
 
-        """self.closeGameButton.configure(command=partial(forceCloseAion, "close", "game", self.closeGameButton, self.infoLabel))"""
+        self.closeGameButton.configure(command=partial(forceCloseAion, "close", "game", self.closeGameButton, self.infoLabel))
 
 
         
@@ -182,35 +182,35 @@ class createTabs(ctk.CTkTabview):
                                                         self.translationButton,
                                                         self.translationDeleteButton))
         #TRANSLATION EU
-        self.translationEuLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_translationEu_label"), height=30, font=font_regular_bold)
-        self.translationEuLabel.grid(row=4, column=0, padx=padx_both, pady=pady_both, sticky="e")
+        self.translationEuLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_translation_eu_label"), height=30, font=font_regular_bold)
+        self.translationEuLabel.grid(row=5, column=0, padx=padx_both, pady=pady_both, sticky="e")
         self.translationEuReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
-        self.translationEuReturnLabel.grid(row=4, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
+        self.translationEuReturnLabel.grid(row=5, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
         self.translationEuButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_download"), state="disabled", width=90)
-        self.translationEuButton.grid(row=4, column=3, padx=padx_both, pady=pady_both)
+        self.translationEuButton.grid(row=5, column=3, padx=padx_both, pady=pady_both)
         self.translationEuDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
-        self.translationEuDeleteButton.grid(row=4, column=4, padx=padx_both, pady=pady_both)
+        self.translationEuDeleteButton.grid(row=5, column=4, padx=padx_both, pady=pady_both)
         self.translationEuButton.configure(command=partial(copyFilesButton,
-                                                  "translationEu",
+                                                  "translation_eu",
                                                   "copy",
                                                   self.translationEuReturnLabel,
                                                   self.translationEuButton,
                                                   self.translationEuDeleteButton))
-        self.translationDeleteButton.configure(command=partial(copyFilesButton,
-                                                        "translationEu",
+        self.translationEuDeleteButton.configure(command=partial(copyFilesButton,
+                                                        "translation_eu",
                                                         "delete",
                                                         self.translationEuReturnLabel,
                                                         self.translationEuButton,
                                                         self.translationEuDeleteButton))
         #ASMO SKIN FOR ELYOS
         self.asmo_skinLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_asmo_skin_label"), height=30, font=font_regular_bold)
-        self.asmo_skinLabel.grid(row=5, column=0, padx=padx_both, pady=pady_both, sticky="e")
+        self.asmo_skinLabel.grid(row=6, column=0, padx=padx_both, pady=pady_both, sticky="e")
         self.asmo_skinReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
-        self.asmo_skinReturnLabel.grid(row=5, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
+        self.asmo_skinReturnLabel.grid(row=6, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
         self.asmo_skinButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_download"), state="disabled", width=90)
-        self.asmo_skinButton.grid(row=5, column=3, padx=padx_both, pady=pady_both)
+        self.asmo_skinButton.grid(row=6, column=3, padx=padx_both, pady=pady_both)
         self.asmo_skinDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
-        self.asmo_skinDeleteButton.grid(row=5, column=4, padx=padx_both, pady=pady_both)
+        self.asmo_skinDeleteButton.grid(row=6, column=4, padx=padx_both, pady=pady_both)
         self.asmo_skinButton.configure(command=partial(copyFilesButton,
                                                   "asmo_skin",
                                                   "copy",
@@ -227,12 +227,11 @@ class createTabs(ctk.CTkTabview):
 
         self.verifyAllButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_verify_all"), font=font_big_bold, width=184)
         self.verifyAllButton.grid(row=0, column=3, columnspan=2, padx=padx_both, pady=pady_both)
-        
         self.verifyAllButton.configure(command=partial(verifyFilesButton, 
-                                                   ["translation", "filter", "font", "voice", "asmo_skin"], 
-                                                   [self.translationButton, self.filterButton, self.fontButton, self.voiceButton, self.asmo_skinButton],
-                                                   [self.translationDeleteButton, self.filterDeleteButton, self.fontDeleteButton, self.voiceDeleteButton, self.asmo_skinDeleteButton],
-                                                   [self.translationReturnLabel, self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel, self.asmo_skinReturnLabel],
+                                                   ["translation", "translation_eu", "filter", "font", "voice", "asmo_skin"], 
+                                                   [self.translationButton, self.translationEuButton, self.filterButton, self.fontButton, self.voiceButton, self.asmo_skinButton],
+                                                   [self.translationDeleteButton, self.translationEuDeleteButton, self.filterDeleteButton, self.fontDeleteButton, self.voiceDeleteButton, self.asmo_skinDeleteButton],
+                                                   [self.translationReturnLabel, self.translationEuReturnLabel, self.filterReturnLabel, self.fontReturnLabel, self.voiceReturnLabel, self.asmo_skinReturnLabel],
                                                    self.verifyAllButton,
                                                    self))
 
@@ -302,9 +301,9 @@ class createTabs(ctk.CTkTabview):
         self.euPathButton = ctk.CTkButton(self.configRightFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.euPathEntry), width=120)
         self.euPathButton.grid(row=4, column=3, padx=padx_both, pady=pady_both)
 
-        self.euLauncherPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text="C:\\EU\\Launcher\\Folder")
+        self.euLauncherPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text="C:\\EU\\Launcher\\Folder", state="disabled")
         self.euLauncherPathEntry.grid(row=5, column=0, padx=padx_both, pady=pady_both, columnspan=3, sticky="we")
-        self.euLauncherPathButton = ctk.CTkButton(self.configRightFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.euLauncherPathEntry), width=120)
+        self.euLauncherPathButton = ctk.CTkButton(self.configRightFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.euLauncherPathEntry), width=120, state="disabled")
         self.euLauncherPathButton.grid(row=5, column=3, padx=padx_both, pady=pady_both)
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs populated.")
@@ -343,7 +342,7 @@ class createTabs(ctk.CTkTabview):
 
 app = App()
 app.iconbitmap("./config/img/Aion-Classic-Mods.ico")
-app.geometry("570x267")
+app.geometry("570x300")
 app.resizable(0, 0)
 app.eval("tk::PlaceWindow . center")
 app.mainloop()

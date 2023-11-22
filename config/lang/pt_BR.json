@@ -6,13 +6,15 @@
     "voice": "Vozes KR",
     "filter": "Filtro de 'Chat'",
     "font": "Letras JP",
-    "translation": "Tradução PTBR",
+    "translation": "Tradução PTBR NA",
+    "translation_eu": "Tradução PTBR EU",
     "asmo_skin": "Cor de Pele Asmo",
 
     "app_voice_label": "Vozes KR:",
     "app_filter_label": "Filtro de 'Chat':",
     "app_font_label": "Letras JP:",
-    "app_translation_label": "Tradução PTBR:",
+    "app_translation_label": "Tradução PTBR NA:",
+    "app_translation_eu_label": "Tradução PTBR EU:",
     "app_asmo_skin_label": "Cor de Pele Asmo:",
 
     "app_return_label_waiting": "Esperando...",
@@ -57,7 +59,7 @@
     "config_region_radio_eu": "Clássico EU",
     "config_region_radio_both": "Ambos",
 
-    "config_select_folder_button": "Selecionar Pasta",
+    "config_select_folder_button": "Selecionar",
 
 
     "functions_wrong_directory": "A pasta selecionada não é a correta para a versão {VERSION}. Por favor, selecione a pasta principal do jogo.",
