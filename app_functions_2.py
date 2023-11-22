@@ -634,16 +634,18 @@ def getFiles(assets_path, game_path, file_names):
             for filename in file_names:
                 assets_file = assets_path+filename
                 game_file = game_dir+filename
-                if os.path.isfile(assets_file):
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> ASSETS FILE FOUND.")
+                if os.path.isfile(assets_file) or os.path.isfile(game_file):
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_file: {os.path.isfile(assets_file)} game_file: {os.path.isfile(game_file)}.")
                     copy_files_list.extend([[assets_file, game_file]])
+                    """
                     if os.path.isfile(game_file):
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> GAME FILE FOUND.")
                         logging.debug(f"({assets_path}) {sys._getframe().f_code.co_name}() -> game_file: {game_file}")
                     else:
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> GAME FILE NOT FOUND.")
+                    """
                 else:
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> ASSETS FILE NOT FOUND.")
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> assets_file and game_file NOT FOUND.")
         logging.debug(f"({assets_path}) {sys._getframe().f_code.co_name}() -> copy_files_list: {copy_files_list}")
         return copy_files_list
     except Exception as e:

@@ -1,20 +1,20 @@
 {
     "app_title": "Aion Classic 'Mods' by Load",
-    "app_version": " - v1.3.0",
+    "app_version": " - v1.4.0",
     "app_info_label": "Please choose an option to begin.",
 
     "voice": "KR voices",
     "filter": "Chat Filter",
     "font": "JP fonts",
-    "translation": "PTBR Translation NA",
-    "translation_eu": "PTBR Translation EU",
+    "translation": "BR Translation NA",
+    "translation_eu": "BR Translation EU",
     "asmo_skin": "Asmo Skin Color",
 
     "app_voice_label": "KR Voices:",
     "app_filter_label": "Chat Filter:",
     "app_font_label": "JP Fonts:",
-    "app_translation_label": "PTBR Translation NA:",
-    "app_translation_eu_label": "PTBR Translation EU:",
+    "app_translation_label": "BR Translation NA:",
+    "app_translation_eu_label": "BR Translation EU:",
     "app_asmo_skin_label": "Asmo Skin Color:",
 
     "app_return_label_waiting": "Waiting...",

@@ -4,6 +4,7 @@
     "filter": ["\\data\\Strings\\aionfilterchat.dat", "\\data\\Strings\\aionfilterchat_load.pak", "\\data\\Strings\\aionfilterline.dat",
                "\\aionfilterline_load.pak"],
     "font": ["\\textures\\ui\\hit_number_jp.pak"],
+    "translation_old": ["\\data\\Data_ptBR.pak"],
     "translation": ["\\data\\z_Data_na_ptBR.pak"],
     "translation_eu": ["\\data\\z_data_eu_ptBR.pak"],
     "asmo_skin": ["\\data\\custompreset\\face2siel.pak", "\\data\\custompreset\\face3df15.pak", "\\data\\custompreset\\face4df17.pak",
