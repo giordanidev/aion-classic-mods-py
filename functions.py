@@ -241,13 +241,21 @@ def verifyFilesButton(file_type_list,
 
                     # Sends the file type and verify
                     verify_files_return = verifyFiles(file_type)
-                    if verify_files_return == True:
+                    if verify_files_return in ["both", "game"]:
                         file_type_label_list[type_count].configure(text=translateText("app_return_label_update"), text_color=text_color_success)
                         install_buttons_list[type_count].configure(text=translateText("app_button_update"), state="normal", font=font_regular_bold)
                         delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
-                    else:
+                    elif verify_files_return in ["assets", True]:
+                        file_type_label_list[type_count].configure(text=translateText("app_return_label_install"), text_color=text_color_success)
+                        install_buttons_list[type_count].configure(text=translateText("app_button_install"), state="normal", font=font_regular_bold)
+                        delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
+                    elif verify_files_return == False:
                         file_type_label_list[type_count].configure(text=translateText("app_return_label_download"), text_color=text_color_success)
                         install_buttons_list[type_count].configure(text=translateText("app_button_download"), state="normal", font=font_regular_bold)
+                        delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
+                    else:
+                        file_type_label_list[type_count].configure(text=translateText("app_return_label_install"), text_color=text_color_success)
+                        install_buttons_list[type_count].configure(text=translateText("app_button_install"), state="disabled", font=font_regular)
                         delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
                         
                 verifyFilesThreaded_func = threading.Thread(target=verifyFilesThreaded, args=(file_type, type_count))
@@ -572,13 +580,13 @@ def getFilePath(game_file_type):
         if app_region in ["2", "3"]:
             game_lang.extend(["eng", "fra", "deu"])
             
-        curr_dir = os.getcwd()
         with open(".\\config\\files.json", encoding='utf-8') as f:
             download_files = json.load(f)
             f.close
         # Gets all files and hashes them when files already exist in game path
         files = download_files[game_file_type]
 
+        curr_dir = os.getcwd()
         assets_path = f"{curr_dir}\\assets"
         # Returns [full_file_path]. It can be multiple paths depending on regions selected
         game_path = getGameFilePath(game_lang)
@@ -595,29 +603,26 @@ def verifyFiles(game_file_type):
     If they exist, both the Download and Remove buttons will be anabled.
     """
     try:
-        if game_file_type in ["filter", "font", "voice", "translation", "translation_eu", "asmo_skin"]:
-            # Returns [[verify_hash_list], [copy_files_list]]
-            files_path = getFilePath(game_file_type)
-            available_files = getFiles(files_path[0], files_path[1], files_path[2]) # assets path | game file | file names
-            # available_files = asset files | game folder files
+        files_path = getFilePath(game_file_type)
+        available_files = getFiles(files_path[0], files_path[1], files_path[2]) # assets path | game file | file names
+        # available_files = asset files | game folder files
 
-            if not available_files:
-                logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> asset files not available.")
-                return "assets"
-            elif len(available_files) >= 1:
-                for files in available_files:
-                    logging.debug(f"START WHILE - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files}")
-                    found = False
-                    if os.path.isfile(files[1]):
-                        logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> VERDADE!")
-                        found = True
-                        break
-                    if found == False:
-                        if not os.path.isfile(files[1]):
-                            logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> only asset files available: {len(available_files[0])} - {available_files[0]}")
-                            return "game_files"
-                logging.debug(f"END WHILE - {sys._getframe().f_code.co_name}() -> found: {found}")
-            return found
+        if not available_files:
+            logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() -> asset files not available.")
+            return False
+        elif len(available_files) >= 1:
+            for files in available_files:
+                logging.debug(f"START WHILE - {sys._getframe().f_code.co_name}() -> files: {len(files)} {files}")
+                assets_file = files[0]
+                game_file = files[1]
+                if os.path.isfile(assets_file):
+                    logging.debug(f"WHILE - {sys._getframe().f_code.co_name}() -> VERDADE!")
+                    if os.path.isfile(game_file):
+                        return "both"
+                    else:
+                        return "assets"
+                elif os.path.isfile(game_file):
+                    return "game"
         else:
             return False
     except Exception as e:
@@ -690,22 +695,9 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
     and deletes files.
     """
     try:
+        files_path = getFilePath(game_file_type)
+        copy_delete_files = getFiles(files_path[0], files_path[1], files_path[2]) # assets path | game files path)
 
-        if copy_delete == "copy":
-            downloaded_files = downloadFiles(game_file_type, return_label)
-            extractFiles(downloaded_files[0], downloaded_files[1]) # file path | destination in app assets folder
-            files_path = getFilePath(game_file_type)
-            copy_delete_files = getFiles(files_path[0], files_path[1], files_path[2]) # assets path | game files path)
-            if not copy_delete_files:
-                logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_delete} from 'copy_delete_files'")
-                return False
-        elif copy_delete == "delete":
-            files_path = getFilePath(game_file_type)
-            copy_delete_files = getFiles(files_path[0], files_path[1], files_path[2]) # assets path | game files path)
-            if not copy_delete_files:
-                logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_delete} from 'copy_delete_files'")
-                return False
-            
         logging.debug(f"{sys._getframe().f_code.co_name}() -> files -> type: {game_file_type}: {copy_delete_files}")
         show_delete_warning = True
         logging.debug(f"{sys._getframe().f_code.co_name}() -> copy_delete_files: {copy_delete_files}")
@@ -722,16 +714,29 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
                         if idioma in game_file.split("\\"):
                             logging.debug(f"{sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} and idioma: {idioma} -> do NOT copy")
                             return False
-                if game_file_type == "translation_eu" and "enu" in game_file.split("\\"):
+                elif game_file_type == "translation_eu" and "enu" in game_file.split("\\"):
                     logging.debug(f"{sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} and idioma: enu -> do NOT copy")
                     return False
                 
+                downloaded_files = downloadFiles(game_file_type, return_label)
+                extractFiles(downloaded_files[0], downloaded_files[1]) # file path | destination in app assets folder
+
+                if not copy_delete_files:
+                    logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_delete} from 'copy_delete_files'")
+                    return False
                 if not os.path.isdir(os.path.dirname(game_file)):
                     logging.debug(f"{sys._getframe().f_code.co_name}() -> MKDIR: {os.path.dirname(game_file)}")
                     os.makedirs(os.path.dirname(game_file))
                 logging.debug(f"{sys._getframe().f_code.co_name}() -> COPY :: {asset_file} -> {game_file}")
                 shutil.copy2(asset_file, game_file)
+
             elif copy_delete == "delete":
+                
+                files_path = getFilePath(game_file_type)
+                copy_delete_files = getFiles(files_path[0], files_path[1], files_path[2]) # assets path | game files path)
+                if not copy_delete_files:
+                    logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_delete} from 'copy_delete_files'")
+                    return False
                 if show_delete_warning == True:
                     alert = showAlert("askquestion", translateText("functions_show_delete").replace('{FILETYPE}', translateText(f"{game_file_type}")))
                     if alert == "no":
@@ -851,7 +856,6 @@ def extractFiles(filepath, dest):
 #MAY OR MAY NOT USE IT IN THE FUTURE. FOR NOW, IT STAYS HERE!
 def forceCloseAion(action, game_client, close_button, return_label):
     running_apps = psutil.process_iter(['pid','name']) #returns names of running processes
-    found = False
 
     if game_client == "game":
         app_name = ["aion", "aionclassic"]
@@ -864,6 +868,7 @@ def forceCloseAion(action, game_client, close_button, return_label):
         app_check_phrase = translateText("app_return_label_launcher_found")
         app_close_phrase = translateText("app_return_label_launcher_closed")
 
+    found = False
     for app in running_apps:
         sys_app = app.info.get('name').split('.')
         sys_app_name = sys_app[0].lower()
@@ -893,7 +898,7 @@ def forceCloseAion(action, game_client, close_button, return_label):
         return_label.configure(text=translateText("app_info_aion_notfound"), font=font_regular)
 
 def forceCloseAion_thread(action, game_client, close_button, return_label):
-    while 1 :
+    while 1:
         forceCloseAion(action, game_client, close_button, return_label)
         time.sleep(10)
 

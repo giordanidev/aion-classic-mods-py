@@ -1,4 +1,4 @@
-from app_functions import *
+from functions import *
 import tkinter as tk, customtkinter as ctk, logging
 from functools import partial
 
