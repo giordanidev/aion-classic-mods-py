@@ -290,7 +290,7 @@ def copyFilesButton(file_type, copy_delete, return_label, return_button, delete_
                 return False
             elif copy_files_return == True:
                 if copy_delete == "copy":
-                    return_label.configure(text=translateText("app_return_label_install"), text_color=text_color_success)
+                    return_label.configure(text=translateText("app_return_label_success"), text_color=text_color_success)
                     return_button.configure(text=translateText("app_button_update"), state="enabled", font=font_regular_bold)
                     delete_button.configure(state="normal", font=font_regular_bold)
                 elif copy_delete == "delete":
@@ -695,6 +695,7 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
     and deletes files.
     """
     try:
+        #TODO >> REDO getFiles()
         files_path = getFilePath(game_file_type)
         copy_delete_files = getFiles(files_path[0], files_path[1], files_path[2]) # assets path | game files path)
 
