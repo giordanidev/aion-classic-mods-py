@@ -1,9 +1,9 @@
 {
     "voice": ["\\sounds\\voice\\attack\\attack_kr.pak", "\\sounds\\voice\\cast\\cast_kr.pak", "\\sounds\\voice\\damage\\damage_kr.pak",
-              "\\sounds\\voice\\defense\\defence_kr.pak", "\\sounds\\voice\\login\\login_kr.pak", "\\sounds\\voice\\motion\\motion_kr.pak"],
+              "\\sounds\\voice\\defence\\defence_kr.pak", "\\sounds\\voice\\login\\login_kr.pak", "\\sounds\\voice\\motion\\motion_kr.pak"],
 
     "filter": ["\\data\\Strings\\aionfilterchat.dat", "\\data\\Strings\\aionfilterchat_load.pak", "\\data\\Strings\\aionfilterline.dat",
-               "\\aionfilterline_load.pak"],
+               "\\data\\Strings\\aionfilterline_load.pak"],
 
     "font": ["\\textures\\ui\\hit_number_jp.pak"],
     
