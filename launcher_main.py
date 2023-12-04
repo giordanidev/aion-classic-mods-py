@@ -17,6 +17,7 @@ class App(ctk.CTk):
         ctk.set_appearance_mode(app_config.get('app', 'theme'))
         ctk.set_default_color_theme(app_config.get('app', 'color').lower())
 
+        configJson()
 
 app = App()
 app.iconbitmap("./config/img/AionClassicMods.ico")

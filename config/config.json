@@ -19,7 +19,7 @@
         ]
     },
     "EU_launcher_path": "C:\\Program Files (x86)\\GameforgeClient",
-    "stop_asking": true,
+    "stop_asking": false,
     "on_start": true,
-    "always_update": true
+    "always_update": false
 }

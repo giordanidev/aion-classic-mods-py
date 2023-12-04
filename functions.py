@@ -939,3 +939,11 @@ def getException(e):
         'trace': trace
     })
     showAlert("showerror", translateText("functions_show_critical_error")+"\n\n"+str(e))
+
+
+def configJson():
+    with open(".\\config\\config.json", encoding='utf-8') as f:
+        config_json = json.load(f)
+        f.close
+    print(config_json)
+    print(config_json["paths"]["NA"][0])
