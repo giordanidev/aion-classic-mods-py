@@ -2,5 +2,5 @@ venv/
 __pycache__/
 output/
 assets/
-logs/logs.log
+logs/
 config/config.ini
