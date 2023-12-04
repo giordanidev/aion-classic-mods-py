@@ -1,6 +1,11 @@
 {
     "app_title": "Aion Classic 'Mods' por Load",
-    "reserved_to_version": "en_US app_version",
+    "app_launcher_title": " - Atualizador",
+    "app_launcher_stop_asking": "Não perguntar novamente",
+    "app_launcher_on_start": "Verificar ao iniciar",
+    "app_launcher_always_update": "Sempre atualizar",
+    
+
     "app_info_label": "Por favor, escolha uma ação para começar!",
 
     "voice": "Vozes KR",

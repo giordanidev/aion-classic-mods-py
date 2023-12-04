@@ -1,19 +1,25 @@
 {
     "theme": "System",
     "color": "Blue",
-    "regions": ["na", "eu"],
+    "regions": ["NA", "EU"],
     "paths": {
-        "na": "E:\\JOGOS\\AION_CLASSIC",
-        "eu": "E:\\JOGOS\\aionclassic"
+        "NA": ["E:\\JOGOS\\AION_CLASSIC", true],
+        "EU": ["E:\\JOGOS\\aionclassic", true]
     },
     "langs": {
-        "na": [
-            ["enu", true]
+        "NA":
+        [
+            ["ENU", true]
         ],
-        "eu": [
-            ["fra", true],
-            ["eng", false],
-            ["deu", false]
+        "EU":
+        [
+            ["FRA", false],
+            ["ENG", true],
+            ["DEU", false]
         ]
-    }
+    },
+    "EU_launcher_path": "C:\\Program Files (x86)\\GameforgeClient",
+    "stop_asking": true,
+    "on_start": true,
+    "always_update": true
 }
