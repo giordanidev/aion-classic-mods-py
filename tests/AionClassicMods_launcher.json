@@ -7,7 +7,7 @@
   },
   {
    "optionDest": "filenames",
-   "value": "D:/giordanidev/aion-classic-mods-py/main.py"
+   "value": "D:/giordanidev/aion-classic-mods-py/main_launcher.py"
   },
   {
    "optionDest": "onefile",
@@ -19,11 +19,11 @@
   },
   {
    "optionDest": "icon_file",
-   "value": "D:/giordanidev/aion-classic-mods-py/config/img/Aion-Classic-Mods.ico"
+   "value": "D:/giordanidev/aion-classic-mods-py/config/img/AionClassicMods_launcher.ico"
   },
   {
    "optionDest": "name",
-   "value": "Aion-Classic-Mods"
+   "value": "AionClassicMods_launcher"
   },
   {
    "optionDest": "ascii",
@@ -80,10 +80,6 @@
   {
    "optionDest": "datas",
    "value": "D:/giordanidev/aion-classic-mods-py/config;config/"
-  },
-  {
-   "optionDest": "datas",
-   "value": "D:/giordanidev/aion-classic-mods-py/assets;assets/"
   },
   {
    "optionDest": "datas",
