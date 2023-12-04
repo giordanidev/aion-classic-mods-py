@@ -1,5 +1,6 @@
 venv/
 __pycache__/
 output/
+assets/
 logs/logs.log
 config/config.ini
