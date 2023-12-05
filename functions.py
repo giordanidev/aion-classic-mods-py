@@ -848,7 +848,7 @@ def downloadFiles(file_type, return_label):
         if meta_length:
             file_size = int(meta_length[0])
             
-        print(f"Testing with {file_size} Bytes download")
+        #print(f"Testing with {file_size} Bytes download")
         print("Downloading: {0} Bytes: {1}".format(url, file_size))
 
         file_size_dl = 0
@@ -955,5 +955,12 @@ def configJson():
     with open(".\\config\\config.json", encoding='utf-8') as f:
         config_json = json.load(f)
         f.close
-    print(config_json)
-    print(config_json["paths"]["NA"][0])
+    #print(config_json)
+    #print(config_json["paths"]["NA"][0])
+
+def checkUpdates():
+    url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/version.json"
+    cloud_json = urllib2.urlopen(url)
+    cloud_version = json.loads(cloud_json.read())
+    print(cloud_version)
+    return cloud_version

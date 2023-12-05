@@ -22,6 +22,9 @@ class App(ctk.CTk):
         #center app on main screen 
         centerApp(350, 150, self)
 
+        
+        cloud_version = checkUpdates()
+
 app = App()
 app.iconbitmap("./config/img/AionClassicMods.ico")
 app.resizable(0, 0)
