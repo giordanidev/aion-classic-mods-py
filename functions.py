@@ -129,6 +129,16 @@ font_big_bold = ("", 13, "bold")
 padx_both = 2.5
 pady_both = 2.5
 
+def centerApp(width, height, self):
+    #center the app on screen
+    window_width = width
+    window_height = height
+    screen_width = self.winfo_screenwidth()
+    screen_height = self.winfo_screenheight()
+    x_cordinate = int((screen_width/2) - (window_width/2))
+    y_cordinate = int((screen_height/2) - (window_height/2) - 50)
+    self.geometry("{}x{}+{}+{}".format(window_width, window_height, x_cordinate, y_cordinate))
+
 def regionSelection(self):
     try:
         app_config = appConfigLoad()[0]
