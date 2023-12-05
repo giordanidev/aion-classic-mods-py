@@ -33,6 +33,17 @@ class App(ctk.CTk):
         self.current_ui = []
         self.current_ui.append(self.tabsView)
 
+        #center the app on screen
+        window_width = 570
+        window_height = 350
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        x_cordinate = int((screen_width/2) - (window_width/2))
+        y_cordinate = int((screen_height/2) - (window_height/2))
+        print(self.winfo_screenwidth())
+        print(self.winfo_screenheight())
+        self.geometry("{}x{}+{}+{}".format(window_width, window_height, x_cordinate, y_cordinate))
+
     def changeColorEvent(self, color):
 
         en_color = getEnglishTranslation(color)
@@ -250,10 +261,9 @@ class createTabs(ctk.CTkTabview):
         appConfigSave(app_config)
         ctk.set_appearance_mode(en_theme)
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Theme changed to '{value.capitalize()}'.")
+        
 
 app = App()
 app.iconbitmap("./config/img/AionClassicMods.ico")
-app.geometry("570x300")
 app.resizable(0, 0)
-app.eval("tk::PlaceWindow . center")
 app.mainloop()
