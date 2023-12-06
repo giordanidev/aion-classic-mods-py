@@ -1,4 +1,4 @@
-#TODO LAUNCHER TO CHECK PROGRAM UPDATES
+#TODO UPDATER TO CHECK PROGRAM UPDATES
 #DOWNLOAD AND INSTALL UPDATE? YES/NO.
 
 from functions import *
@@ -8,7 +8,7 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title(translateText("app_title") + translateText("app_launcher_title") + translateText("app_launcher_version"))
+        self.title(translateText("app_title") + translateText("app_updater_title") + translateText("app_updater_version"))
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -20,7 +20,7 @@ class App(ctk.CTk):
         configJson()
 
         #center app on main screen 
-        centerApp(350, 150, self)
+        centerApp(450, 150, self)
 
         
         cloud_version = checkUpdates()

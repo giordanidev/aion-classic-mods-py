@@ -950,7 +950,6 @@ def getException(e):
     })
     showAlert("showerror", translateText("functions_show_critical_error")+"\n\n"+str(e))
 
-
 def configJson():
     with open(".\\config\\config.json", encoding='utf-8') as f:
         config_json = json.load(f)
@@ -960,7 +959,12 @@ def configJson():
 
 def checkUpdates():
     url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/version.json"
+    local = ".\\download\\version.json"
     cloud_json = urllib2.urlopen(url)
     cloud_version = json.loads(cloud_json.read())
-    print(cloud_version)
-    return cloud_version
+
+    with open(local, encoding='utf-8') as f:
+        local_version = json.load(f)
+        f.close
+    print(f"LOCAL:{local_version} \nCLOUD: {cloud_version}")
+    return local_version, cloud_version

@@ -7,7 +7,7 @@
   },
   {
    "optionDest": "filenames",
-   "value": "D:/giordanidev/aion-classic-mods-py/main_launcher.py"
+   "value": "D:/giordanidev/aion-classic-mods-py/main_updater.py"
   },
   {
    "optionDest": "onefile",
@@ -23,7 +23,7 @@
   },
   {
    "optionDest": "name",
-   "value": "AionClassicMods_launcher"
+   "value": "AionClassicMods_updater"
   },
   {
    "optionDest": "ascii",
