@@ -966,5 +966,7 @@ def checkUpdates():
     with open(local, encoding='utf-8') as f:
         local_version = json.load(f)
         f.close
-    print(f"LOCAL:{local_version} \nCLOUD: {cloud_version}")
+    print(f"LOCAL: {local_version} \nCLOUD: {cloud_version}")
+
+    
     return local_version, cloud_version

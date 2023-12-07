@@ -35,6 +35,10 @@ class App(ctk.CTk):
         
         #center app on main screen 
         centerApp(580, 305, self)
+        
+        self.iconbitmap("./config/img/AionClassicMods.ico")
+        self.resizable(0, 0)
+        self.mainloop()
 
     def changeColorEvent(self, color):
 
@@ -244,6 +248,8 @@ class createTabs(ctk.CTkTabview):
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values read.")
 
+        
+
     def change_theme_event(self, value):
 
         en_theme = getEnglishTranslation(value)
@@ -256,6 +262,3 @@ class createTabs(ctk.CTkTabview):
         
 
 app = App()
-app.iconbitmap("./config/img/AionClassicMods.ico")
-app.resizable(0, 0)
-app.mainloop()
