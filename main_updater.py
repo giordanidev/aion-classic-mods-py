@@ -4,6 +4,8 @@
 from functions import *
 import tkinter as tk, customtkinter as ctk, logging
 
+logging.debug(f"{sys._getframe().f_code.co_name}() -> Updater initialized.")
+
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -37,7 +39,7 @@ class App(ctk.CTk):
             self.updaterFrame.grid_columnconfigure(1, weight=1)
 
             self.infoLabel = ctk.CTkLabel(self.updaterFrame, text="Aguardando")
-            self.infoLabel.grid(row=0, column=0, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
+            self.infoLabel.grid(row=0, column=0, columnspan=2, padx=padx_both, pady=pady_both, sticky="we")
             
             cloud_version = checkUpdates()
 

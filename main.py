@@ -116,7 +116,7 @@ class createTabs(ctk.CTkTabview):
             self.nome_campoButton = f"{campo}Button"
             self.nome_campoDeleteButton = f"{campo}DeleteButton"
             
-            self.nome_campoLabel = ctk.CTkLabel(self.appTopFrame, text=translateText(f"app_{campo}_label"), height=30, font=font_regular_bold)
+            self.nome_campoLabel = ctk.CTkLabel(self.appTopFrame, text=translateText(f"app_{campo}_label")+":", height=30, font=font_regular_bold)
             self.nome_campoLabel.grid(row=linha, column=0, padx=padx_both, pady=pady_both, sticky="e")
             self.nome_campoReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
             self.nome_campoReturnLabel.grid(row=linha, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")

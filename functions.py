@@ -5,7 +5,19 @@ import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, loca
 import urllib.request as urllib2
 import urllib.parse as urlparse
 
-logging.basicConfig(filename='.\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=logging.DEBUG, filemode='w')
+arg_count = 0
+arg_found = False
+for arg in sys.argv:
+    if arg == "--LOGS":
+        log_level = sys.argv[arg_count+1]
+        if log_level == "DEBUG":
+            log_level = logging.DEBUG
+            arg_found = True
+    arg_count += 1
+if arg_found == False:
+    log_level = logging.INFO
+    
+logging.basicConfig(filename='.\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=log_level, filemode="w")
 logging.getLogger().addHandler(logging.StreamHandler())
 
 logging.debug(f"{sys._getframe().f_code.co_name}() -> App initialized.")
@@ -13,6 +25,15 @@ logging.debug(f"{sys._getframe().f_code.co_name}() -> app_functions.py imported.
 
 # GLOBAL VARIABLES
 copy_delete_files = ""
+config_path = ".\\config\\config.json"
+version_path = ".\\download\\version.json"
+version_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/version.json"
+filter_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/aionfilter.zip"
+font_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/hit_number.zip"
+voice_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/voice.zip"
+translation_url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/_arquivo/z_Data_na_ptBR.zip"
+translation_eu_url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/_arquivo/z_data_eu_ptBR.zip"
+asmo_skin_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/asmo_skin.zip"
 
 # Gets system language to load the correct "lang" file for app translation
 def getLang():
@@ -765,7 +786,7 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
                     logging.warning(f"ERROR -> {sys._getframe().f_code.co_name}() :: Nothing to {copy_delete} from 'copy_delete_files'")
                     return False
                 if show_delete_warning == True:
-                    alert = showAlert("askquestion", translateText("functions_show_delete").replace('{FILETYPE}', translateText(f"{game_file_type}")))
+                    alert = showAlert("askquestion", translateText("functions_show_delete").replace('{FILETYPE}', translateText(f"app_{game_file_type}_label")))
                     if alert == "no":
                         return False
                     else:
@@ -815,17 +836,17 @@ def downloadFiles(file_type, return_label):
     logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}")
 
     if (file_type == "filter"):
-        url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/aionfilter.zip"
+        url = filter_url
     elif (file_type == "font"):
-        url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/hit_number.zip"
+        url = font_url
     elif (file_type == "voice"):
-        url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/voice.zip"
+        url = voice_url
     elif (file_type == "translation"):
-        url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/_arquivo/z_Data_na_ptBR.zip"
+        url = translation_url
     elif (file_type == "translation_eu"):
-        url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/_arquivo/z_data_eu_ptBR.zip"
+        url = translation_eu_url
     elif (file_type == "asmo_skin"):
-        url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/asmo_skin.zip"
+        url = asmo_skin_url
 
     u = urllib2.urlopen(url)
 
@@ -951,19 +972,17 @@ def getException(e):
     showAlert("showerror", translateText("functions_show_critical_error")+"\n\n"+str(e))
 
 def configJson():
-    with open(".\\config\\config.json", encoding='utf-8') as f:
+    with open(config_path, encoding='utf-8') as f:
         config_json = json.load(f)
         f.close
     #print(config_json)
     #print(config_json["paths"]["NA"][0])
 
 def checkUpdates():
-    url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/version.json"
-    local = ".\\download\\version.json"
-    cloud_json = urllib2.urlopen(url)
+    cloud_json = urllib2.urlopen(version_url)
     cloud_version = json.loads(cloud_json.read())
 
-    with open(local, encoding='utf-8') as f:
+    with open(version_path, encoding='utf-8') as f:
         local_version = json.load(f)
         f.close
     print(f"LOCAL: {local_version} \nCLOUD: {cloud_version}")
