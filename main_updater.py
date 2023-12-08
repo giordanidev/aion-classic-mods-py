@@ -1,5 +1,5 @@
-#TODO UPDATER TO CHECK PROGRAM UPDATES
-#DOWNLOAD AND INSTALL UPDATE? YES/NO.
+#TODO
+#ADD OWN FUNCTIONS FILE/LOGS
 
 from functions import *
 import tkinter as tk, customtkinter as ctk, logging
