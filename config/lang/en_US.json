@@ -4,9 +4,8 @@
     "app_info_label": "Please choose an option to begin.",
     
     "app_updater_title": " - Updater",
-    "app_updater_stop_asking": "Don't ask anymore",
     "app_updater_on_start": "Verify at startup",
-    "app_updater_always_update": "Always update",
+    "app_updater_always_update": "Always install updates",
     "app_updater_version": " - v1.0.0",
     "app_updater_searching": "Searching for updates... please wait.",
     "app_updater_found": "New update found! Do you wish to install it?",
@@ -41,6 +40,7 @@
     "app_button_update": "Update",
     "app_button_close_game": "Close Aion",
     "app_button_close_client": "Close Launcher",
+    "app_button_updater_ignore": "Ignore",
 
 
     "config_theme_label": "Theme:",
@@ -49,6 +49,7 @@
     "config_na_label": "NA Game Folder:",
     "config_eu_label": "EU Game Folder",
     "config_eulauncher_label": "EU Launcher Folder:",
+    "config_verify_on_start": "Verify files on start",
 
     "config_theme_system": "System",
     "config_theme_dark": "Dark",

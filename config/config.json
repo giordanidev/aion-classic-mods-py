@@ -1,7 +1,7 @@
 {
     "first_run": true,
     "theme": "System",
-    "color": "Dark-blue",
+    "color": "Blue",
     "regions": [
         [
             "NA",
@@ -21,7 +21,7 @@
         "C:/Program Files (x86)/GameforgeClient",
         true
     ],
-    "stop_asking": false,
     "on_start": true,
-    "always_update": false
+    "always_update": false,
+    "verify_on_start": false
 }
