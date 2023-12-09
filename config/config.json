@@ -7,13 +7,13 @@
             "NA",
             "Classic NA",
             "E:/JOGOS/AION_CLASSIC",
-            false
+            true
         ],
         [
             "EU",
             "Classic EU",
             "E:/JOGOS/aionclassic",
-            false
+            true
         ]
     ],
     "langs": [],

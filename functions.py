@@ -5,42 +5,6 @@ import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, loca
 import urllib.request as urllib2
 import urllib.parse as urlparse
 
-
-def appConfigJson():
-    with open(".\\config\\config.json", encoding='utf-8') as f:
-        config_json = json.load(f)
-    f.close
-    return config_json
-app_config = appConfigJson()
-
-def appConfigSave(app_config):
-    try:
-        with open(config_path, 'w') as config_write:
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> appConfigSave: {app_config}")
-            json_object = json.dumps(app_config, indent=4)
-            config_write.write(json_object)
-    except Exception as e:
-        getException(e)
-        return False
-    
-arg_count = 0
-arg_found = False
-for arg in sys.argv:
-    if arg == "--LOGS":
-        log_level = sys.argv[arg_count+1]
-        if log_level == "DEBUG":
-            log_level = logging.DEBUG
-            arg_found = True
-    arg_count += 1
-if arg_found == False:
-    log_level = logging.INFO
-    
-logging.basicConfig(filename='.\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=log_level, filemode="w")
-logging.getLogger().addHandler(logging.StreamHandler())
-
-logging.info(f"{sys._getframe().f_code.co_name}() -> App initialized.")
-logging.debug(f"{sys._getframe().f_code.co_name}() -> app_functions.py imported.")
-
 # GLOBAL VARIABLES
 copy_delete_files = ""
 config_path = ".\\config\\config.json"
@@ -54,8 +18,58 @@ translation_url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/_ar
 translation_eu_url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/_arquivo/z_data_eu_ptBR.zip"
 asmo_skin_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/asmo_skin.zip"
 
-# Gets system language to load the correct "lang" file for app translation
+def appConfigJson():
+    with open(".\\config\\config.json", encoding='utf-8') as f:
+        config_json = json.load(f)
+    f.close
+    return config_json
+# GLOBAL VARIABLE
+app_config = appConfigJson()
+
+def appConfigSave(app_config):
+    try:
+        with open(config_path, 'w') as config_write:
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> appConfigSave: {app_config}")
+            json_object = json.dumps(app_config, indent=4)
+            config_write.write(json_object)
+    except Exception as e:
+        getException(e)
+        return False
+
+def appVersion():
+    with open(version_path, encoding='utf-8') as f:
+        local_version = json.load(f)
+        f.close
+    return local_version
+# GLOBAL VARIABLE
+local_version = appVersion()
+
+def setLogLevel():
+    arg_count = 0
+    arg_found = False
+    for arg in sys.argv:
+        if arg == "--LOGS":
+            log_level = sys.argv[arg_count+1]
+            if log_level == "DEBUG":
+                log_level = logging.DEBUG
+                arg_found = True
+        arg_count += 1
+    if arg_found == False:
+        log_level = logging.INFO
+    return log_level
+# GLOBAL VARIABLE
+log_level = setLogLevel()
+    
+logging.basicConfig(filename='.\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=log_level, filemode="w")
+logging.getLogger().addHandler(logging.StreamHandler())
+
+logging.info(f"{sys._getframe().f_code.co_name}() -> App initialized.")
+logging.debug(f"{sys._getframe().f_code.co_name}() -> app_functions.py imported.")
+
 def getLang():
+    """
+    Gets system language to load the correct "lang" file for app's translation.
+    """
     try:
         windll = ctypes.windll.kernel32
         app_lang = locale.windows_locale[windll.GetUserDefaultUILanguage()]
@@ -111,29 +125,13 @@ def getLangTranslation(value):
         getException(e)
         return False
 
-"""
-def get_langs():
-    with open('./config/config.json') as config_file:
-        data = json.load(config_file)
-    if "langs" in data:
-        langs = data["langs"]
-    else:
-        langs = False
-    return langs
-
-def get_regions():
-    with open('./config/config.json') as config_file:
-        data = json.load(config_file)
-    regions = data["regions"]
-    return regions
-"""
-
 ###########################################################
 ###########                                     ###########
 ###########   START  MAIN.PY FUNCTIONS          ###########
 ###########                                     ###########
 ###########################################################
 
+# GLOBAL VARIABLES
 text_color_success = ("#007514", "#7EFF93")
 text_color_fail = ("#D80000", "#FF6969")
 text_color_verifying = ("black", "white")
@@ -144,7 +142,9 @@ padx_both = 2.5
 pady_both = 2.5
 
 def centerApp(width, height, self):
-    #center the app on screen
+    """
+    Centers the app in the computer's main screen on start.
+    """
     window_width = width
     window_height = height
     screen_width = self.winfo_screenwidth()
@@ -294,6 +294,12 @@ def copyFilesButton(file_type, copy_delete, return_label, return_button, delete_
 ###########################################################
 
 def firstRun():
+    """
+    List of tasks to be executed on the app's first run. Such as:
+    - Try to locate NA's and EU's client and launcher installation paths;
+    - Try to identify region's translation folders;
+    - Confirm that paths found are current being used.
+    """
     try:
         global app_config
         if app_config['first_run'] == True:
@@ -332,6 +338,7 @@ def getClassicNaPath():
             global app_config
             region_index = getRegionIndex("NA")
             app_config['regions'][region_index][2] = classic_na_path.replace("\\","/")
+            app_config['regions'][region_index][3] = True
             appConfigSave(app_config)
             return True
         else:
@@ -370,6 +377,7 @@ def getClassicEuPath():
                     global app_config
                     region_index = getRegionIndex("EU")
                     app_config['regions'][region_index][2] = classic_eu_path.replace("\\","/")
+                    app_config['regions'][region_index][3] = True
                     appConfigSave(app_config)
                     return True
             except:
@@ -926,13 +934,10 @@ def getException(e):
     showAlert("showerror", translateText("functions_show_critical_error")+"\n\n"+str(e))
 
 def checkUpdates():
+    global local_version
     cloud_json = urllib2.urlopen(version_url)
     cloud_version = json.loads(cloud_json.read())
-
-    with open(version_path, encoding='utf-8') as f:
-        local_version = json.load(f)
-        f.close
-    return local_version, cloud_version
+    return cloud_version
 
 def getRegionIndex(region):
     global app_config

@@ -30,7 +30,7 @@ class App(ctk.CTk):
         self.current_ui = []
         self.current_ui.append(self.tabsView)
         
-        #center app on main screen 
+        # DEFINES APP SIZE AND POSITION ON MAIN SCREEN
         centerApp(580, 305, self)
         
         self.iconbitmap(app_icon)
