@@ -170,7 +170,8 @@ def selectDirectory(path_entry):
     try:
         logging.debug(f"{sys._getframe().f_code.co_name}() -> 'Select Folder' ({path_entry.cget('placeholder_text')}) button pressed.")
 
-        game_directory = filedialog.askdirectory().replace("/","\\")
+        #game_directory = filedialog.askdirectory().replace("/","\\")
+        game_directory = filedialog.askdirectory().replace("\\","/")
         logging.debug(f"{sys._getframe().f_code.co_name}() -> game_directory: {game_directory}.")
 
         if game_directory is not None:
