@@ -4,13 +4,16 @@ from functools import partial
 
 logging.debug(f"{sys._getframe().f_code.co_name}() -> main.py imported.")
 
+# Read configs from file
+load_configs = appConfigLoad()
+app_config = load_configs[0]
+config_full_path = load_configs[0]
+        
 gerar_campos = ["translation", "translation_eu", "filter", "font", "voice", "asmo_skin"]
 
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
-
-        global app_config
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> App() class initialized.")
 
@@ -20,8 +23,8 @@ class App(ctk.CTk):
         self.grid_columnconfigure(0, weight=1)
 
         # System appearance
-        ctk.set_appearance_mode(app_config['theme'])
-        ctk.set_default_color_theme(app_config['color'].lower())
+        ctk.set_appearance_mode(app_config.get('app', 'theme'))
+        ctk.set_default_color_theme(app_config.get('app', 'color').lower())
 
         self.tabsView = createTabs(self, self.changeColorEvent)
         self.tabsView.grid(row=0, column=0, padx=padx_both, pady=pady_both, sticky="nsew")
@@ -38,17 +41,17 @@ class App(ctk.CTk):
         self.mainloop()
 
     def changeColorEvent(self, color):
-        global app_config
+
         en_color = getEnglishTranslation(color)
 
         ctk.set_default_color_theme(en_color.lower())
-        app_config['color'] = en_color
+        app_config = appConfigLoad()[0]
+        app_config.set('app', 'color', en_color)
         appConfigSave(app_config)
         self.resetCurrentUi()
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Color changed to '{color.capitalize()}'.")
 
     def resetCurrentUi(self):
-        global app_config
         for widget in self.current_ui:
             widget.destroy()
         self.tabsView = createTabs(self, self.changeColorEvent)
@@ -60,13 +63,13 @@ class createTabs(ctk.CTkTabview):
     def __init__(self, master, changeColorEvent, **kwargs):
         super().__init__(master=master, **kwargs)
 
-        global app_config
-
         logging.debug(f"{sys._getframe().f_code.co_name}() -> createTabs() class initialized.")
 
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> app_config: {app_config}")
+        app_config = appConfigLoad()[0]
 
-        # START CREATE TABS
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> app_config.items(): {app_config.items('app')}")
+
+        # create tabs
         self.add("App")
         appTab = self.tab("App")
         appTab.grid_rowconfigure(0, weight=1)
@@ -78,12 +81,10 @@ class createTabs(ctk.CTkTabview):
         configTab.grid_columnconfigure(1, weight=1)
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs created.")
-        # END CREATE TABS
         
-        # DO FIRST RUN THINGS (CHECK COMMAND FOR MORE INFO)
         firstRun()
 
-        ## START GENERATE APP MAIN FRAME
+        # App tab widgets
         self.appTopFrame = ctk.CTkFrame(appTab)
         self.appTopFrame.grid(row=0, column=0, sticky="new")
         self.appTopFrame.configure(fg_color="transparent")
@@ -103,11 +104,12 @@ class createTabs(ctk.CTkTabview):
         self.closeGameButton.configure(command=partial(forceCloseAion, "close", "game", self.closeGameButton, self.infoLabel))
 
 
-        # START GENERATE LABELS/BUTTONS FOR ASSETS
+
         linha = 1
         all_buttons = []
         all_deleteButtons = []
         all_returnLabels = []
+        #GERAR CAMPOS/BOTÕES DRY
         for campo in gerar_campos:
             self.nome_campoLabel = f"{campo}Label"
             self.nome_campoReturnLabel = f"{campo}ReturnLabel"
@@ -138,7 +140,7 @@ class createTabs(ctk.CTkTabview):
             all_deleteButtons.append(self.nome_campoDeleteButton)
             all_returnLabels.append(self.nome_campoReturnLabel)
             linha += 1
-        # END GENERATE LABELS/BUTTONS FOR ASSETS
+            
 
 
         self.verifyAllButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_verify_all"), font=font_big_bold, width=184)
@@ -150,9 +152,8 @@ class createTabs(ctk.CTkTabview):
                                                    all_returnLabels,
                                                    self.verifyAllButton,
                                                    self))
-        ## END GENERATE APP MAIN FRAME
 
-        ## START GENERATE CONFIG LEFT FRAME
+        # Config tab widgets > Left
         self.configLeftFrame = ctk.CTkFrame(configTab, fg_color="transparent")
         self.configLeftFrame.grid(row=0, column=0, sticky="ns")
 
@@ -226,17 +227,24 @@ class createTabs(ctk.CTkTabview):
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs populated.")
 
         # DEFAULT VALUES
+        app_config = appConfigLoad()[0]
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values -> "+
-                      f"theme: {app_config['theme']} | "+
-                      f"color: {app_config['color']}"+
-                      f"eu_launcher_path: {app_config['eu_launcher_path']} | ")
-        if app_config['theme']:
-            lang_theme = getLangTranslation(app_config['theme'])
+                      f"theme: {app_config.get('app', 'theme')} | "+
+                      f"region: {app_config.get('app', 'region')} | "+
+                      f"napath: {app_config.get('app', 'napath')} | "+
+                      f"eupath: {app_config.get('app', 'eupath')} | "+
+                      f"eulauncherpath: {app_config.get('app', 'eulauncherpath')} | "+
+                      f"color: {app_config.get('app', 'color')}")
+        if app_config.get('app', 'theme'):
+            lang_theme = getLangTranslation(app_config.get('app', 'theme'))
             self.themeButton.set(lang_theme)
-        if app_config['color']:
-            lang_color = getLangTranslation(app_config['color'])
+        if app_config.get('app', 'color'):
+            lang_color = getLangTranslation(app_config.get('app', 'color'))
             self.colorButton.set(lang_color)
-        if app_config['eu_launcher_path']: self.euLauncherPathEntry.insert(0, app_config['eu_launcher_path'])
+        if app_config.get('app', 'region'): self.regionRadio.set(app_config.get('app', 'region'))
+        if app_config.get('app', 'napath'): self.naPathEntry.insert(0, app_config.get('app', 'napath'))
+        if app_config.get('app', 'eupath'): self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
+        if app_config.get('app', 'eulauncherpath'): self.euLauncherPathEntry.insert(0, app_config.get('app', 'eulauncherpath'))
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values read.")
 
@@ -246,8 +254,8 @@ class createTabs(ctk.CTkTabview):
 
         en_theme = getEnglishTranslation(value)
 
-        global app_config
-        app_config['theme'] = en_theme
+        app_config = appConfigLoad()[0]
+        app_config.set('app', 'theme', en_theme)
         appConfigSave(app_config)
         ctk.set_appearance_mode(en_theme)
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Theme changed to '{value.capitalize()}'.")

@@ -10,12 +10,7 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        def appConfigJson():
-            with open(".\\config\\config.json", encoding='utf-8') as f:
-                config_json = json.load(f)
-            f.close
-            return config_json
-        app_config_json = appConfigJson()
+        global app_config
 
         self.title(translateText("app_title") + translateText("app_updater_title") + translateText("app_updater_version"))
 
@@ -23,15 +18,13 @@ class App(ctk.CTk):
         self.grid_columnconfigure(0, weight=1)
 
         # System appearance
-        ctk.set_appearance_mode(app_config_json["theme"])
-        ctk.set_default_color_theme(app_config_json["color"].lower())
-
-        configJson()
+        ctk.set_appearance_mode(app_config['theme'])
+        ctk.set_default_color_theme(app_config['color'].lower())
 
         #center app on main screen 
         centerApp(450, 150, self)
 
-        if app_config_json["on_start"] == True:
+        if app_config['on_start'] == True:
 
             self.updaterFrame = ctk.CTkFrame(self)
             self.updaterFrame.grid(row=0, column=0, sticky="new")
@@ -42,9 +35,8 @@ class App(ctk.CTk):
             self.infoLabel.grid(row=0, column=0, columnspan=2, padx=padx_both, pady=pady_both, sticky="we")
             
             cloud_version = checkUpdates()
-
             
-            self.iconbitmap("./config/img/AionClassicMods.ico")
+            self.iconbitmap(app_icon)
             self.resizable(0, 0)
             self.mainloop()
         else:

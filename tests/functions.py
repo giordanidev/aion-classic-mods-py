@@ -5,24 +5,6 @@ import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, loca
 import urllib.request as urllib2
 import urllib.parse as urlparse
 
-
-def appConfigJson():
-    with open(".\\config\\config.json", encoding='utf-8') as f:
-        config_json = json.load(f)
-    f.close
-    return config_json
-app_config = appConfigJson()
-
-def appConfigSave(app_config):
-    try:
-        with open(config_path, 'w') as config_write:
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> appConfigSave: {app_config}")
-            json_object = json.dumps(app_config, indent=4)
-            config_write.write(json_object)
-    except Exception as e:
-        getException(e)
-        return False
-    
 arg_count = 0
 arg_found = False
 for arg in sys.argv:
@@ -38,14 +20,13 @@ if arg_found == False:
 logging.basicConfig(filename='.\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=log_level, filemode="w")
 logging.getLogger().addHandler(logging.StreamHandler())
 
-logging.info(f"{sys._getframe().f_code.co_name}() -> App initialized.")
+logging.debug(f"{sys._getframe().f_code.co_name}() -> App initialized.")
 logging.debug(f"{sys._getframe().f_code.co_name}() -> app_functions.py imported.")
 
 # GLOBAL VARIABLES
 copy_delete_files = ""
 config_path = ".\\config\\config.json"
 version_path = ".\\download\\version.json"
-app_icon = "./config/img/AionClassicMods.ico"
 version_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/version.json"
 filter_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/aionfilter.zip"
 font_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/hit_number.zip"
@@ -111,6 +92,32 @@ def getLangTranslation(value):
         getException(e)
         return False
 
+def appConfigLoad():
+    try:
+        app_config = ConfigParser()
+        config_path = 'config/'
+        config_file = 'config.ini'
+        config_full_path = config_path + config_file
+        app_config.read(config_full_path)
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> appConfigLoad: {app_config.items('app')}")
+        return (app_config, config_full_path)
+    except Exception as e:
+        getException(e)
+        return False
+
+load_configs = appConfigLoad()
+app_config = load_configs[0]
+config_full_path = load_configs[1]
+
+def appConfigSave(app_config):
+    try:
+        with open(config_full_path, 'w') as config_write:
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> appConfigSave: {app_config.items('app')}")
+            app_config.write(config_write)
+    except Exception as e:
+        getException(e)
+        return False
+
 """
 def get_langs():
     with open('./config/config.json') as config_file:
@@ -151,17 +158,53 @@ def centerApp(width, height, self):
     screen_height = self.winfo_screenheight()
     x_cordinate = int((screen_width/2) - (window_width/2))
     y_cordinate = int((screen_height/2) - (window_height/2) - 50)
-    self.geometry(f"{window_width}x{window_height}+{x_cordinate}+{y_cordinate}")
+    self.geometry("{}x{}+{}+{}".format(window_width, window_height, x_cordinate, y_cordinate))
 
 def regionSelection(self):
     try:
-        # TODO
-        # AUTO GENERATE + MARK CHECKBOXES
-        # 'FOR' REPEAT TO GET REGION INDEX
-        app_config = appConfigJson()
-        app_config['regions'][region_index_number][region_index_field] == str(self.regionRadio.get())
-
+        app_config = appConfigLoad()[0]
+        app_config.set('app', 'region', str(self.regionRadio.get()))
         appConfigSave(app_config)
+        if (self.regionRadio.get() == 0):
+            self.naPathLabel.configure(state="disabled")
+            self.naPathEntry.configure(state="disabled")
+            self.naPathButton.configure(state="disabled")
+            self.euPathLabel.configure(state="disabled")
+            self.euPathEntry.configure(state="disabled")
+            self.euPathButton.configure(state="disabled")
+        elif (self.regionRadio.get() == 1):
+            if getClassicNaPath():
+                self.naPathEntry.delete(0, 'end')
+                self.naPathEntry.insert(0, app_config.get('app', 'napath'))
+            self.naPathLabel.configure(state="normal")
+            self.naPathEntry.configure(state="normal")
+            self.naPathButton.configure(state="normal")
+            self.euPathLabel.configure(state="disabled")
+            self.euPathEntry.configure(state="disabled")
+            self.euPathButton.configure(state="disabled")
+        elif (self.regionRadio.get() == 2):
+            if getClassicEuPath():
+                self.euPathEntry.delete(0, 'end')
+                self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
+            self.naPathLabel.configure(state="disabled")
+            self.naPathEntry.configure(state="disabled")
+            self.naPathButton.configure(state="disabled")
+            self.euPathLabel.configure(state="normal")
+            self.euPathEntry.configure(state="normal")
+            self.euPathButton.configure(state="normal")
+        elif (self.regionRadio.get() == 3):
+            if getClassicNaPath():
+                self.naPathEntry.delete(0, 'end')
+                self.naPathEntry.insert(0, app_config.get('app', 'napath'))
+            if getClassicEuPath():
+                self.euPathEntry.delete(0, 'end')
+                self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
+            self.naPathLabel.configure(state="normal")
+            self.naPathEntry.configure(state="normal")
+            self.naPathButton.configure(state="normal")
+            self.euPathLabel.configure(state="normal")
+            self.euPathEntry.configure(state="normal")
+            self.euPathButton.configure(state="normal")
     except Exception as e:
         getException(e)
         return False
@@ -173,15 +216,23 @@ def selectDirectory(path_entry):
         game_directory = filedialog.askdirectory().replace("/","\\")
         logging.debug(f"{sys._getframe().f_code.co_name}() -> game_directory: {game_directory}.")
 
-        if game_directory is not None:
+        if game_directory:
+            placeholder_text = path_entry.cget("placeholder_text")
+            if "NA" in placeholder_text.split("\\"):
+                region = "NA"
+                path = "napath"
+            elif "EU" in placeholder_text.split("\\"):
+                region = "EU"
+                path = "eupath"
             validate_directory_return = validateDirectory(game_directory, region)
             logging.debug(f"{sys._getframe().f_code.co_name}() -> validate_directory_return: {validate_directory_return}.")
 
             if validate_directory_return:
                 path_entry.delete(0, 'end')
                 path_entry.insert(0, game_directory)
-                global app_config
-                app_config['TODO'] = game_directory
+                load_configs = appConfigLoad()
+                app_config = load_configs[0]
+                app_config.set('app', path, game_directory)
                 appConfigSave(app_config)
                 return True
 
@@ -294,9 +345,9 @@ def copyFilesButton(file_type, copy_delete, return_label, return_button, delete_
 
 def firstRun():
     try:
-        global app_config
-        if app_config['first_run'] == True:
-            logging.info(f"{sys._getframe().f_code.co_name}() :: First run! The program will try to configure some basic settings.")
+        app_config = appConfigLoad()[0]
+        if not app_config.get('app', 'region'):
+            logging.info(f"{sys._getframe().f_code.co_name}() :: First run!")
             logging.debug(f"{sys._getframe().f_code.co_name}() -> getClassicNaPath() initialized.")
             getClassicNaPath()
             logging.debug(f"{sys._getframe().f_code.co_name}() -> getClassicEuPath() initialized.")
@@ -305,9 +356,11 @@ def firstRun():
             getClassicEuLauncherPath()
             logging.debug(f"{sys._getframe().f_code.co_name}() -> verifyGamePath() initialized.")
             verifyGamePath()
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> defineRegion() initialized.")
+            defineRegion()
             return True
         else:
-            logging.debug(f"{sys._getframe().f_code.co_name}() :: Not the first run anymore!")
+            logging.info(f"{sys._getframe().f_code.co_name}() :: Not the first run anymore!")
             return False
     except Exception as e:
         getException(e)
@@ -328,13 +381,10 @@ def getClassicNaPath():
             logging.debug(f"{sys._getframe().f_code.co_name}() -> na_dir: {classic_na_path}")
             if classic_na_path[len(classic_na_path)-1] == "\\":
                 classic_na_path = classic_na_path.rstrip(classic_na_path[-1])
-            global app_config
-            region_index = getRegionIndex("NA")
-            app_config['regions'][region_index][2] = classic_na_path.replace("\\","/")
+            app_config = appConfigLoad()[0]
+            app_config.set('app', 'napath', classic_na_path)
             appConfigSave(app_config)
             return True
-        else:
-            return False
     except Exception as e:
         getException(e)
         return False
@@ -349,7 +399,7 @@ def getClassicEuPath():
     try:
         a_reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
         a_key = winreg.OpenKey(a_reg, r'SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall')
-        found = False
+        not_found = True
         for i in range(1024):
             try:
                 key_name = winreg.EnumKey(a_key, i)
@@ -362,18 +412,17 @@ def getClassicEuPath():
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> game_publisher: {game_publisher}")
                         classic_eu_path = winreg.QueryValueEx(o_key, "InstallLocation")[0]
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> classic_eu_path: {classic_eu_path}")
-                        found = True
-                if found == True:
+                        not_found = False
+                if not_found == False:
                     if classic_eu_path[len(classic_eu_path)-1] == "\\":
                         classic_eu_path = classic_eu_path.rstrip(classic_eu_path[-1])
-                    global app_config
-                    region_index = getRegionIndex("EU")
-                    app_config['regions'][region_index][2] = classic_eu_path.replace("\\","/")
+                    app_config = appConfigLoad()[0]
+                    app_config.set('app', 'eupath', classic_eu_path)
                     appConfigSave(app_config)
                     return True
             except:
                 continue
-        if found == False:
+        if not_found == True:
             logging.debug(f"{sys._getframe().f_code.co_name}(): Installation path not found. Select manually.")
             return False
     except Exception as e:
@@ -399,17 +448,15 @@ def getClassicEuLauncherPath():
             logging.debug(f"{sys._getframe().f_code.co_name}() -> classic_eu_launcher_path: {classic_eu_launcher_path}")
             if classic_eu_launcher_path[len(classic_eu_launcher_path)-1] == "\\":
                 classic_eu_launcher_path = classic_eu_launcher_path.rstrip(classic_eu_launcher_path[-1])
-            global app_config
-            app_config['eu_launcher_path'] = [classic_eu_launcher_path.replace("\\","/"), True]
+            app_config = appConfigLoad()[0]
+            app_config.set('app', 'eulauncherpath', classic_eu_launcher_path)
             appConfigSave(app_config)
             return True
-        else:
-            return False
     except Exception as e:
         getException(e)
         return False
 
-def populateRegion(self):
+def defineRegion():
     """
     #TODO redo config handling with JSON
 
@@ -419,7 +466,7 @@ def populateRegion(self):
     try:
         count_region = 0
         verifyGamePath() # verifys if game path selected is accurate.
-        global app_config
+        app_config = appConfigLoad()[0] # Reloads config.
         if app_config.get('app', 'napath'): count_region += 1
         if app_config.get('app', 'eupath'): count_region += 2
         app_config.set('app', 'region', str(count_region))
@@ -436,7 +483,7 @@ def verifyGamePath():
     the user to select a new path.
     """
     try:
-        global app_config
+        app_config = appConfigLoad()[0]
         na_path = app_config.get('app', 'napath')
         eu_path = app_config.get('app', 'eupath')
         app_region = app_config.get('app', 'region')
@@ -536,7 +583,7 @@ def getGameFilePath(game_lang):
     """
     try:
         verifyGamePath()
-        global app_config
+        app_config = appConfigLoad()[0]
         na_path = app_config.get('app', 'napath')
         eu_path = app_config.get('app', 'eupath')
         full_file_path = []
@@ -556,7 +603,7 @@ def getGameFilePath(game_lang):
 def getFilePath(game_file_type):
     try:
         logging.debug(f"{sys._getframe().f_code.co_name}() START -> game_file_type: {game_file_type}.")
-        global app_config
+        app_config = appConfigLoad()[0]
         app_region = app_config.get('app', 'region')
         game_lang = []
         if not app_region in ("1", "2", "3"):
@@ -924,6 +971,13 @@ def getException(e):
     })
     showAlert("showerror", translateText("functions_show_critical_error")+"\n\n"+str(e))
 
+def configJson():
+    with open(config_path, encoding='utf-8') as f:
+        config_json = json.load(f)
+        f.close
+    #print(config_json)
+    #print(config_json["paths"]["NA"][0])
+
 def checkUpdates():
     cloud_json = urllib2.urlopen(version_url)
     cloud_version = json.loads(cloud_json.read())
@@ -931,13 +985,5 @@ def checkUpdates():
     with open(version_path, encoding='utf-8') as f:
         local_version = json.load(f)
         f.close
+    print(f"LOCAL: {local_version} \nCLOUD: {cloud_version}")
     return local_version, cloud_version
-
-def getRegionIndex(region):
-    global app_config
-    count = 0
-    for regions in app_config['regions']:
-        if regions[0] == region:
-            return count
-        count += 1
-    return False
