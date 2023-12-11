@@ -1,6 +1,6 @@
 {
     "app_version": "1.4.0.1", 
-    "launcher_version": "1.0.0.0",
+    "updater_version": "1.0.0.0",
     "translation": "1.0.0.0",
     "translation_eu": "1.0.0.0",
     "filter": "1.0.0.0",

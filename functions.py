@@ -7,8 +7,8 @@ import urllib.parse as urlparse
 
 # GLOBAL VARIABLES
 copy_delete_files = ""
-config_path = ".\\config\\config.json"
-version_path = ".\\download\\version.json"
+config_path = "./config/config.json"
+version_path = "./download/version.json"
 app_icon = "./config/img/AionClassicMods.ico"
 version_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/version.json"
 filter_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/aionfilter.zip"
@@ -19,7 +19,7 @@ translation_eu_url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/
 asmo_skin_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/asmo_skin.zip"
 
 def appConfigJson():
-    with open(".\\config\\config.json", encoding='utf-8') as f:
+    with open("./config/config.json", encoding='utf-8') as f:
         config_json = json.load(f)
     f.close
     return config_json
@@ -60,7 +60,7 @@ def setLogLevel():
 # GLOBAL VARIABLE
 log_level = setLogLevel()
     
-logging.basicConfig(filename='.\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=log_level, filemode="w")
+logging.basicConfig(filename='./logs/logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=log_level, filemode="w")
 logging.getLogger().addHandler(logging.StreamHandler())
 
 logging.info(f"{sys._getframe().f_code.co_name}() -> App initialized.")
@@ -73,8 +73,8 @@ def getLang():
     try:
         windll = ctypes.windll.kernel32
         app_lang = locale.windows_locale[windll.GetUserDefaultUILanguage()]
-        lang_path = f".\\config\\lang\\{app_lang}.json"
-        with open(".\\config\\lang\\en_US.json", encoding='utf-8') as f:
+        lang_path = f"./config/lang/{app_lang}.json"
+        with open("./config/lang/en_US.json", encoding='utf-8') as f:
             en_translated_text = json.load(f)
             f.close
         if os.path.isfile(lang_path):
@@ -455,7 +455,7 @@ def verifyGamePath():
             if app_region in ("1", "3"):
                 logging.debug(f"{sys._getframe().f_code.co_name}() -> na_path: {na_path}")
                 if na_path:
-                    game_path = f"{na_path}\\bin64\\Aion.bin"
+                    game_path = f"{na_path}/bin64/Aion.bin"
                     if not os.path.isfile(game_path):
                         app_config.set('app', 'napath', "")
                         appConfigSave(app_config)
@@ -470,7 +470,7 @@ def verifyGamePath():
             if app_region in ("2", "3"):
                 logging.debug(f"{sys._getframe().f_code.co_name}() -> eu_path: {eu_path}")
                 if eu_path:
-                    game_path = f"{eu_path}\\bin64\\aionclassic.bin"
+                    game_path = f"{eu_path}/bin64/aionclassic.bin"
                     if not os.path.isfile(game_path):
                         app_config.set('app', 'eupath', "")
                         appConfigSave(app_config)
@@ -517,7 +517,7 @@ def validateDirectory(game_directory, region):
     try:
         wrong_directory = translateText("functions_wrong_directory")
         if region == "NA":
-            game_path = f"{game_directory}\\bin64\\Aion.bin"
+            game_path = f"{game_directory}/bin64/Aion.bin"
             logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
             if not os.path.isfile(game_path):
                 showAlert("showerror", wrong_directory.replace("{VERSION}","NA"))
@@ -525,7 +525,7 @@ def validateDirectory(game_directory, region):
             else:
                 return True
         if region == "EU":
-            game_path = f"{game_directory}\\bin64\\aionclassic.bin"
+            game_path = f"{game_directory}/bin64/aionclassic.bin"
             logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
             if not os.path.isfile(game_path):
                 showAlert("showerror", wrong_directory.replace("{VERSION}","EU"))
@@ -551,9 +551,9 @@ def getGameFilePath(game_lang):
         full_file_path = []
         for lang in game_lang:
             if lang == "enu":
-                full_file_path.append(f"{na_path}\\l10n\\{lang}")
+                full_file_path.append(f"{na_path}/l10n/{lang}")
             elif lang in ["eng", "fra", "deu"]:
-                full_file_path.append(f"{eu_path}\\l10n\\{lang}")
+                full_file_path.append(f"{eu_path}/l10n/{lang}")
             else:
                 logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown region.")
                 return
@@ -576,14 +576,14 @@ def getFilePath(game_file_type):
         if app_region in ["2", "3"]:
             game_lang.extend(["eng", "fra", "deu"])
             
-        with open(".\\config\\files.json", encoding='utf-8') as f:
+        with open("./config/files.json", encoding='utf-8') as f:
             download_files = json.load(f)
             f.close
         # Gets all files and hashes them when files already exist in game path
         files = download_files[game_file_type]
 
         curr_dir = os.getcwd()
-        assets_path = f"{curr_dir}\\assets"
+        assets_path = f"{curr_dir}/assets"
         # Returns [full_file_path]. It can be multiple paths depending on regions selected
         game_path = getGameFilePath(game_lang)
         logging.debug(f"{sys._getframe().f_code.co_name}() END -> assets_path: {assets_path} || game_path: {game_path} || files: {files}.")
@@ -726,10 +726,10 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
                 #TODO ADD EU/NA VERIFICATION
                 if game_file_type == "translation":
                     for idioma in ["eng", "fra", "deu"]:
-                        if idioma in game_file.split("\\"):
+                        if idioma in game_file.split("/"):
                             logging.debug(f"{sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} and idioma: {idioma} -> do NOT copy")
                             pass
-                elif game_file_type == "translation_eu" and "enu" in game_file.split("\\"):
+                elif game_file_type == "translation_eu" and "enu" in game_file.split("/"):
                     logging.debug(f"{sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} and idioma: enu -> do NOT copy")
                     pass
                 logging.debug(f"{sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} PASSED -> copy")
@@ -776,15 +776,15 @@ def downloadFiles(file_type, return_label):
     file_path = getFilePath(file_type)[0]
     # Defines assets path
     if file_type == "filter":
-        assets_dir = "\\data\\Strings"
+        assets_dir = "/data/Strings"
     if file_type == "font":
-        assets_dir = "\\textures\\ui"
+        assets_dir = "/textures/ui"
     if file_type == "voice":
-        assets_dir = "\\sounds\\voice"
+        assets_dir = "/sounds/voice"
     if file_type in ["translation", "translation_eu"]:
-        assets_dir = "\\data"
+        assets_dir = "/data"
     if file_type == "asmo_skin":
-        assets_dir = "\\data\\custompreset"
+        assets_dir = "/data/custompreset"
     
     file_path = file_path+assets_dir
     logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}")

@@ -1,12 +1,9 @@
 {
-    "app_title": "Aion Classic 'Mods' por Load",
-    
-    "app_info_label": "Por favor, escolha uma ação para começar!",
+    "app_title": "Aion Classic Mods por Load",
 
     "app_updater_title": " - Atualizador",
     "app_updater_on_start": "Verificar ao iniciar",
     "app_updater_always_update": "Sempre instalar atualizações",
-    
     "app_updater_searching": "Procurando por atualizações... por favor, aguarde.",
     "app_updater_found": "Atualização encontrada! Você deseja instalar agora?",
     "app_updater_not_found": "Não há atualizações disponíveis.",
@@ -26,7 +23,7 @@
     "app_return_label_success": "Successo! Arquivos instalados.",
     "app_return_label_download": "Arquivos estão prontos para ser baixados.",
     "app_return_label_deleted": "Successo! Arquivos excluídos.",
-    "app_return_label_launcher_found": "Launcher do jogo está aberto.",
+    "app_return_label_launcher_found": "O Launcher do jogo está aberto.",
     "app_return_label_launcher_closed": "O Launcher foi fechado.",
     "app_return_label_game_found": "O jogo está aberto.",
     "app_return_label_game_closed": "O jogo foi fechado.",
@@ -41,14 +38,11 @@
     "app_button_close_game": "Fechar Aion",
     "app_button_close_client": "Fechar Launcher",
     "app_button_updater_ignore": "Ignorar",
-    
 
     "config_theme_label": "Tema:",
     "config_color_label": "Cor:",
     "config_region_label": "Seleção de região:",
-    "config_na_label": "Pasta do Jogo NA:",
-    "config_eu_label": "Pasta do Jogo EU:",
-    "config_eulauncher_label": "Pasta Launcher EU:",
+    "config_eu_launcher_label": "Pasta Launcher EU:",
     "config_verify_on_start": "Verificar arquivos ao iniciar",
 
     "config_theme_system": "Sistema",
@@ -58,19 +52,15 @@
     "config_color_blue": "Azul",
     "config_color_darkblue": "Azul-escuro",
     "config_color_green": "Verde",
-    
-    "config_region_radio_na": "Clássico NA",
-    "config_region_radio_eu": "Clássico EU",
-    "config_region_radio_both": "Ambos",
 
     "config_select_folder_button": "Selecionar",
+    "config_eu_launcher_folder": "C:/Jogos/Pasta_EU_Launcher/",
 
+    "functions_wrong_directory": "A pasta selecionada não é a correta para a região {VERSION}.\n\nPor favor, selecione a pasta principal do jogo (EX: C:/Jogos/aionclassic).",
 
-    "functions_wrong_directory": "A pasta selecionada não é a correta para a versão {VERSION}. Por favor, selecione a pasta principal do jogo.",
-
-    "functions_show_game_region": "Você precisa selecionar ao menos uma versão do jogo para prosseguir.",
-    "functions_show_delete": "Você está prestes a excluir o(s) arquivo(s) de {FILETYPE}.\n\nEsta ação NÃO PODE ser desfeita. Tem certeza que deseja continuar?",
-    "functions_show_critical_error": "Erro crítico! Por favor, envie o arquivo de log para o criador do aplicativo para verificação.",
+    "functions_show_game_region": "Você precisa selecionar ao menos uma região e um idioma do jogo para prosseguir.",
+    "functions_show_delete": "Você está prestes a excluir o(s) arquivo(s) de {FILETYPE}.\n\nTem certeza que deseja continuar?",
+    "functions_show_critical_error": "Erro crítico! Por favor, envie o arquivo de log (pasta principal do app/logs/log.log ou log_updater.log) para o criador do aplicativo para verificação.",
 
     "functions_alert_info": "Informação:",
     "functions_alert_warning": "Atenção!",

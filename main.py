@@ -14,7 +14,7 @@ class App(ctk.CTk):
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> App() class initialized.")
 
-        self.title(translateText("app_title") + translateText("app_version"))
+        self.title(translateText("app_title") + " - v" +local_version["app_version"])
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -83,9 +83,9 @@ class createTabs(ctk.CTkTabview):
         # DO FIRST RUN THINGS (CHECK COMMAND FOR MORE INFO)
         firstRun()
 
-        ## START GENERATE APP MAIN FRAME
+        ## START APP MAIN FRAME
         self.appTopFrame = ctk.CTkFrame(appTab)
-        self.appTopFrame.grid(row=0, column=0, sticky="new")
+        self.appTopFrame.grid(row=0, column=0, sticky="nsew")
         self.appTopFrame.configure(fg_color="transparent")
         self.appTopFrame.grid_columnconfigure(1, weight=1)
 
@@ -102,17 +102,16 @@ class createTabs(ctk.CTkTabview):
 
         self.closeGameButton.configure(command=partial(forceCloseAion, "close", "game", self.closeGameButton, self.infoLabel))
 
-
         # START GENERATE LABELS/BUTTONS FOR ASSETS
         linha = 1
         all_buttons = []
         all_deleteButtons = []
         all_returnLabels = []
         for campo in gerar_campos:
-            self.nome_campoLabel = f"{campo}Label"
-            self.nome_campoReturnLabel = f"{campo}ReturnLabel"
-            self.nome_campoButton = f"{campo}Button"
-            self.nome_campoDeleteButton = f"{campo}DeleteButton"
+            #self.nome_campoLabel = f"{campo}Label"
+            #self.nome_campoReturnLabel = f"{campo}ReturnLabel"
+            #self.nome_campoButton = f"{campo}Button"
+            #self.nome_campoDeleteButton = f"{campo}DeleteButton"
             
             self.nome_campoLabel = ctk.CTkLabel(self.appTopFrame, text=translateText(f"app_{campo}_label")+":", height=30, font=font_regular_bold)
             self.nome_campoLabel.grid(row=linha, column=0, padx=padx_both, pady=pady_both, sticky="e")
@@ -150,29 +149,27 @@ class createTabs(ctk.CTkTabview):
                                                    all_returnLabels,
                                                    self.verifyAllButton,
                                                    self))
-        ## END GENERATE APP MAIN FRAME
+        ## END APP MAIN FRAME
 
-        ## START GENERATE CONFIG LEFT FRAME
-        self.configLeftFrame = ctk.CTkFrame(configTab, fg_color="transparent")
-        self.configLeftFrame.grid(row=0, column=0, sticky="ns")
+        ## START CONFIG SCROLLABLE FRAME
+        self.configScrollableFrame = ctk.CTkScrollableFrame(configTab, fg_color="transparent", height=245)
+        self.configScrollableFrame.grid(row=0, column=0, columnspan=2, padx=0, pady=0, sticky="ew")
+
+        ## START CONFIG LEFT FRAME
+        self.configLeftFrame = ctk.CTkFrame(self.configScrollableFrame, fg_color="red")
+        self.configLeftFrame.grid(row=0, column=0, sticky="n")
 
         self.themeLabel = ctk.CTkLabel(self.configLeftFrame, text=translateText("config_theme_label"), font=font_regular_bold)
-        self.themeLabel.grid(row=0, column=0, padx=padx_both, pady=pady_both, sticky="e")
+        self.themeLabel.grid(row=0, column=0, padx=padx_both, pady=2, sticky="e")
         self.colorLabel = ctk.CTkLabel(self.configLeftFrame, text=translateText("config_color_label"), font=font_regular_bold)
-        self.colorLabel.grid(row=1, column=0, padx=padx_both, pady=pady_both, sticky="e")
-        self.regionLabel = ctk.CTkLabel(self.configLeftFrame, text=translateText("config_region_label"), font=font_regular_bold)
-        self.regionLabel.grid(row=2, column=0, padx=padx_both, pady=pady_both, sticky="e")
-        self.naPathLabel = ctk.CTkLabel(self.configLeftFrame, text=translateText("config_na_label"), font=font_regular_bold)
-        self.naPathLabel.grid(row=3, column=0, padx=padx_both, pady=pady_both, sticky="e")
-        self.euPathLabel = ctk.CTkLabel(self.configLeftFrame, text=translateText("config_eu_label"), font=font_regular_bold)
-        self.euPathLabel.grid(row=4, column=0, padx=padx_both, pady=pady_both, sticky="e")
-        self.euLauncherLabel = ctk.CTkLabel(self.configLeftFrame, text=translateText("config_eulauncher_label"), font=font_regular_bold)
-        self.euLauncherLabel.grid(row=5, column=0, padx=padx_both, pady=pady_both, sticky="e")
+        self.colorLabel.grid(row=1, column=0, padx=padx_both, pady=2, sticky="e")
+        self.eu_launcherLabel = ctk.CTkLabel(self.configLeftFrame, text=translateText("config_eu_launcher_label"), font=font_regular_bold)
+        self.eu_launcherLabel.grid(row=2, column=0, padx=padx_both, pady=2, sticky="e")
 
         # Config tab widgets > Right
-        self.configRightFrame = ctk.CTkFrame(configTab, fg_color="transparent")
-        self.configRightFrame.grid(row=0, column=1, sticky="nsew")
-        self.configRightFrame.grid_columnconfigure((0, 1, 2), weight=1)
+        self.configRightFrame = ctk.CTkFrame(self.configScrollableFrame, fg_color="blue")
+        self.configRightFrame.grid(row=0, column=1, pady=0, sticky="new")
+        self.configRightFrame.grid_columnconfigure(0, weight=1)
 
         theme_variable = ctk.StringVar(value="System")
         self.themeButton = ctk.CTkSegmentedButton(self.configRightFrame, command=self.change_theme_event, variable=theme_variable,
@@ -186,42 +183,40 @@ class createTabs(ctk.CTkTabview):
                                                           translateText("config_color_darkblue"),
                                                           translateText("config_color_green")])
         self.colorButton.grid(row=1, column=0, padx=padx_both, pady=pady_both, columnspan=4, sticky="ew")
-        
+
+        self.euLauncherPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text=translateText("config_eu_launcher_folder"), state="disabled")
+        self.euLauncherPathEntry.grid(row=2, column=0, padx=padx_both, pady=pady_both, columnspan=3, sticky="we")
+        self.euLauncherPathButton = ctk.CTkButton(self.configRightFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.euLauncherPathEntry), width=120, state="disabled")
+        self.euLauncherPathButton.grid(row=2, column=3, padx=padx_both, pady=pady_both)
+
+        linha = 5
+        for region in app_config['regions']:
+            self.region_selectionLabel = ctk.CTkLabel(self.configLeftFrame, text=region[1], font=font_regular_bold)
+            self.region_selectionLabel.grid(row=linha, column=0, padx=padx_both, pady=2, sticky="e")
+            linha += 1
+
+        """
         self.regionRadio = tk.IntVar()
 
         self.naRadio = ctk.CTkRadioButton(self.configRightFrame,
-                                                    text=translateText("config_region_radio_na"),
+                                                    text="",
                                                     command=partial(regionSelection, self),
                                                     variable=self.regionRadio,
                                                     value=1)
         self.naRadio.grid(row=2, column=0, padx=padx_both, pady=pady_both, sticky="w")
         self.euRadio = ctk.CTkRadioButton(self.configRightFrame,
-                                                    text=translateText("config_region_radio_eu"),
+                                                    text="",
                                                     command=partial(regionSelection, self),
                                                     variable=self.regionRadio,
                                                     value=2)
         self.euRadio.grid(row=2, column=1, pady=pady_both, sticky="w")
         self.bothRadio = ctk.CTkRadioButton(self.configRightFrame,
-                                                    text=translateText("config_region_radio_both"),
+                                                    text="",
                                                     command=partial(regionSelection, self),
                                                     variable=self.regionRadio,
                                                     value=3)
         self.bothRadio.grid(row=2, column=2, pady=pady_both, sticky="w")
-
-        self.naPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text="C:\\NA\\Game\\Folder")
-        self.naPathEntry.grid(row=3, column=0, padx=padx_both, pady=pady_both, columnspan=3, sticky="we")
-        self.naPathButton = ctk.CTkButton(self.configRightFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.naPathEntry), width=120)
-        self.naPathButton.grid(row=3, column=3, padx=padx_both, pady=pady_both)
-
-        self.euPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text="C:\\EU\\Game\\Folder")
-        self.euPathEntry.grid(row=4, column=0, padx=padx_both, pady=pady_both, columnspan=3, sticky="we")
-        self.euPathButton = ctk.CTkButton(self.configRightFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.euPathEntry), width=120)
-        self.euPathButton.grid(row=4, column=3, padx=padx_both, pady=pady_both)
-
-        self.euLauncherPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text="C:\\EU\\Launcher\\Folder", state="disabled")
-        self.euLauncherPathEntry.grid(row=5, column=0, padx=padx_both, pady=pady_both, columnspan=3, sticky="we")
-        self.euLauncherPathButton = ctk.CTkButton(self.configRightFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.euLauncherPathEntry), width=120, state="disabled")
-        self.euLauncherPathButton.grid(row=5, column=3, padx=padx_both, pady=pady_both)
+        """
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs populated.")
 

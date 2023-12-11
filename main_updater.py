@@ -12,9 +12,9 @@ class App(ctk.CTk):
 
         global app_config
 
-        if app_config['on_start'] == True:
+        if app_config['update_on_start'] == True:
 
-            self.title(translateText("app_title") + translateText("app_updater_title") + translateText("app_updater_version"))
+            self.title(translateText("app_title") + translateText("app_updater_title") + "- v" + local_version["updater_version"])
 
             self.grid_rowconfigure(0, weight=1)
             self.grid_columnconfigure(0, weight=1)
