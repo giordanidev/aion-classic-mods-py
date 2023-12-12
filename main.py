@@ -4,8 +4,6 @@ from functools import partial
 
 logging.debug(f"{sys._getframe().f_code.co_name}() -> main.py imported.")
 
-gerar_campos = ["translation", "translation_eu", "filter", "font", "voice", "asmo_skin"]
-
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -108,10 +106,12 @@ class createTabs(ctk.CTkTabview):
         self.verifyAllButton.grid(row=linha_main, column=3, columnspan=2, padx=padx_both, pady=pady_both)
 
         # START GENERATE LABELS/BUTTONS FOR ASSETS
+
         linha_main += 1
         all_buttons = []
         all_deleteButtons = []
         all_returnLabels = []
+        gerar_campos = ["translation", "translation_eu", "filter", "font", "voice", "asmo_skin"]
         for campo in gerar_campos:
             self.nome_campoLabel = ctk.CTkLabel(self.appMainFrame, text=translateText(f"app_{campo}_label")+":", height=30, font=font_regular_bold)
             self.nome_campoLabel.grid(row=linha_main, column=0, padx=padx_both, pady=pady_both, sticky="e")
