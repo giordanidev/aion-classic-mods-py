@@ -89,7 +89,7 @@ class createTabs(ctk.CTkTabview):
         
         linha_main = 0
 
-        self.infoLabel = ctk.CTkLabel(self.appMainFrame, text="OI")
+        self.infoLabel = ctk.CTkLabel(self.appMainFrame, text="")
         self.infoLabel.grid(row=linha_main, column=0, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
 
         self.closeClientButton = ctk.CTkButton(self.appMainFrame, text=translateText("app_button_close_client"), state="disabled", width=90)
