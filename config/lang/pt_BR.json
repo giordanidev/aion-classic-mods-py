@@ -39,10 +39,10 @@
     "app_button_close_client": "Fechar Launcher",
     "app_button_updater_ignore": "Ignorar",
 
-    "config_theme_label": "Tema:",
-    "config_color_label": "Cor:",
-    "config_region_label": "Seleção de região:",
-    "config_eu_launcher_label": "Pasta Launcher EU:",
+    "config_theme_label": "Tema",
+    "config_color_label": "Cor",
+    "config_region_label": "Seleção de região",
+    "config_eu_launcher_label": "Pasta Launcher EU",
     "config_verify_on_start": "Verificar arquivos ao iniciar",
 
     "config_theme_system": "Sistema",

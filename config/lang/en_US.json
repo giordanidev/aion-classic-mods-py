@@ -39,10 +39,10 @@
     "app_button_close_client": "Close Launcher",
     "app_button_updater_ignore": "Ignore",
 
-    "config_theme_label": "Theme:",
-    "config_color_label": "Color:",
-    "config_region_label": "Region selection:",
-    "config_eu_launcher_label": "EU Launcher Folder:",
+    "config_theme_label": "Theme",
+    "config_color_label": "Color",
+    "config_region_label": "Region selection",
+    "config_eu_launcher_label": "EU Launcher Folder",
     "config_verify_on_start": "Verify files on start",
 
     "config_theme_system": "System",

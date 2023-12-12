@@ -84,38 +84,43 @@ class createTabs(ctk.CTkTabview):
         firstRun()
 
         ## START APP MAIN FRAME
-        self.appTopFrame = ctk.CTkFrame(appTab)
-        self.appTopFrame.grid(row=0, column=0, sticky="nsew")
-        self.appTopFrame.configure(fg_color="transparent")
-        self.appTopFrame.grid_columnconfigure(1, weight=1)
+        self.appMainFrame = ctk.CTkFrame(appTab)
+        self.appMainFrame.grid(row=0, column=0, sticky="nsew")
+        self.appMainFrame.configure(fg_color="transparent")
+        self.appMainFrame.grid_columnconfigure(1, weight=1)
+        
+        linha_main = 0
 
-        self.infoLabel = ctk.CTkLabel(self.appTopFrame, text="")
-        self.infoLabel.grid(row=0, column=0, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
+        self.infoLabel = ctk.CTkLabel(self.appMainFrame, text="OI")
+        self.infoLabel.grid(row=linha_main, column=0, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
 
-        self.closeClientButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_close_client"), state="disabled", width=90)
-        self.closeClientButton.grid(row=0, column=1, padx=padx_both, pady=pady_both, sticky="e")
+        self.closeClientButton = ctk.CTkButton(self.appMainFrame, text=translateText("app_button_close_client"), state="disabled", width=90)
+        self.closeClientButton.grid(row=linha_main, column=1, padx=padx_both, pady=pady_both, sticky="e")
 
         self.closeClientButton.configure(command=partial(forceCloseAion, "close", "client", self.closeClientButton, self.infoLabel))
 
-        self.closeGameButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_close_game"), state="disabled", width=90)
-        self.closeGameButton.grid(row=0, column=2, padx=padx_both, pady=pady_both)
+        self.closeGameButton = ctk.CTkButton(self.appMainFrame, text=translateText("app_button_close_game"), state="disabled", width=90)
+        self.closeGameButton.grid(row=linha_main, column=2, padx=padx_both, pady=pady_both)
 
         self.closeGameButton.configure(command=partial(forceCloseAion, "close", "game", self.closeGameButton, self.infoLabel))
+        
+        self.verifyAllButton = ctk.CTkButton(self.appMainFrame, text=translateText("app_button_verify_all"), font=font_big_bold, width=184)
+        self.verifyAllButton.grid(row=linha_main, column=3, columnspan=2, padx=padx_both, pady=pady_both)
 
         # START GENERATE LABELS/BUTTONS FOR ASSETS
-        linha = 1
+        linha_main += 1
         all_buttons = []
         all_deleteButtons = []
         all_returnLabels = []
         for campo in gerar_campos:
-            self.nome_campoLabel = ctk.CTkLabel(self.appTopFrame, text=translateText(f"app_{campo}_label")+":", height=30, font=font_regular_bold)
-            self.nome_campoLabel.grid(row=linha, column=0, padx=padx_both, pady=pady_both, sticky="e")
-            self.nome_campoReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
-            self.nome_campoReturnLabel.grid(row=linha, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
-            self.nome_campoButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_install"), state="disabled", width=90)
-            self.nome_campoButton.grid(row=linha, column=3, padx=padx_both, pady=pady_both)
-            self.nome_campoDeleteButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_delete"), state="disabled", width=90)
-            self.nome_campoDeleteButton.grid(row=linha, column=4, padx=padx_both, pady=pady_both)
+            self.nome_campoLabel = ctk.CTkLabel(self.appMainFrame, text=translateText(f"app_{campo}_label")+":", height=30, font=font_regular_bold)
+            self.nome_campoLabel.grid(row=linha_main, column=0, padx=padx_both, pady=pady_both, sticky="e")
+            self.nome_campoReturnLabel = ctk.CTkLabel(self.appMainFrame, text=translateText("app_return_label_waiting"), justify="left")
+            self.nome_campoReturnLabel.grid(row=linha_main, column=1, columnspan=2, padx=padx_both, pady=pady_both, sticky="w")
+            self.nome_campoButton = ctk.CTkButton(self.appMainFrame, text=translateText("app_button_install"), state="disabled", width=90)
+            self.nome_campoButton.grid(row=linha_main, column=3, padx=padx_both, pady=pady_both)
+            self.nome_campoDeleteButton = ctk.CTkButton(self.appMainFrame, text=translateText("app_button_delete"), state="disabled", width=90)
+            self.nome_campoDeleteButton.grid(row=linha_main, column=4, padx=padx_both, pady=pady_both)
             self.nome_campoButton.configure(command=partial(copyFilesButton,
                                                     campo,
                                                     "copy",
@@ -131,12 +136,9 @@ class createTabs(ctk.CTkTabview):
             all_buttons.append(self.nome_campoButton)
             all_deleteButtons.append(self.nome_campoDeleteButton)
             all_returnLabels.append(self.nome_campoReturnLabel)
-            linha += 1
+            linha_main += 1
         # END GENERATE LABELS/BUTTONS FOR ASSETS
 
-
-        self.verifyAllButton = ctk.CTkButton(self.appTopFrame, text=translateText("app_button_verify_all"), font=font_big_bold, width=184)
-        self.verifyAllButton.grid(row=0, column=3, columnspan=2, padx=padx_both, pady=pady_both)
         self.verifyAllButton.configure(command=partial(verifyFilesButton, 
                                                    gerar_campos, 
                                                    all_buttons,
@@ -151,40 +153,44 @@ class createTabs(ctk.CTkTabview):
         self.configScrollableFrame.grid(row=0, column=1, padx=0, pady=0, sticky="nsew")
         self.configScrollableFrame.grid_columnconfigure(4, weight=1)
 
+        linha_configs = 0
         theme_variable = ctk.StringVar(value="System")
-        self.themeLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_theme_label"), font=font_regular_bold)
-        self.themeLabel.grid(row=0, column=0, padx=padx_both, pady=2, sticky="e")
+        self.themeLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_theme_label")+":", font=font_regular_bold)
+        self.themeLabel.grid(row=linha_configs, column=0, padx=padx_both, pady=2, sticky="e")
         self.themeButton = ctk.CTkSegmentedButton(self.configScrollableFrame, command=self.change_theme_event, variable=theme_variable,
                                                   values=[translateText("config_theme_system"),
                                                           translateText("config_theme_dark"),
                                                           translateText("config_theme_light")])
-        self.themeButton.grid(row=0, column=1, padx=padx_both, pady=pady_both, columnspan=4, sticky="ew")
+        self.themeButton.grid(row=linha_configs, column=1, padx=padx_both, pady=pady_both, columnspan=4, sticky="ew")
 
+        linha_configs += 1
         color_variable = ctk.StringVar(value="Blue")
-        self.colorLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_color_label"), font=font_regular_bold)
-        self.colorLabel.grid(row=1, column=0, padx=padx_both, pady=2, sticky="e")
+        self.colorLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_color_label")+":", font=font_regular_bold)
+        self.colorLabel.grid(row=linha_configs, column=0, padx=padx_both, pady=2, sticky="e")
         self.colorButton = ctk.CTkSegmentedButton(self.configScrollableFrame, command=changeColorEvent, variable=color_variable,
                                                   values=[translateText("config_color_blue"),
                                                           translateText("config_color_darkblue"),
                                                           translateText("config_color_green")])
-        self.colorButton.grid(row=1, column=1, padx=padx_both, pady=pady_both, columnspan=4, sticky="ew")
+        self.colorButton.grid(row=linha_configs, column=1, padx=padx_both, pady=pady_both, columnspan=4, sticky="ew")
 
-        self.eu_launcherLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_eu_launcher_label"), font=font_regular_bold)
-        self.eu_launcherLabel.grid(row=2, column=0, padx=padx_both, pady=2, sticky="e")
+        linha_configs += 1
+        self.eu_launcherLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_eu_launcher_label")+":", font=font_regular_bold)
+        self.eu_launcherLabel.grid(row=linha_configs, column=0, padx=padx_both, pady=2, sticky="e")
         self.eu_launcherPathEntry = ctk.CTkEntry(self.configScrollableFrame, placeholder_text=translateText("config_eu_launcher_folder"))
-        self.eu_launcherPathEntry.grid(row=2, column=1, columnspan=3, padx=padx_both, pady=pady_both, sticky="we")
+        self.eu_launcherPathEntry.grid(row=linha_configs, column=1, columnspan=3, padx=padx_both, pady=pady_both, sticky="we")
         self.eu_launcherPathButton = ctk.CTkButton(self.configScrollableFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.eu_launcherPathEntry), font=font_regular_bold, width=120)
-        self.eu_launcherPathButton.grid(row=2, column=4, padx=padx_both, pady=pady_both, sticky="w")
+        self.eu_launcherPathButton.grid(row=linha_configs, column=4, padx=padx_both, pady=pady_both, sticky="w")
 
         
-        def checkbox_event(box_get):
+        def checkbox_event(checkbox_get):
             # TODO
-            print(f"checkbox toggled, current value: {box_get.get()} > {box_get.cget('textvariable')} > {box_get.cget('text')}")
+            # SAVE NEW CONFIGS
+            print(f"checkbox toggled, current value: {checkbox_get.get()} > {checkbox_get.cget('textvariable')} > {checkbox_get.cget('text')}")
 
-        linha = 3
+        linha_configs += 1
         for region in app_config['regions']:
-            self.region_selectionLabel = ctk.CTkLabel(self.configScrollableFrame, text=region[1], font=font_regular_bold)
-            self.region_selectionLabel.grid(row=linha, column=0, padx=padx_both, pady=2, sticky="e")
+            self.region_selectionLabel = ctk.CTkLabel(self.configScrollableFrame, text=region[1]+":", font=font_regular_bold)
+            self.region_selectionLabel.grid(row=linha_configs, column=0, padx=padx_both, pady=2, sticky="e")
             coluna = 1
             for lang in app_config['langs']:
                 if lang[0] == region[0]:
@@ -195,9 +201,9 @@ class createTabs(ctk.CTkTabview):
                     self.checkbox = ctk.CTkCheckBox(self.configScrollableFrame, text=lang[1],
                                      variable=check_var, textvariable=lang[0], onvalue="on", offvalue="off")
                     self.checkbox.configure(command=partial(checkbox_event, self.checkbox))
-                    self.checkbox.grid(row=linha, column=coluna, padx=padx_both, pady=2, sticky="e")
+                    self.checkbox.grid(row=linha_configs, column=coluna, padx=padx_both, pady=2)
                     coluna += 1
-            linha += 1
+            linha_configs += 1
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs populated.")
 
@@ -205,13 +211,9 @@ class createTabs(ctk.CTkTabview):
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values -> "+
                       f"theme: {app_config['theme']} | "+
                       f"color: {app_config['color']}"+
-                      f"eu_launcher_path: {app_config['eu_launcher_path']} | ")
-        if app_config['theme']:
-            lang_theme = getLangTranslation(app_config['theme'])
-            self.themeButton.set(lang_theme)
-        if app_config['color']:
-            lang_color = getLangTranslation(app_config['color'])
-            self.colorButton.set(lang_color)
+                      f"eu_launcher_path: {app_config['eu_launcher_path']}")
+        if app_config['theme']: self.themeButton.set(getLangTranslation(app_config['theme']))
+        if app_config['color']: self.colorButton.set(getLangTranslation(app_config['color']))
         if app_config['eu_launcher_path']: self.eu_launcherPathEntry.insert(0, app_config['eu_launcher_path'][0])
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values read.")
