@@ -4,3 +4,4 @@ output/
 assets/
 logs/
 config/config.ini
+kivy/
