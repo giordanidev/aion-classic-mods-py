@@ -5,28 +5,11 @@ import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, loca
 import urllib.request as urllib2
 import urllib.parse as urlparse
 
-arg_count = 0
-arg_found = False
-for arg in sys.argv:
-    if arg == "--LOGS":
-        log_level = sys.argv[arg_count+1]
-        if log_level == "DEBUG":
-            log_level = logging.DEBUG
-            arg_found = True
-    arg_count += 1
-if arg_found == False:
-    log_level = logging.INFO
-    
-logging.basicConfig(filename='.\\logs\\logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=log_level, filemode="w")
-logging.getLogger().addHandler(logging.StreamHandler())
-
-logging.debug(f"{sys._getframe().f_code.co_name}() -> App initialized.")
-logging.debug(f"{sys._getframe().f_code.co_name}() -> app_functions.py imported.")
-
 # GLOBAL VARIABLES
 copy_delete_files = ""
-config_path = ".\\config\\config.json"
-version_path = ".\\download\\version.json"
+config_path = "./config/config.json"
+version_path = "./download/version.json"
+app_icon = "./config/img/AionClassicMods.ico"
 version_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/version.json"
 filter_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/aionfilter.zip"
 font_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/hit_number.zip"
@@ -35,13 +18,63 @@ translation_url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/_ar
 translation_eu_url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/_arquivo/z_data_eu_ptBR.zip"
 asmo_skin_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/asmo_skin.zip"
 
-# Gets system language to load the correct "lang" file for app translation
+def appConfigJson():
+    with open("./config/config.json", encoding='utf-8') as f:
+        config_json = json.load(f)
+    f.close
+    return config_json
+# GLOBAL VARIABLE
+app_config = appConfigJson()
+
+def appConfigSave(app_config):
+    try:
+        with open(config_path, 'w') as config_write:
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> appConfigSave: {app_config}")
+            json_object = json.dumps(app_config, indent=4)
+            config_write.write(json_object)
+    except Exception as e:
+        getException(e)
+        return False
+
+def appVersion():
+    with open(version_path, encoding='utf-8') as f:
+        local_version = json.load(f)
+        f.close
+    return local_version
+# GLOBAL VARIABLE
+local_version = appVersion()
+
+def setLogLevel():
+    arg_count = 0
+    arg_found = False
+    for arg in sys.argv:
+        if arg == "--LOGS":
+            log_level = sys.argv[arg_count+1]
+            if log_level == "DEBUG":
+                log_level = logging.DEBUG
+                arg_found = True
+        arg_count += 1
+    if arg_found == False:
+        log_level = logging.INFO
+    return log_level
+# GLOBAL VARIABLE
+log_level = setLogLevel()
+    
+logging.basicConfig(filename='./logs/logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=log_level, filemode="w")
+logging.getLogger().addHandler(logging.StreamHandler())
+
+logging.info(f"{sys._getframe().f_code.co_name}() -> App initialized.")
+logging.debug(f"{sys._getframe().f_code.co_name}() -> app_functions.py imported.")
+
 def getLang():
+    """
+    Gets system language to load the correct "lang" file for app's translation.
+    """
     try:
         windll = ctypes.windll.kernel32
         app_lang = locale.windows_locale[windll.GetUserDefaultUILanguage()]
-        lang_path = f".\\config\\lang\\{app_lang}.json"
-        with open(".\\config\\lang\\en_US.json", encoding='utf-8') as f:
+        lang_path = f"./config/lang/{app_lang}.json"
+        with open("./config/lang/en_US.json", encoding='utf-8') as f:
             en_translated_text = json.load(f)
             f.close
         if os.path.isfile(lang_path):
@@ -92,55 +125,13 @@ def getLangTranslation(value):
         getException(e)
         return False
 
-def appConfigLoad():
-    try:
-        app_config = ConfigParser()
-        config_path = 'config/'
-        config_file = 'config.ini'
-        config_full_path = config_path + config_file
-        app_config.read(config_full_path)
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> appConfigLoad: {app_config.items('app')}")
-        return (app_config, config_full_path)
-    except Exception as e:
-        getException(e)
-        return False
-
-load_configs = appConfigLoad()
-app_config = load_configs[0]
-config_full_path = load_configs[1]
-
-def appConfigSave(app_config):
-    try:
-        with open(config_full_path, 'w') as config_write:
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> appConfigSave: {app_config.items('app')}")
-            app_config.write(config_write)
-    except Exception as e:
-        getException(e)
-        return False
-
-"""
-def get_langs():
-    with open('./config/config.json') as config_file:
-        data = json.load(config_file)
-    if "langs" in data:
-        langs = data["langs"]
-    else:
-        langs = False
-    return langs
-
-def get_regions():
-    with open('./config/config.json') as config_file:
-        data = json.load(config_file)
-    regions = data["regions"]
-    return regions
-"""
-
 ###########################################################
 ###########                                     ###########
 ###########   START  MAIN.PY FUNCTIONS          ###########
 ###########                                     ###########
 ###########################################################
 
+# GLOBAL VARIABLES
 text_color_success = ("#007514", "#7EFF93")
 text_color_fail = ("#D80000", "#FF6969")
 text_color_verifying = ("black", "white")
@@ -151,60 +142,26 @@ padx_both = 2.5
 pady_both = 2.5
 
 def centerApp(width, height, self):
-    #center the app on screen
+    """
+    Centers the app in the computer's main screen on start.
+    """
     window_width = width
     window_height = height
     screen_width = self.winfo_screenwidth()
     screen_height = self.winfo_screenheight()
     x_cordinate = int((screen_width/2) - (window_width/2))
     y_cordinate = int((screen_height/2) - (window_height/2) - 50)
-    self.geometry("{}x{}+{}+{}".format(window_width, window_height, x_cordinate, y_cordinate))
+    self.geometry(f"{window_width}x{window_height}+{x_cordinate}+{y_cordinate}")
 
 def regionSelection(self):
     try:
-        app_config = appConfigLoad()[0]
-        app_config.set('app', 'region', str(self.regionRadio.get()))
+        # TODO
+        # AUTO GENERATE + MARK CHECKBOXES
+        # 'FOR' REPEAT TO GET REGION INDEX
+        app_config = appConfigJson()
+        app_config['regions'][region_index_number][region_index_field] == str(self.regionRadio.get())
+
         appConfigSave(app_config)
-        if (self.regionRadio.get() == 0):
-            self.naPathLabel.configure(state="disabled")
-            self.naPathEntry.configure(state="disabled")
-            self.naPathButton.configure(state="disabled")
-            self.euPathLabel.configure(state="disabled")
-            self.euPathEntry.configure(state="disabled")
-            self.euPathButton.configure(state="disabled")
-        elif (self.regionRadio.get() == 1):
-            if getClassicNaPath():
-                self.naPathEntry.delete(0, 'end')
-                self.naPathEntry.insert(0, app_config.get('app', 'napath'))
-            self.naPathLabel.configure(state="normal")
-            self.naPathEntry.configure(state="normal")
-            self.naPathButton.configure(state="normal")
-            self.euPathLabel.configure(state="disabled")
-            self.euPathEntry.configure(state="disabled")
-            self.euPathButton.configure(state="disabled")
-        elif (self.regionRadio.get() == 2):
-            if getClassicEuPath():
-                self.euPathEntry.delete(0, 'end')
-                self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
-            self.naPathLabel.configure(state="disabled")
-            self.naPathEntry.configure(state="disabled")
-            self.naPathButton.configure(state="disabled")
-            self.euPathLabel.configure(state="normal")
-            self.euPathEntry.configure(state="normal")
-            self.euPathButton.configure(state="normal")
-        elif (self.regionRadio.get() == 3):
-            if getClassicNaPath():
-                self.naPathEntry.delete(0, 'end')
-                self.naPathEntry.insert(0, app_config.get('app', 'napath'))
-            if getClassicEuPath():
-                self.euPathEntry.delete(0, 'end')
-                self.euPathEntry.insert(0, app_config.get('app', 'eupath'))
-            self.naPathLabel.configure(state="normal")
-            self.naPathEntry.configure(state="normal")
-            self.naPathButton.configure(state="normal")
-            self.euPathLabel.configure(state="normal")
-            self.euPathEntry.configure(state="normal")
-            self.euPathButton.configure(state="normal")
     except Exception as e:
         getException(e)
         return False
@@ -213,26 +170,19 @@ def selectDirectory(path_entry):
     try:
         logging.debug(f"{sys._getframe().f_code.co_name}() -> 'Select Folder' ({path_entry.cget('placeholder_text')}) button pressed.")
 
-        game_directory = filedialog.askdirectory().replace("/","\\")
+        #game_directory = filedialog.askdirectory().replace("/","\\")
+        game_directory = filedialog.askdirectory().replace("\\","/")
         logging.debug(f"{sys._getframe().f_code.co_name}() -> game_directory: {game_directory}.")
 
-        if game_directory:
-            placeholder_text = path_entry.cget("placeholder_text")
-            if "NA" in placeholder_text.split("\\"):
-                region = "NA"
-                path = "napath"
-            elif "EU" in placeholder_text.split("\\"):
-                region = "EU"
-                path = "eupath"
+        if game_directory is not None:
             validate_directory_return = validateDirectory(game_directory, region)
             logging.debug(f"{sys._getframe().f_code.co_name}() -> validate_directory_return: {validate_directory_return}.")
 
             if validate_directory_return:
                 path_entry.delete(0, 'end')
                 path_entry.insert(0, game_directory)
-                load_configs = appConfigLoad()
-                app_config = load_configs[0]
-                app_config.set('app', path, game_directory)
+                global app_config
+                app_config['TODO'] = game_directory
                 appConfigSave(app_config)
                 return True
 
@@ -344,10 +294,16 @@ def copyFilesButton(file_type, copy_delete, return_label, return_button, delete_
 ###########################################################
 
 def firstRun():
+    """
+    List of tasks to be executed on the app's first run. Such as:
+    - Try to locate NA's and EU's client and launcher installation paths;
+    - Try to identify region's translation folders;
+    - Confirm that paths found are current being used.
+    """
     try:
-        app_config = appConfigLoad()[0]
-        if not app_config.get('app', 'region'):
-            logging.info(f"{sys._getframe().f_code.co_name}() :: First run!")
+        global app_config
+        if app_config['first_run'] == True:
+            logging.info(f"{sys._getframe().f_code.co_name}() :: First run! The program will try to configure some basic settings.")
             logging.debug(f"{sys._getframe().f_code.co_name}() -> getClassicNaPath() initialized.")
             getClassicNaPath()
             logging.debug(f"{sys._getframe().f_code.co_name}() -> getClassicEuPath() initialized.")
@@ -356,11 +312,9 @@ def firstRun():
             getClassicEuLauncherPath()
             logging.debug(f"{sys._getframe().f_code.co_name}() -> verifyGamePath() initialized.")
             verifyGamePath()
-            logging.debug(f"{sys._getframe().f_code.co_name}() -> defineRegion() initialized.")
-            defineRegion()
             return True
         else:
-            logging.info(f"{sys._getframe().f_code.co_name}() :: Not the first run anymore!")
+            logging.debug(f"{sys._getframe().f_code.co_name}() :: Not the first run anymore!")
             return False
     except Exception as e:
         getException(e)
@@ -381,10 +335,14 @@ def getClassicNaPath():
             logging.debug(f"{sys._getframe().f_code.co_name}() -> na_dir: {classic_na_path}")
             if classic_na_path[len(classic_na_path)-1] == "\\":
                 classic_na_path = classic_na_path.rstrip(classic_na_path[-1])
-            app_config = appConfigLoad()[0]
-            app_config.set('app', 'napath', classic_na_path)
+            global app_config
+            region_index = getRegionIndex("NA")
+            app_config['regions'][region_index][2] = classic_na_path.replace("\\","/")
+            app_config['regions'][region_index][3] = True
             appConfigSave(app_config)
             return True
+        else:
+            return False
     except Exception as e:
         getException(e)
         return False
@@ -399,7 +357,7 @@ def getClassicEuPath():
     try:
         a_reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
         a_key = winreg.OpenKey(a_reg, r'SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall')
-        not_found = True
+        found = False
         for i in range(1024):
             try:
                 key_name = winreg.EnumKey(a_key, i)
@@ -412,17 +370,19 @@ def getClassicEuPath():
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> game_publisher: {game_publisher}")
                         classic_eu_path = winreg.QueryValueEx(o_key, "InstallLocation")[0]
                         logging.debug(f"{sys._getframe().f_code.co_name}() -> classic_eu_path: {classic_eu_path}")
-                        not_found = False
-                if not_found == False:
+                        found = True
+                if found == True:
                     if classic_eu_path[len(classic_eu_path)-1] == "\\":
                         classic_eu_path = classic_eu_path.rstrip(classic_eu_path[-1])
-                    app_config = appConfigLoad()[0]
-                    app_config.set('app', 'eupath', classic_eu_path)
+                    global app_config
+                    region_index = getRegionIndex("EU")
+                    app_config['regions'][region_index][2] = classic_eu_path.replace("\\","/")
+                    app_config['regions'][region_index][3] = True
                     appConfigSave(app_config)
                     return True
             except:
                 continue
-        if not_found == True:
+        if found == False:
             logging.debug(f"{sys._getframe().f_code.co_name}(): Installation path not found. Select manually.")
             return False
     except Exception as e:
@@ -448,15 +408,17 @@ def getClassicEuLauncherPath():
             logging.debug(f"{sys._getframe().f_code.co_name}() -> classic_eu_launcher_path: {classic_eu_launcher_path}")
             if classic_eu_launcher_path[len(classic_eu_launcher_path)-1] == "\\":
                 classic_eu_launcher_path = classic_eu_launcher_path.rstrip(classic_eu_launcher_path[-1])
-            app_config = appConfigLoad()[0]
-            app_config.set('app', 'eulauncherpath', classic_eu_launcher_path)
+            global app_config
+            app_config['eu_launcher_path'] = [classic_eu_launcher_path.replace("\\","/"), True]
             appConfigSave(app_config)
             return True
+        else:
+            return False
     except Exception as e:
         getException(e)
         return False
 
-def defineRegion():
+def populateRegion(self):
     """
     #TODO redo config handling with JSON
 
@@ -466,7 +428,7 @@ def defineRegion():
     try:
         count_region = 0
         verifyGamePath() # verifys if game path selected is accurate.
-        app_config = appConfigLoad()[0] # Reloads config.
+        global app_config
         if app_config.get('app', 'napath'): count_region += 1
         if app_config.get('app', 'eupath'): count_region += 2
         app_config.set('app', 'region', str(count_region))
@@ -483,7 +445,7 @@ def verifyGamePath():
     the user to select a new path.
     """
     try:
-        app_config = appConfigLoad()[0]
+        global app_config
         na_path = app_config.get('app', 'napath')
         eu_path = app_config.get('app', 'eupath')
         app_region = app_config.get('app', 'region')
@@ -493,7 +455,7 @@ def verifyGamePath():
             if app_region in ("1", "3"):
                 logging.debug(f"{sys._getframe().f_code.co_name}() -> na_path: {na_path}")
                 if na_path:
-                    game_path = f"{na_path}\\bin64\\Aion.bin"
+                    game_path = f"{na_path}/bin64/Aion.bin"
                     if not os.path.isfile(game_path):
                         app_config.set('app', 'napath', "")
                         appConfigSave(app_config)
@@ -508,7 +470,7 @@ def verifyGamePath():
             if app_region in ("2", "3"):
                 logging.debug(f"{sys._getframe().f_code.co_name}() -> eu_path: {eu_path}")
                 if eu_path:
-                    game_path = f"{eu_path}\\bin64\\aionclassic.bin"
+                    game_path = f"{eu_path}/bin64/aionclassic.bin"
                     if not os.path.isfile(game_path):
                         app_config.set('app', 'eupath', "")
                         appConfigSave(app_config)
@@ -555,7 +517,7 @@ def validateDirectory(game_directory, region):
     try:
         wrong_directory = translateText("functions_wrong_directory")
         if region == "NA":
-            game_path = f"{game_directory}\\bin64\\Aion.bin"
+            game_path = f"{game_directory}/bin64/Aion.bin"
             logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
             if not os.path.isfile(game_path):
                 showAlert("showerror", wrong_directory.replace("{VERSION}","NA"))
@@ -563,7 +525,7 @@ def validateDirectory(game_directory, region):
             else:
                 return True
         if region == "EU":
-            game_path = f"{game_directory}\\bin64\\aionclassic.bin"
+            game_path = f"{game_directory}/bin64/aionclassic.bin"
             logging.debug(f"{sys._getframe().f_code.co_name}() -> game_path: {game_path}.")
             if not os.path.isfile(game_path):
                 showAlert("showerror", wrong_directory.replace("{VERSION}","EU"))
@@ -583,15 +545,15 @@ def getGameFilePath(game_lang):
     """
     try:
         verifyGamePath()
-        app_config = appConfigLoad()[0]
+        global app_config
         na_path = app_config.get('app', 'napath')
         eu_path = app_config.get('app', 'eupath')
         full_file_path = []
         for lang in game_lang:
             if lang == "enu":
-                full_file_path.append(f"{na_path}\\l10n\\{lang}")
+                full_file_path.append(f"{na_path}/l10n/{lang}")
             elif lang in ["eng", "fra", "deu"]:
-                full_file_path.append(f"{eu_path}\\l10n\\{lang}")
+                full_file_path.append(f"{eu_path}/l10n/{lang}")
             else:
                 logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: Unknown region.")
                 return
@@ -603,7 +565,7 @@ def getGameFilePath(game_lang):
 def getFilePath(game_file_type):
     try:
         logging.debug(f"{sys._getframe().f_code.co_name}() START -> game_file_type: {game_file_type}.")
-        app_config = appConfigLoad()[0]
+        global app_config
         app_region = app_config.get('app', 'region')
         game_lang = []
         if not app_region in ("1", "2", "3"):
@@ -614,14 +576,14 @@ def getFilePath(game_file_type):
         if app_region in ["2", "3"]:
             game_lang.extend(["eng", "fra", "deu"])
             
-        with open(".\\config\\files.json", encoding='utf-8') as f:
+        with open("./config/files.json", encoding='utf-8') as f:
             download_files = json.load(f)
             f.close
         # Gets all files and hashes them when files already exist in game path
         files = download_files[game_file_type]
 
         curr_dir = os.getcwd()
-        assets_path = f"{curr_dir}\\assets"
+        assets_path = f"{curr_dir}/assets"
         # Returns [full_file_path]. It can be multiple paths depending on regions selected
         game_path = getGameFilePath(game_lang)
         logging.debug(f"{sys._getframe().f_code.co_name}() END -> assets_path: {assets_path} || game_path: {game_path} || files: {files}.")
@@ -764,10 +726,10 @@ def copyDeleteFiles(game_file_type, copy_delete, return_label):
                 #TODO ADD EU/NA VERIFICATION
                 if game_file_type == "translation":
                     for idioma in ["eng", "fra", "deu"]:
-                        if idioma in game_file.split("\\"):
+                        if idioma in game_file.split("/"):
                             logging.debug(f"{sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} and idioma: {idioma} -> do NOT copy")
                             pass
-                elif game_file_type == "translation_eu" and "enu" in game_file.split("\\"):
+                elif game_file_type == "translation_eu" and "enu" in game_file.split("/"):
                     logging.debug(f"{sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} and idioma: enu -> do NOT copy")
                     pass
                 logging.debug(f"{sys._getframe().f_code.co_name}() -> game_file_type: {game_file_type} PASSED -> copy")
@@ -814,15 +776,15 @@ def downloadFiles(file_type, return_label):
     file_path = getFilePath(file_type)[0]
     # Defines assets path
     if file_type == "filter":
-        assets_dir = "\\data\\Strings"
+        assets_dir = "/data/Strings"
     if file_type == "font":
-        assets_dir = "\\textures\\ui"
+        assets_dir = "/textures/ui"
     if file_type == "voice":
-        assets_dir = "\\sounds\\voice"
+        assets_dir = "/sounds/voice"
     if file_type in ["translation", "translation_eu"]:
-        assets_dir = "\\data"
+        assets_dir = "/data"
     if file_type == "asmo_skin":
-        assets_dir = "\\data\\custompreset"
+        assets_dir = "/data/custompreset"
     
     file_path = file_path+assets_dir
     logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}")
@@ -971,19 +933,17 @@ def getException(e):
     })
     showAlert("showerror", translateText("functions_show_critical_error")+"\n\n"+str(e))
 
-def configJson():
-    with open(config_path, encoding='utf-8') as f:
-        config_json = json.load(f)
-        f.close
-    #print(config_json)
-    #print(config_json["paths"]["NA"][0])
-
 def checkUpdates():
+    global local_version
     cloud_json = urllib2.urlopen(version_url)
     cloud_version = json.loads(cloud_json.read())
+    return cloud_version
 
-    with open(version_path, encoding='utf-8') as f:
-        local_version = json.load(f)
-        f.close
-    print(f"LOCAL: {local_version} \nCLOUD: {cloud_version}")
-    return local_version, cloud_version
+def getRegionIndex(region):
+    global app_config
+    count = 0
+    for regions in app_config['regions']:
+        if regions[0] == region:
+            return count
+        count += 1
+    return False

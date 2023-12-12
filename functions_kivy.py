@@ -1,6 +1,5 @@
 from __future__ import (division, absolute_import, print_function, unicode_literals)
 from configparser import ConfigParser
-from tkinter import messagebox, filedialog
 import os, os.path, hashlib, winreg, sys, json, logging, threading, ctypes, locale, shutil, time, tempfile, zipfile, psutil
 import urllib.request as urllib2
 import urllib.parse as urlparse
