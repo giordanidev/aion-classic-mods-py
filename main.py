@@ -153,48 +153,45 @@ class createTabs(ctk.CTkTabview):
 
         ## START CONFIG SCROLLABLE FRAME
         self.configScrollableFrame = ctk.CTkScrollableFrame(configTab, fg_color="transparent", height=245)
-        self.configScrollableFrame.grid(row=0, column=0, columnspan=2, padx=0, pady=0, sticky="ew")
-
-        ## START CONFIG LEFT FRAME
-        self.configLeftFrame = ctk.CTkFrame(self.configScrollableFrame, fg_color="red")
-        self.configLeftFrame.grid(row=0, column=0, sticky="n")
-
-        self.themeLabel = ctk.CTkLabel(self.configLeftFrame, text=translateText("config_theme_label"), font=font_regular_bold)
-        self.themeLabel.grid(row=0, column=0, padx=padx_both, pady=2, sticky="e")
-        self.colorLabel = ctk.CTkLabel(self.configLeftFrame, text=translateText("config_color_label"), font=font_regular_bold)
-        self.colorLabel.grid(row=1, column=0, padx=padx_both, pady=2, sticky="e")
-        self.eu_launcherLabel = ctk.CTkLabel(self.configLeftFrame, text=translateText("config_eu_launcher_label"), font=font_regular_bold)
-        self.eu_launcherLabel.grid(row=2, column=0, padx=padx_both, pady=2, sticky="e")
-
-        # Config tab widgets > Right
-        self.configRightFrame = ctk.CTkFrame(self.configScrollableFrame, fg_color="blue")
-        self.configRightFrame.grid(row=0, column=1, pady=0, sticky="new")
-        self.configRightFrame.grid_columnconfigure(0, weight=1)
+        self.configScrollableFrame.grid(row=0, column=1, padx=0, pady=0, sticky="nsew")
+        self.configScrollableFrame.grid_columnconfigure(4, weight=1)
 
         theme_variable = ctk.StringVar(value="System")
-        self.themeButton = ctk.CTkSegmentedButton(self.configRightFrame, command=self.change_theme_event, variable=theme_variable,
+        self.themeLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_theme_label"), font=font_regular_bold)
+        self.themeLabel.grid(row=0, column=0, padx=padx_both, pady=2, sticky="e")
+        self.themeButton = ctk.CTkSegmentedButton(self.configScrollableFrame, command=self.change_theme_event, variable=theme_variable,
                                                   values=[translateText("config_theme_system"),
                                                           translateText("config_theme_dark"),
                                                           translateText("config_theme_light")])
-        self.themeButton.grid(row=0, column=0, padx=padx_both, pady=pady_both, columnspan=4, sticky="ew")
+        self.themeButton.grid(row=0, column=1, padx=padx_both, pady=pady_both, columnspan=4, sticky="ew")
+
         color_variable = ctk.StringVar(value="Blue")
-        self.colorButton = ctk.CTkSegmentedButton(self.configRightFrame, command=changeColorEvent, variable=color_variable,
+        self.colorLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_color_label"), font=font_regular_bold)
+        self.colorLabel.grid(row=1, column=0, padx=padx_both, pady=2, sticky="e")
+        self.colorButton = ctk.CTkSegmentedButton(self.configScrollableFrame, command=changeColorEvent, variable=color_variable,
                                                   values=[translateText("config_color_blue"),
                                                           translateText("config_color_darkblue"),
                                                           translateText("config_color_green")])
-        self.colorButton.grid(row=1, column=0, padx=padx_both, pady=pady_both, columnspan=4, sticky="ew")
+        self.colorButton.grid(row=1, column=1, padx=padx_both, pady=pady_both, columnspan=4, sticky="ew")
 
-        self.euLauncherPathEntry = ctk.CTkEntry(self.configRightFrame, placeholder_text=translateText("config_eu_launcher_folder"), state="disabled")
-        self.euLauncherPathEntry.grid(row=2, column=0, padx=padx_both, pady=pady_both, columnspan=3, sticky="we")
-        self.euLauncherPathButton = ctk.CTkButton(self.configRightFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.euLauncherPathEntry), width=120, state="disabled")
-        self.euLauncherPathButton.grid(row=2, column=3, padx=padx_both, pady=pady_both)
+        self.eu_launcherLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_eu_launcher_label"), font=font_regular_bold)
+        self.eu_launcherLabel.grid(row=2, column=0, padx=padx_both, pady=2, sticky="e")
+        self.eu_launcherPathEntry = ctk.CTkEntry(self.configScrollableFrame, placeholder_text=translateText("config_eu_launcher_folder"))
+        self.eu_launcherPathEntry.grid(row=2, column=1, padx=padx_both, pady=pady_both, columnspan=2, sticky="we")
+        self.eu_launcherPathButton = ctk.CTkButton(self.configScrollableFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.eu_launcherPathEntry), font=font_regular_bold, width=120)
+        self.eu_launcherPathButton.grid(row=2, column=3, padx=padx_both, pady=pady_both, sticky="w")
 
-        linha = 5
+        linha = 3
         for region in app_config['regions']:
-            self.region_selectionLabel = ctk.CTkLabel(self.configLeftFrame, text=region[1], font=font_regular_bold)
+            self.region_selectionLabel = ctk.CTkLabel(self.configScrollableFrame, text=region[1], font=font_regular_bold)
             self.region_selectionLabel.grid(row=linha, column=0, padx=padx_both, pady=2, sticky="e")
             linha += 1
-
+            regions = []
+            for lang in app_config['langs']:
+                if lang[0] == region[0]:
+                    # TODO
+                    regions = []
+        
         """
         self.regionRadio = tk.IntVar()
 
@@ -231,7 +228,7 @@ class createTabs(ctk.CTkTabview):
         if app_config['color']:
             lang_color = getLangTranslation(app_config['color'])
             self.colorButton.set(lang_color)
-        if app_config['eu_launcher_path']: self.euLauncherPathEntry.insert(0, app_config['eu_launcher_path'])
+        if app_config['eu_launcher_path']: self.eu_launcherPathEntry.insert(0, app_config['eu_launcher_path'][0])
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values read.")
 
