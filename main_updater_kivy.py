@@ -1,11 +1,14 @@
 #TODO
 #ADD OWN FUNCTIONS FILE/LOGS
 
-from functions import *
-import tkinter as tk, customtkinter as ctk, logging
+from functions_kivy import *
 
 logging.debug(f"{sys._getframe().f_code.co_name}() -> Updater initialized.")
 
+
+
+
+"""
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -71,3 +74,4 @@ class App(ctk.CTk):
             self.destroy()
 
 app = App()
+"""
