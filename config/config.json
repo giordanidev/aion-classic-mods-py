@@ -1,7 +1,7 @@
 {
     "first_run": true,
     "theme": "System",
-    "color": "Blue",
+    "color": "Dark-blue",
     "regions": [
         [
             "NA",
@@ -17,8 +17,26 @@
         ]
     ],
     "langs": [
-        ["NA", "ENG", true],
-        ["EU", "FRA", false]
+        [
+            "NA",
+            "ENU",
+            true
+        ],
+        [
+            "EU",
+            "DEU",
+            false
+        ],
+        [
+            "EU",
+            "ENG",
+            true
+        ],
+        [
+            "EU",
+            "FRA",
+            false
+        ]
     ],
     "eu_launcher_path": [
         "C:/Program Files (x86)/GameforgeClient",

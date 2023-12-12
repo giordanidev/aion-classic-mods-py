@@ -108,11 +108,6 @@ class createTabs(ctk.CTkTabview):
         all_deleteButtons = []
         all_returnLabels = []
         for campo in gerar_campos:
-            #self.nome_campoLabel = f"{campo}Label"
-            #self.nome_campoReturnLabel = f"{campo}ReturnLabel"
-            #self.nome_campoButton = f"{campo}Button"
-            #self.nome_campoDeleteButton = f"{campo}DeleteButton"
-            
             self.nome_campoLabel = ctk.CTkLabel(self.appTopFrame, text=translateText(f"app_{campo}_label")+":", height=30, font=font_regular_bold)
             self.nome_campoLabel.grid(row=linha, column=0, padx=padx_both, pady=pady_both, sticky="e")
             self.nome_campoReturnLabel = ctk.CTkLabel(self.appTopFrame, text=translateText("app_return_label_waiting"), justify="left")
@@ -177,43 +172,32 @@ class createTabs(ctk.CTkTabview):
         self.eu_launcherLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_eu_launcher_label"), font=font_regular_bold)
         self.eu_launcherLabel.grid(row=2, column=0, padx=padx_both, pady=2, sticky="e")
         self.eu_launcherPathEntry = ctk.CTkEntry(self.configScrollableFrame, placeholder_text=translateText("config_eu_launcher_folder"))
-        self.eu_launcherPathEntry.grid(row=2, column=1, padx=padx_both, pady=pady_both, columnspan=2, sticky="we")
+        self.eu_launcherPathEntry.grid(row=2, column=1, columnspan=3, padx=padx_both, pady=pady_both, sticky="we")
         self.eu_launcherPathButton = ctk.CTkButton(self.configScrollableFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.eu_launcherPathEntry), font=font_regular_bold, width=120)
-        self.eu_launcherPathButton.grid(row=2, column=3, padx=padx_both, pady=pady_both, sticky="w")
+        self.eu_launcherPathButton.grid(row=2, column=4, padx=padx_both, pady=pady_both, sticky="w")
+
+        
+        def checkbox_event(box_get):
+            # TODO
+            print(f"checkbox toggled, current value: {box_get.get()} > {box_get.cget('textvariable')} > {box_get.cget('text')}")
 
         linha = 3
         for region in app_config['regions']:
             self.region_selectionLabel = ctk.CTkLabel(self.configScrollableFrame, text=region[1], font=font_regular_bold)
             self.region_selectionLabel.grid(row=linha, column=0, padx=padx_both, pady=2, sticky="e")
-            linha += 1
-            regions = []
+            coluna = 1
             for lang in app_config['langs']:
                 if lang[0] == region[0]:
-                    # TODO
-                    regions = []
-        
-        """
-        self.regionRadio = tk.IntVar()
-
-        self.naRadio = ctk.CTkRadioButton(self.configRightFrame,
-                                                    text="",
-                                                    command=partial(regionSelection, self),
-                                                    variable=self.regionRadio,
-                                                    value=1)
-        self.naRadio.grid(row=2, column=0, padx=padx_both, pady=pady_both, sticky="w")
-        self.euRadio = ctk.CTkRadioButton(self.configRightFrame,
-                                                    text="",
-                                                    command=partial(regionSelection, self),
-                                                    variable=self.regionRadio,
-                                                    value=2)
-        self.euRadio.grid(row=2, column=1, pady=pady_both, sticky="w")
-        self.bothRadio = ctk.CTkRadioButton(self.configRightFrame,
-                                                    text="",
-                                                    command=partial(regionSelection, self),
-                                                    variable=self.regionRadio,
-                                                    value=3)
-        self.bothRadio.grid(row=2, column=2, pady=pady_both, sticky="w")
-        """
+                    if lang[2] == True:
+                        check_var = ctk.StringVar(value="on")
+                    else:
+                        check_var = ctk.StringVar(value="off")
+                    self.checkbox = ctk.CTkCheckBox(self.configScrollableFrame, text=lang[1],
+                                     variable=check_var, textvariable=lang[0], onvalue="on", offvalue="off")
+                    self.checkbox.configure(command=partial(checkbox_event, self.checkbox))
+                    self.checkbox.grid(row=linha, column=coluna, padx=padx_both, pady=2, sticky="e")
+                    coluna += 1
+            linha += 1
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs populated.")
 
@@ -231,8 +215,7 @@ class createTabs(ctk.CTkTabview):
         if app_config['eu_launcher_path']: self.eu_launcherPathEntry.insert(0, app_config['eu_launcher_path'][0])
 
         logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values read.")
-
-        
+        ## END CONFIG SCROLLABLE FRAME
 
     def change_theme_event(self, value):
 
