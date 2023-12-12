@@ -198,9 +198,8 @@ class createTabs(ctk.CTkTabview):
                         check_var = ctk.StringVar(value="on")
                     else:
                         check_var = ctk.StringVar(value="off")
-                    self.checkbox = ctk.CTkCheckBox(self.configScrollableFrame, text=lang[1],
-                                     variable=check_var, textvariable=lang[0], onvalue="on", offvalue="off")
-                    self.checkbox.configure(command=partial(checkbox_event, self.checkbox))
+                    self.checkbox = ctk.CTkCheckBox(self.configScrollableFrame, variable=check_var, onvalue="on", offvalue="off")
+                    self.checkbox.configure(command=partial(checkbox_event, self.checkbox), textvariable=lang[0], text=lang[1])
                     self.checkbox.grid(row=linha_configs, column=coluna, padx=padx_both, pady=2)
                     coluna += 1
             linha_configs += 1
