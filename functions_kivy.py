@@ -6,7 +6,7 @@ import os, os.path, winreg, sys, json, logging, threading, ctypes, locale, shuti
 import urllib.request as urllib2, urllib.parse as urlparse
 
 # GLOBAL VARIABLES
-copy_delete_files = ""
+copy_delete_files = []
 config_path = "./config/config.json"
 version_path = "./download/version.json"
 app_icon = "./config/img/AionClassicMods.ico"
@@ -19,10 +19,14 @@ translation_eu_url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/
 asmo_skin_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/asmo_skin.zip"
 
 def appConfigJson():
-    with open("./config/config.json", encoding='utf-8') as f:
-        config_json = json.load(f)
-    f.close
-    return config_json
+    try:
+        with open("./config/config.json", encoding='utf-8') as f:
+            config_json = json.load(f)
+        f.close
+        return config_json
+    except Exception as e:
+        getException(e)
+        return False
 # GLOBAL VARIABLE
 app_config = appConfigJson()
 
@@ -37,26 +41,34 @@ def appConfigSave(app_config):
         return False
 
 def appVersion():
-    with open(version_path, encoding='utf-8') as f:
-        local_version = json.load(f)
-        f.close
-    return local_version
+    try:
+        with open(version_path, encoding='utf-8') as f:
+            local_version = json.load(f)
+            f.close
+        return local_version
+    except Exception as e:
+        getException(e)
+        return False
 # GLOBAL VARIABLE
 local_version = appVersion()
 
 def setLogLevel():
-    arg_count = 0
-    arg_found = False
-    for arg in sys.argv:
-        if arg == "--LOGS":
-            log_level = sys.argv[arg_count+1]
-            if log_level == "DEBUG":
-                log_level = logging.DEBUG
-                arg_found = True
-        arg_count += 1
-    if arg_found == False:
-        log_level = logging.INFO
-    return log_level
+    try:
+        arg_count = 0
+        arg_found = False
+        for arg in sys.argv:
+            if arg == "--LOGS":
+                log_level = sys.argv[arg_count+1]
+                if log_level == "DEBUG":
+                    log_level = logging.DEBUG
+                    arg_found = True
+            arg_count += 1
+        if arg_found == False:
+            log_level = logging.INFO
+        return log_level
+    except Exception as e:
+        getException(e)
+        return False
 # GLOBAL VARIABLE
 log_level = setLogLevel()
     
@@ -145,13 +157,17 @@ def centerApp(width, height, self):
     """
     Centers the app in the computer's main screen on start.
     """
-    window_width = width
-    window_height = height
-    screen_width = self.winfo_screenwidth()
-    screen_height = self.winfo_screenheight()
-    x_cordinate = int((screen_width/2) - (window_width/2))
-    y_cordinate = int((screen_height/2) - (window_height/2) - 50)
-    self.geometry(f"{window_width}x{window_height}+{x_cordinate}+{y_cordinate}")
+    try:
+        window_width = width
+        window_height = height
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        x_cordinate = int((screen_width/2) - (window_width/2))
+        y_cordinate = int((screen_height/2) - (window_height/2) - 50)
+        self.geometry(f"{window_width}x{window_height}+{x_cordinate}+{y_cordinate}")
+    except Exception as e:
+        getException(e)
+        return False
 
 def regionSelection(self):
     try:
@@ -490,6 +506,7 @@ def verifyGamePath():
         return False
     
 # alert_type = showinfo | showwarning | showerror | askquestion | askokcancel | askyesno 
+
 def showAlert(alert_type, message):
     try:
         if alert_type == "showinfo": # returns "ok"
@@ -773,145 +790,161 @@ def downloadFiles(file_type, return_label):
     """ 
     Download and save a file specified by url to 'dest' directory.
     """
-    file_path = getFilePath(file_type)[0]
-    # Defines assets path
-    if file_type == "filter":
-        assets_dir = "/data/Strings"
-    if file_type == "font":
-        assets_dir = "/textures/ui"
-    if file_type == "voice":
-        assets_dir = "/sounds/voice"
-    if file_type in ["translation", "translation_eu"]:
-        assets_dir = "/data"
-    if file_type == "asmo_skin":
-        assets_dir = "/data/custompreset"
-    
-    file_path = file_path+assets_dir
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}")
-    dest = file_path
-    
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> dest: {dest}")
-    if not os.path.isdir(dest):
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> MKDIR: {dest}")
-        os.makedirs(dest)
+    try:
+        file_path = getFilePath(file_type)[0]
+        # Defines assets path
+        if file_type == "filter":
+            assets_dir = "/data/Strings"
+        if file_type == "font":
+            assets_dir = "/textures/ui"
+        if file_type == "voice":
+            assets_dir = "/sounds/voice"
+        if file_type in ["translation", "translation_eu"]:
+            assets_dir = "/data"
+        if file_type == "asmo_skin":
+            assets_dir = "/data/custompreset"
+        
+        file_path = file_path+assets_dir
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}")
+        dest = file_path
+        
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> dest: {dest}")
+        if not os.path.isdir(dest):
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> MKDIR: {dest}")
+            os.makedirs(dest)
 
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}")
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> file_path: {file_path}")
 
-    if (file_type == "filter"):
-        url = filter_url
-    elif (file_type == "font"):
-        url = font_url
-    elif (file_type == "voice"):
-        url = voice_url
-    elif (file_type == "translation"):
-        url = translation_url
-    elif (file_type == "translation_eu"):
-        url = translation_eu_url
-    elif (file_type == "asmo_skin"):
-        url = asmo_skin_url
+        if (file_type == "filter"):
+            url = filter_url
+        elif (file_type == "font"):
+            url = font_url
+        elif (file_type == "voice"):
+            url = voice_url
+        elif (file_type == "translation"):
+            url = translation_url
+        elif (file_type == "translation_eu"):
+            url = translation_eu_url
+        elif (file_type == "asmo_skin"):
+            url = asmo_skin_url
 
-    u = urllib2.urlopen(url)
+        u = urllib2.urlopen(url)
 
-    scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
-    
-    filename = os.path.basename(path)
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> filename: {filename}")
+        scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
+        
+        filename = os.path.basename(path)
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> filename: {filename}")
 
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> dest: {dest}")
-    if dest:
-        filepath = os.path.join(dest, filename)
-    else:
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> dest: {dest}")
+        if dest:
+            filepath = os.path.join(dest, filename)
+        else:
+            return False
+
+        with open(filepath, 'wb') as f:
+            meta = u.info()
+            meta_func = meta.getheaders if hasattr(meta, 'getheaders') else meta.get_all
+            meta_length = meta_func("Content-Length")
+            file_size = None
+            if meta_length:
+                file_size = int(meta_length[0])
+                
+            #print(f"Testing with {file_size} Bytes download")
+            print("Downloading: {0} Bytes: {1}".format(url, file_size))
+
+            file_size_dl = 0
+            block_sz = 8192
+            while True:
+                buffer = u.read(block_sz)
+                if not buffer:
+                    break
+
+                file_size_dl += len(buffer)
+                f.write(buffer)
+
+                status = f"{translateText('app_button_downloading')} {filename}:"
+                if file_size:
+                    status += " {0:3.0f}%".format(file_size_dl * 100 / file_size)
+                status += chr(13)
+                print(status, end="")
+                return_label.configure(text=status, text_color=text_color_success)
+            print()
+        return filepath, dest
+    except Exception as e:
+        getException(e)
         return False
 
-    with open(filepath, 'wb') as f:
-        meta = u.info()
-        meta_func = meta.getheaders if hasattr(meta, 'getheaders') else meta.get_all
-        meta_length = meta_func("Content-Length")
-        file_size = None
-        if meta_length:
-            file_size = int(meta_length[0])
-            
-        #print(f"Testing with {file_size} Bytes download")
-        print("Downloading: {0} Bytes: {1}".format(url, file_size))
-
-        file_size_dl = 0
-        block_sz = 8192
-        while True:
-            buffer = u.read(block_sz)
-            if not buffer:
-                break
-
-            file_size_dl += len(buffer)
-            f.write(buffer)
-
-            status = f"{translateText('app_button_downloading')} {filename}:"
-            if file_size:
-                status += " {0:3.0f}%".format(file_size_dl * 100 / file_size)
-            status += chr(13)
-            print(status, end="")
-            return_label.configure(text=status, text_color=text_color_success)
-        print()
-    return filepath, dest
-
 def extractFiles(filepath, dest):
-    logging.debug(f"{sys._getframe().f_code.co_name}() -> filepath: {filepath}")
-    with zipfile.ZipFile(filepath, 'r') as zip_files:
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> extracting")
-        zip_files.extractall(dest)
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> extracting DONE")
+    try:
+        logging.debug(f"{sys._getframe().f_code.co_name}() -> filepath: {filepath}")
+        with zipfile.ZipFile(filepath, 'r') as zip_files:
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> extracting")
+            zip_files.extractall(dest)
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> extracting DONE")
 
-    if os.path.isfile(filepath):
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {filepath}")
-        os.remove(filepath)
+        if os.path.isfile(filepath):
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {filepath}")
+            os.remove(filepath)
+    except Exception as e:
+        getException(e)
+        return False
 
 #MAY OR MAY NOT USE IT IN THE FUTURE. FOR NOW, IT STAYS HERE!
 def forceCloseAion(action, game_client, close_button, return_label):
-    running_apps = psutil.process_iter(['pid','name']) #returns names of running processes
+    try:
+        running_apps = psutil.process_iter(['pid','name']) #returns names of running processes
 
-    if game_client == "game":
-        app_name = ["aion", "aionclassic"]
-        app_extension = "bin"
-        app_check_phrase = translateText("app_return_label_game_found")
-        app_close_phrase = translateText("app_return_label_game_closed")
-    elif game_client == "client":
-        app_name = ["gfservice", "gfclient"]
-        app_extension = "exe"
-        app_check_phrase = translateText("app_return_label_launcher_found")
-        app_close_phrase = translateText("app_return_label_launcher_closed")
+        if game_client == "game":
+            app_name = ["aion", "aionclassic"]
+            app_extension = "bin"
+            app_check_phrase = translateText("app_return_label_game_found")
+            app_close_phrase = translateText("app_return_label_game_closed")
+        elif game_client == "client":
+            app_name = ["gfservice", "gfclient"]
+            app_extension = "exe"
+            app_check_phrase = translateText("app_return_label_launcher_found")
+            app_close_phrase = translateText("app_return_label_launcher_closed")
 
-    found = False
-    for app in running_apps:
-        sys_app = app.info.get('name').split('.')
-        sys_app_name = sys_app[0].lower()
+        found = False
+        for app in running_apps:
+            sys_app = app.info.get('name').split('.')
+            sys_app_name = sys_app[0].lower()
 
-        if sys_app_name in app_name and app_extension in sys_app:
-            if action == "close":
-                pid = app.info.get('pid') #returns PID of the given app if found running
-            
-                try: #deleting the app if asked app is running.(It raises error for some windows apps)
-                    app_pid = psutil.Process(pid)
-                    app_pid.terminate()
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> Process '{sys_app_name}.{app_extension} ({app_pid})' closed!")
-                    close_button.configure(state="disabled", font=font_regular)
-                    return_label.configure(text=app_close_phrase, text_color=text_color_success, font=font_regular)
-                    found = True
-                except Exception as e:
-                    getException(e)
-                    return False
-            elif action == "check":
-                close_button.configure(state="normal", font=font_regular_bold)
-                return_label.configure(text=app_check_phrase, text_color=text_color_success, font=font_regular)
-        else: pass
-    
-    if found == False:
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> Aion process not found!")
-        close_button.configure(state="disabled", font=font_regular)
-        return_label.configure(text=translateText("app_info_aion_notfound"), font=font_regular)
+            if sys_app_name in app_name and app_extension in sys_app:
+                if action == "close":
+                    pid = app.info.get('pid') #returns PID of the given app if found running
+                
+                    try: #deleting the app if asked app is running.(It raises error for some windows apps)
+                        app_pid = psutil.Process(pid)
+                        app_pid.terminate()
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> Process '{sys_app_name}.{app_extension} ({app_pid})' closed!")
+                        close_button.configure(state="disabled", font=font_regular)
+                        return_label.configure(text=app_close_phrase, text_color=text_color_success, font=font_regular)
+                        found = True
+                    except Exception as e:
+                        getException(e)
+                        return False
+                elif action == "check":
+                    close_button.configure(state="normal", font=font_regular_bold)
+                    return_label.configure(text=app_check_phrase, text_color=text_color_success, font=font_regular)
+            else: pass
+        
+        if found == False:
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> Aion process not found!")
+            close_button.configure(state="disabled", font=font_regular)
+            return_label.configure(text=translateText("app_info_aion_notfound"), font=font_regular)
+    except Exception as e:
+        getException(e)
+        return False
 
 def forceCloseAion_thread(action, game_client, close_button, return_label):
-    while 1:
-        forceCloseAion(action, game_client, close_button, return_label)
-        time.sleep(10)
+    try:
+        while 1:
+            forceCloseAion(action, game_client, close_button, return_label)
+            time.sleep(10)
+    except Exception as e:
+        getException(e)
+        return False
 
 def getException(e):
     """
@@ -934,16 +967,24 @@ def getException(e):
     showAlert("showerror", translateText("functions_show_critical_error")+"\n\n"+str(e))
 
 def checkUpdates():
-    global local_version
-    cloud_json = urllib2.urlopen(version_url)
-    cloud_version = json.loads(cloud_json.read())
-    return cloud_version
+    try:
+        global local_version
+        cloud_json = urllib2.urlopen(version_url)
+        cloud_version = json.loads(cloud_json.read())
+        return cloud_version
+    except Exception as e:
+        getException(e)
+        return False
 
 def getRegionIndex(region):
-    global app_config
-    count = 0
-    for regions in app_config['regions']:
-        if regions[0] == region:
-            return count
-        count += 1
-    return False
+    try:
+        global app_config
+        count = 0
+        for regions in app_config['regions']:
+            if regions[0] == region:
+                return count
+            count += 1
+        return False
+    except Exception as e:
+        getException(e)
+        return False
