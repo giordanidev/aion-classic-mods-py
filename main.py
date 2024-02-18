@@ -154,6 +154,10 @@ class createTabs(ctk.CTkTabview):
         self.configScrollableFrame.grid_columnconfigure(4, weight=1)
 
         linha_configs = 0
+        self.generalLabel = ctk.CTkLabel(self.configScrollableFrame, text="CONFIGURAÇÕES GERAIS", font=font_big_bold)
+        self.generalLabel.grid(row=linha_configs, column=0, columnspan=5, padx=padx_both, pady=2, sticky="we")
+
+        linha_configs += 1
         theme_variable = ctk.StringVar(value="System")
         self.themeLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_theme_label")+":", font=font_regular_bold)
         self.themeLabel.grid(row=linha_configs, column=0, padx=padx_both, pady=2, sticky="e")
@@ -182,24 +186,35 @@ class createTabs(ctk.CTkTabview):
         self.eu_launcherPathButton.grid(row=linha_configs, column=4, padx=padx_both, pady=pady_both, sticky="w")
 
         
-        def checkbox_event(checkbox_get):
+        def checkboxEvent(checkbox_get, checkbox_lang):
             # TODO
             # SAVE NEW CONFIGS
-            print(f"checkbox toggled, current value: {checkbox_get.get()} > {checkbox_get.cget('textvariable')} > {checkbox_get.cget('text')}")
+            print(f"CHECKBOX > {checkbox_lang}>{checkbox_get.cget('text')}: {checkbox_get.get()}")
+
+        linha_configs += 1
+        self.regionLabel = ctk.CTkLabel(self.configScrollableFrame, text="REGIÕES E IDIOMAS", font=font_big_bold)
+        self.regionLabel.grid(row=linha_configs, column=0, columnspan=5, padx=padx_both, pady=2, sticky="we")
+        self.eu_launcherPathButton = ctk.CTkButton(self.configScrollableFrame, text="Alterar", command=partial(selectDirectory, self.eu_launcherPathEntry), font=font_regular_bold, width=120)
+        self.eu_launcherPathButton.grid(row=linha_configs, column=4, padx=padx_both, pady=pady_both, sticky="w")
 
         linha_configs += 1
         for region in app_config['regions']:
             self.region_selectionLabel = ctk.CTkLabel(self.configScrollableFrame, text=region[1]+":", font=font_regular_bold)
             self.region_selectionLabel.grid(row=linha_configs, column=0, padx=padx_both, pady=2, sticky="e")
             coluna = 1
+            print(app_config['langs'])
             for lang in app_config['langs']:
+                if coluna >= 5:
+                    coluna = 1
+                    linha_configs += 1
                 if lang[0] == region[0]:
+                    print(f"{lang[0]}:{lang[1]}")
                     if lang[2] == True:
                         check_var = ctk.StringVar(value="on")
                     else:
                         check_var = ctk.StringVar(value="off")
                     self.checkbox = ctk.CTkCheckBox(self.configScrollableFrame, variable=check_var, onvalue="on", offvalue="off")
-                    self.checkbox.configure(command=partial(checkbox_event, self.checkbox), textvariable=lang[0], text=lang[1])
+                    self.checkbox.configure(command=partial(checkboxEvent, self.checkbox, lang[0]), text=lang[1])
                     self.checkbox.grid(row=linha_configs, column=coluna, padx=padx_both, pady=2)
                     coluna += 1
             linha_configs += 1

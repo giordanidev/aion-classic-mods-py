@@ -2,14 +2,13 @@
     "voice": ["/sounds/voice/attack/attack_kr.pak",     "/sounds/voice/cast/cast_kr.pak",   "/sounds/voice/damage/damage_kr.pak",
               "/sounds/voice/defence/defence_kr.pak",   "/sounds/voice/login/login_kr.pak", "/sounds/voice/motion/motion_kr.pak"],
 
-    "filter": ["/data/Strings/aionfilterchat.dat",       "/data/Strings/aionfilterchat_load.pak", "/data/Strings/aionfilterline.dat",
-               "/data/Strings/aionfilterline_load.pak"],
+    "filter": ["/data/Strings/aionfilterchat_load.pak", "/data/Strings/aionfilterline_load.pak"],
+    "filter_old": ["/data/Strings/aionfilterchat.dat", "/data/Strings/aionfilterline.dat"],
 
     "font": ["/textures/ui/hit_number_jp.pak"],
-    
-    "translation_old": ["/data/Data_ptBR.pak"],
 
     "translation": ["/data/z_Data_na_ptBR.pak"],
+    "translation_old": ["/data/Data_ptBR.pak"],
 
     "translation_eu": ["/data/z_data_eu_ptBR.pak"],
     

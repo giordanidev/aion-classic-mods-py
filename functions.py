@@ -9,6 +9,7 @@ import urllib.parse as urlparse
 copy_delete_files = ""
 config_path = "./config/config.json"
 version_path = "./download/version.json"
+logs_path = "./logs/logs.log"
 app_icon = "./config/img/AionClassicMods.ico"
 version_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/version.json"
 filter_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/aionfilter.zip"
@@ -59,8 +60,12 @@ def setLogLevel():
     return log_level
 # GLOBAL VARIABLE
 log_level = setLogLevel()
+
+if not os.path.isdir(os.path.dirname(logs_path)):
+    logging.debug(f"{sys._getframe().f_code.co_name}() -> MKDIR: {os.path.dirname(logs_path)}")
+    os.makedirs(os.path.dirname(logs_path))
     
-logging.basicConfig(filename='./logs/logs.log', format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=log_level, filemode="w")
+logging.basicConfig(filename=logs_path, format='%(asctime)s [%(threadName)s] -> [%(levelname)s] -> :: %(message)s', encoding='utf-8', level=log_level, filemode="w")
 logging.getLogger().addHandler(logging.StreamHandler())
 
 logging.info(f"{sys._getframe().f_code.co_name}() -> App initialized.")
@@ -137,7 +142,7 @@ text_color_fail = ("#D80000", "#FF6969")
 text_color_verifying = ("black", "white")
 font_regular = ("", 12)
 font_regular_bold = ("", 12, "bold")
-font_big_bold = ("", 13, "bold")
+font_big_bold = ("", 14, "bold")
 padx_both = 2.5
 pady_both = 2.5
 

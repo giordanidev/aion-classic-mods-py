@@ -1,0 +1,17 @@
+1. Install Python.
+2. Open CMD and run the following commands to create and activate the virtual environment:
+    py -m venv venv
+    venv/scripts/activate
+    - If it works then a green (venv) text will appear in the console, before your current path. Otherwise you will get an error, and if that is the case then you need to open Powershell as admin and run the following:
+    Set-ExecutionPolicy RemoteSigned
+    - And then run the "venv/scripts/activate" command again.
+4. Run the following command to install the requied packages:
+    pip install -r requirements.txt
+
+That's it. Now you should be able to run or compile the app yourself!
+
+To simple run it, just type:
+    py main.py
+
+To start the compilation process, then run:
+    py pyinstaller
