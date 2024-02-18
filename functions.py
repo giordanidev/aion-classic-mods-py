@@ -49,11 +49,9 @@ def setLogLevel():
     arg_count = 0
     arg_found = False
     for arg in sys.argv:
-        if arg == "--LOGS":
-            log_level = sys.argv[arg_count+1]
-            if log_level == "DEBUG":
-                log_level = logging.DEBUG
-                arg_found = True
+        if arg == "--DEBUG":
+            log_level = logging.DEBUG
+            arg_found = True
         arg_count += 1
     if arg_found == False:
         log_level = logging.INFO
