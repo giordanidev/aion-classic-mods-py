@@ -154,7 +154,7 @@ class createTabs(ctk.CTkTabview):
         self.configScrollableFrame.grid_columnconfigure(4, weight=1)
 
         linha_configs = 0
-        self.generalLabel = ctk.CTkLabel(self.configScrollableFrame, text="CONFIGURAÇÕES GERAIS", font=font_big_bold) #TODO ADD TRANSLATION
+        self.generalLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_general_label"), font=font_big_bold) #TODO ADD TRANSLATION
         self.generalLabel.grid(row=linha_configs, column=0, columnspan=5, padx=padx_both, pady=2, sticky="we")
 
         linha_configs += 1
@@ -192,9 +192,9 @@ class createTabs(ctk.CTkTabview):
             print(f"CHECKBOX > {checkbox_lang}>{checkbox_get.cget('text')}: {checkbox_get.get()}")
 
         linha_configs += 1
-        self.regionLabel = ctk.CTkLabel(self.configScrollableFrame, text="REGIÕES E IDIOMAS", font=font_big_bold) #TODO ADD TRANSLATION
+        self.regionLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_regions_label"), font=font_big_bold) #TODO ADD TRANSLATION
         self.regionLabel.grid(row=linha_configs, column=0, columnspan=5, padx=padx_both, pady=2, sticky="we")
-        self.eu_launcherPathButton = ctk.CTkButton(self.configScrollableFrame, text="Alterar", command=partial(selectDirectory, self.eu_launcherPathEntry), font=font_regular_bold, width=120)
+        self.eu_launcherPathButton = ctk.CTkButton(self.configScrollableFrame, text=translateText("config_regions_button"), command=manageRegions, font=font_regular_bold, state="disabled", width=120)
         self.eu_launcherPathButton.grid(row=linha_configs, column=4, padx=padx_both, pady=pady_both, sticky="w")
 
         linha_configs += 1
@@ -202,13 +202,11 @@ class createTabs(ctk.CTkTabview):
             self.region_selectionLabel = ctk.CTkLabel(self.configScrollableFrame, text=region[1]+":", font=font_regular_bold)
             self.region_selectionLabel.grid(row=linha_configs, column=0, padx=padx_both, pady=2, sticky="e")
             coluna = 1
-            print(app_config['langs'])
             for lang in app_config['langs']:
                 if coluna >= 5:
                     coluna = 1
                     linha_configs += 1
                 if lang[0] == region[0]:
-                    print(f"{lang[0]}:{lang[1]}")
                     if lang[2] == True:
                         check_var = ctk.StringVar(value="on")
                     else:

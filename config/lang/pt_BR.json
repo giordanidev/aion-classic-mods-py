@@ -15,7 +15,7 @@
     "app_translation_eu_label": "Tradução BR EU",
     "app_asmo_skin_label": "Cor de Pele Asmo",
 
-    "app_return_label_waiting": "Esperando...",
+    "app_return_label_waiting": "-",
     "app_return_label_verifying": "Verificando arquivos... Por favor, aguarde!",
     "app_return_label_uptodate": "Não há novos arquivos para atualizar.",
     "app_return_label_update": "Atualização disponível.",
@@ -39,6 +39,9 @@
     "app_button_close_client": "Fechar Launcher",
     "app_button_updater_ignore": "Ignorar",
 
+    "config_general_label": "CONFIGURAÇÕES GERAIS",
+    "config_regions_label": "REGIÕES E IDIOMAS",
+    "config_regions_button": "Alterar",
     "config_theme_label": "Tema",
     "config_color_label": "Cor",
     "config_region_label": "Seleção de região",

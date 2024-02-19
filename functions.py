@@ -20,7 +20,7 @@ translation_eu_url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/
 asmo_skin_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/asmo_skin.zip"
 
 def appConfigJson():
-    with open("./config/config.json", encoding='utf-8') as f:
+    with open(config_path, encoding='utf-8') as f:
         config_json = json.load(f)
     f.close
     return config_json
@@ -54,7 +54,7 @@ def setLogLevel():
             arg_found = True
         arg_count += 1
     if arg_found == False:
-        log_level = logging.INFO
+        log_level = logging.DEBUG #TODO DEBUGGING
     return log_level
 # GLOBAL VARIABLE
 log_level = setLogLevel()
@@ -121,8 +121,7 @@ def getLangTranslation(value):
     try:
         for key in en_translated_text:
             if en_translated_text[key] == value:
-                lang_name = translated_text[key]
-                return lang_name
+                return translated_text[key]
         return False
     except Exception as e:
         getException(e)
@@ -156,13 +155,21 @@ def centerApp(width, height, self):
     y_cordinate = int((screen_height/2) - (window_height/2) - 50)
     self.geometry(f"{window_width}x{window_height}+{x_cordinate}+{y_cordinate}")
 
+def manageRegions():
+    try:
+        #TODO
+        print("TODO")
+    except Exception as e:
+        getException(e)
+        return False
+
 def regionSelection(self):
     try:
         # TODO
         # AUTO GENERATE + MARK CHECKBOXES
         # 'FOR' REPEAT TO GET REGION INDEX
         app_config = appConfigJson()
-        app_config['regions'][region_index_number][region_index_field] == str(self.regionRadio.get())
+        app_config['regions']
 
         appConfigSave(app_config)
     except Exception as e:
@@ -421,25 +428,6 @@ def getClassicEuLauncherPath():
         getException(e)
         return False
 
-def populateRegion(self):
-    """
-    #TODO redo config handling with JSON
-
-    Defines the region that is used to set which versions of
-    the game will have files replaced on request.
-    """
-    try:
-        count_region = 0
-        verifyGamePath() # verifys if game path selected is accurate.
-        global app_config
-        if app_config.get('app', 'napath'): count_region += 1
-        if app_config.get('app', 'eupath'): count_region += 2
-        app_config.set('app', 'region', str(count_region))
-        appConfigSave(app_config)
-    except Exception as e:
-        getException(e)
-        return False
-
 def verifyGamePath():
     """
     Verifies if the client path is correct before trying to
@@ -449,41 +437,50 @@ def verifyGamePath():
     """
     try:
         global app_config
-        na_path = app_config.get('app', 'napath')
-        eu_path = app_config.get('app', 'eupath')
-        app_region = app_config.get('app', 'region')
-        if not app_region == "0":
-            wrong_directory = translateText("functions_wrong_directory")
-            wrong_directory_logs = "Selected folder is not the correct {VERSION} game folder. Please select the root {VERSION} game folder."
-            if app_region in ("1", "3"):
-                logging.debug(f"{sys._getframe().f_code.co_name}() -> na_path: {na_path}")
-                if na_path:
-                    game_path = f"{na_path}/bin64/Aion.bin"
-                    if not os.path.isfile(game_path):
-                        app_config.set('app', 'napath', "")
-                        appConfigSave(app_config)
-                        logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory_logs.replace('{VERSION}', 'NA')}")
+        game_paths = []
+        count = 0
+        for region in app_config['regions']:
+            game_path1 = f"{region[2]}/bin64/Aion.bin"
+            game_path2 = f"{region[2]}/bin64/aiononline.bin"
+            
+            if not os.path.isfile(game_path1) or not os.path.isfile(game_path2):
+                app_config['regions'][count][2] = ""
+                app_config['regions'][count][3] = False
+                appConfigSave(app_config)
+                game_paths.append(region[0])
+
+                #TODO
+
+                wrong_directory = translateText("functions_wrong_directory")
+                if app_region in ("1", "3"):
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> na_path: {na_path}")
+                    if na_path:
+                        game_path = f"{na_path}/bin64/Aion.bin"
+                        if not os.path.isfile(game_path):
+                            app_config.set('app', 'napath', "")
+                            appConfigSave(app_config)
+                            logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'NA')}")
+                            showAlert("showerror", wrong_directory.replace("{VERSION}","NA"))
+                            return False
+                    else:
+                        logging.debug(f"{sys._getframe().f_code.co_name}() -> NA game directory is not set.")
+                        logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'NA')}")
                         showAlert("showerror", wrong_directory.replace("{VERSION}","NA"))
                         return False
-                else:
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> NA game directory is not set.")
-                    logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory_logs.replace('{VERSION}', 'NA')}")
-                    showAlert("showerror", wrong_directory.replace("{VERSION}","NA"))
-                    return False
-            if app_region in ("2", "3"):
-                logging.debug(f"{sys._getframe().f_code.co_name}() -> eu_path: {eu_path}")
-                if eu_path:
-                    game_path = f"{eu_path}/bin64/aionclassic.bin"
-                    if not os.path.isfile(game_path):
-                        app_config.set('app', 'eupath', "")
-                        appConfigSave(app_config)
-                        logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory_logs.replace('{VERSION}', 'EU')}")
+                if app_region in ("2", "3"):
+                    logging.debug(f"{sys._getframe().f_code.co_name}() -> eu_path: {eu_path}")
+                    if eu_path:
+                        game_path = f"{eu_path}/bin64/aionclassic.bin"
+                        if not os.path.isfile(game_path):
+                            app_config.set('app', 'eupath', "")
+                            appConfigSave(app_config)
+                            logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'EU')}")
+                            showAlert("showerror", wrong_directory.replace("{VERSION}","EU"))
+                            return False
+                    else:
+                        logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'EU')}")
                         showAlert("showerror", wrong_directory.replace("{VERSION}","EU"))
                         return False
-                else:
-                    logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory_logs.replace('{VERSION}', 'EU')}")
-                    showAlert("showerror", wrong_directory.replace("{VERSION}","EU"))
-                    return False
             return True
         else:
             showAlert("showerror", translateText("functions_show_game_region"))
@@ -569,15 +566,14 @@ def getFilePath(game_file_type):
     try:
         logging.debug(f"{sys._getframe().f_code.co_name}() START -> game_file_type: {game_file_type}.")
         global app_config
-        app_region = app_config.get('app', 'region')
         game_lang = []
-        if not app_region in ("1", "2", "3"):
+        for lang in app_config['langs']:
+            if lang[2] == True:
+                game_lang.append(lang[1])
+
+        if game_lang == None:
             logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() -> app_region :: Region is not set.")
             return
-        if app_region in ["1", "3"]:
-            game_lang.append("enu")
-        if app_region in ["2", "3"]:
-            game_lang.extend(["eng", "fra", "deu"])
             
         with open("./config/files.json", encoding='utf-8') as f:
             download_files = json.load(f)
@@ -863,9 +859,9 @@ def extractFiles(filepath, dest):
         zip_files.extractall(dest)
         logging.debug(f"{sys._getframe().f_code.co_name}() -> extracting DONE")
 
-    if os.path.isfile(filepath):
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {filepath}")
-        os.remove(filepath)
+    #if os.path.isfile(filepath):
+    #    logging.debug(f"{sys._getframe().f_code.co_name}() -> REMOVE: {filepath}")
+    #    os.remove(filepath)
 
 #MAY OR MAY NOT USE IT IN THE FUTURE. FOR NOW, IT STAYS HERE!
 def forceCloseAion(action, game_client, close_button, return_label):
