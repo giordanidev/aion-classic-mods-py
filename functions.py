@@ -449,42 +449,45 @@ def verifyGamePath():
                 appConfigSave(app_config)
                 game_paths.append(region[0])
 
-                #TODO
+        #TODO
 
-                wrong_directory = translateText("functions_wrong_directory")
-                if app_region in ("1", "3"):
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> na_path: {na_path}")
-                    if na_path:
-                        game_path = f"{na_path}/bin64/Aion.bin"
-                        if not os.path.isfile(game_path):
-                            app_config.set('app', 'napath', "")
-                            appConfigSave(app_config)
-                            logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'NA')}")
-                            showAlert("showerror", wrong_directory.replace("{VERSION}","NA"))
-                            return False
-                    else:
-                        logging.debug(f"{sys._getframe().f_code.co_name}() -> NA game directory is not set.")
-                        logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'NA')}")
-                        showAlert("showerror", wrong_directory.replace("{VERSION}","NA"))
-                        return False
-                if app_region in ("2", "3"):
-                    logging.debug(f"{sys._getframe().f_code.co_name}() -> eu_path: {eu_path}")
-                    if eu_path:
-                        game_path = f"{eu_path}/bin64/aionclassic.bin"
-                        if not os.path.isfile(game_path):
-                            app_config.set('app', 'eupath', "")
-                            appConfigSave(app_config)
-                            logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'EU')}")
-                            showAlert("showerror", wrong_directory.replace("{VERSION}","EU"))
-                            return False
-                    else:
-                        logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'EU')}")
-                        showAlert("showerror", wrong_directory.replace("{VERSION}","EU"))
-                        return False
+        """
+        wrong_directory = translateText("functions_wrong_directory")
+        if app_region in ("1", "3"):
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> na_path: {na_path}")
+            if na_path:
+                game_path = f"{na_path}/bin64/Aion.bin"
+                if not os.path.isfile(game_path):
+                    app_config.set('app', 'napath', "")
+                    appConfigSave(app_config)
+                    logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'NA')}")
+                    showAlert("showerror", wrong_directory.replace("{VERSION}","NA"))
+                    return False
+            else:
+                logging.debug(f"{sys._getframe().f_code.co_name}() -> NA game directory is not set.")
+                logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'NA')}")
+                showAlert("showerror", wrong_directory.replace("{VERSION}","NA"))
+                return False
+        if app_region in ("2", "3"):
+            logging.debug(f"{sys._getframe().f_code.co_name}() -> eu_path: {eu_path}")
+            if eu_path:
+                game_path = f"{eu_path}/bin64/aionclassic.bin"
+                if not os.path.isfile(game_path):
+                    app_config.set('app', 'eupath', "")
+                    appConfigSave(app_config)
+                    logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'EU')}")
+                    showAlert("showerror", wrong_directory.replace("{VERSION}","EU"))
+                    return False
+            else:
+                logging.error(f"ERROR -> {sys._getframe().f_code.co_name}() :: {wrong_directory.replace('{VERSION}', 'EU')}")
+                showAlert("showerror", wrong_directory.replace("{VERSION}","EU"))
+                return False
             return True
+        
         else:
             showAlert("showerror", translateText("functions_show_game_region"))
             return False
+        """
     except Exception as e:
         getException(e)
         return False

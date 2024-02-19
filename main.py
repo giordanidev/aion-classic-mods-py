@@ -190,6 +190,7 @@ class createTabs(ctk.CTkTabview):
             # TODO
             # SAVE NEW CONFIGS
             print(f"CHECKBOX > {checkbox_lang}>{checkbox_get.cget('text')}: {checkbox_get.get()}")
+            
 
         linha_configs += 1
         self.regionLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_regions_label"), font=font_big_bold) #TODO ADD TRANSLATION
