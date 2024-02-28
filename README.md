@@ -9,7 +9,7 @@ Watch me on YouTube at [@LoadRPG](https://youtube.com/@LoadRPG) (PT-BR/EN) - If 
 
 ## What do I do?
 - Download and extract the files anywere on your computer. It doesn't need to be in the game directory.
-- Execute the "AionClassicMods_updater.exe" file
+- Execute the "AionClassicMods.exe" file
 - The app SHOULD detect your install directories automatically depending on which versions of the game you have installed. If it doesn't you can go to the options and select the game path directory manually.
 - Click on Verify All and install the files that you want (there is no need to backup anything because it will not replace any files in your game folder)
 - If you don't like the changes, then just Delete the files.
@@ -49,7 +49,7 @@ Me assista no Youtube clicando em [@LoadRPG](https://youtube.com/@LoadRPG) (PT-B
 
 ## Como usar o APP?
 - Faça o download e extraia os arquivos em qualquer lugar no seu computador, não precisa ser na pasta do jogo.
-- Execute o arquivo "AionClassicMods_updater.exe".
+- Execute o arquivo "AionClassicMods.exe".
 - O aplicativo DEVERIA detectar a pasta de instalação do jogo automaticamente, dependendo de quais versões você tem instaladas. Caso o aplicativo falhe em detectar a pasta correta, você pode ir até as Condigurações e selecionar a pasta manualmente.
 - Aperte em Verificar Todos e instale os arquivos que você gostaria de modificar. Não é necessário fazer backup de nada porque nenhum arquivo é substituido.
 - Se não gostar das mudanças apenas Exclua os arquivos!
