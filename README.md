@@ -32,6 +32,7 @@ This proccess DOES NOT affect cutscene or NPC voices, only combat voices.
 
 ## HOW DO I RUN THE APP LOCALLY?
 - Install Python for your system
+- Install Git for your system
 - Use the command line to navigate to the directory of wich you want to clone the repository (main folder only as git will create a new folder using the repository's name)
 - Clone the repository ´git clone https://github.com/giordanidev/aion-classic-mods-py.git´
 - Create a virtual environment ´python -m venv venv´ and start it ´venv/scripts/activate´
@@ -72,6 +73,7 @@ Esse processo NÃO AFETA 'cutscenes' e vozes de NPCs, apenas vozes de combate.
 
 ## COMO FAÇO PARA RODAR O APLICATIVO LOCALMENTE?
 - Instale o Python para o seu sistema
+- Instale o Git para o seu sistema
 - Navegue até o diretório onde você quer copiar o repositório (apenas a pasta principal dos projetos, o git vai criar uma nova pasta com o nome do repositório)
 - Clone o repositório ´git clone https://github.com/giordanidev/aion-classic-mods-py.git´
 - Crie um ambiente virtual ´python -m venv venv´ e inicie o ambiente virtual ´venv/scripts/activate´
