@@ -40,6 +40,8 @@
     "app_button_updater_ignore": "Ignore",
 
     "config_general_label": "GENERAL SETTINGS",
+    "config_check_updates_startup": "Check for updates on startup.",
+    "config_verify_files_startup": "Verify files on startup.",
     "config_regions_label": "REGION AND LANGUAGE",
     "config_regions_button": "Manage",
     "config_theme_label": "Theme",

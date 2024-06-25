@@ -6,8 +6,8 @@
         [
             "NA",
             "Classic NA",
-            "",
-            false
+            "E:/JOGOS/AION_CLASSIC",
+            true
         ],
         [
             "EU",
@@ -42,7 +42,6 @@
         "C:/Program Files (x86)/GameforgeClient",
         true
     ],
-    "update_on_start": true,
-    "always_update": false,
-    "verify_files_on_start": false
+    "check_updates_startup": true,
+    "verify_files_startup": true
 }

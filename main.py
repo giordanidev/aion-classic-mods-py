@@ -2,7 +2,7 @@ from functions import *
 import tkinter as tk, customtkinter as ctk, logging
 from functools import partial
 
-logging.debug(f"{sys._getframe().f_code.co_name}() -> main.py imported.")
+logging.debug(f"{sys._getframe().f_code.co_name}() :: Reading main.py.")
 
 class App(ctk.CTk):
     def __init__(self):
@@ -10,9 +10,9 @@ class App(ctk.CTk):
 
         global app_config
 
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> App() class initialized.")
+        logging.debug(f"{sys._getframe().f_code.co_name}() :: App() class initialized.")
 
-        self.title(translateText("app_title") + " - v" +local_version["app_version"])
+        self.title(translateText("app_title") + " - " +local_version["app_version"])
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -36,6 +36,7 @@ class App(ctk.CTk):
         self.mainloop()
 
     def changeColorEvent(self, color):
+        logging.debug(f"{sys._getframe().f_code.co_name}() :: Changing color to '{color.capitalize()}'.")
         global app_config
         en_color = getEnglishTranslation(color)
 
@@ -43,7 +44,6 @@ class App(ctk.CTk):
         app_config['color'] = en_color
         appConfigSave(app_config)
         self.resetCurrentUi()
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> Color changed to '{color.capitalize()}'.")
 
     def resetCurrentUi(self):
         global app_config
@@ -59,10 +59,7 @@ class createTabs(ctk.CTkTabview):
         super().__init__(master=master, **kwargs)
 
         global app_config
-
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> createTabs() class initialized.")
-
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> app_config: {app_config}")
+        logging.debug(f"{sys._getframe().f_code.co_name}() :: createTabs() class initialized.")
 
         # START CREATE TABS
         self.add("App")
@@ -74,8 +71,6 @@ class createTabs(ctk.CTkTabview):
         configTab = self.tab("Config")
         configTab.grid_rowconfigure(4, weight=1)
         configTab.grid_columnconfigure(1, weight=1)
-
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs created.")
         # END CREATE TABS
         
         # DO FIRST RUN THINGS (CHECK COMMAND FOR MORE INFO)
@@ -104,8 +99,6 @@ class createTabs(ctk.CTkTabview):
         
         self.verifyAllButton = ctk.CTkButton(self.appMainFrame, text=translateText("app_button_verify_all"), font=font_big_bold, width=184)
         self.verifyAllButton.grid(row=linha_main, column=3, columnspan=2, padx=padx_both, pady=pady_both)
-
-        # START GENERATE LABELS/BUTTONS FOR ASSETS
 
         linha_main += 1
         all_buttons = []
@@ -137,7 +130,12 @@ class createTabs(ctk.CTkTabview):
             all_deleteButtons.append(self.nome_campoDeleteButton)
             all_returnLabels.append(self.nome_campoReturnLabel)
             linha_main += 1
-        # END GENERATE LABELS/BUTTONS FOR ASSETS
+
+            if campo in local_version["disable_fields"]:
+                self.nome_campoLabel.configure(state="disabled")
+                self.nome_campoReturnLabel.configure(state="disabled")
+                self.nome_campoButton.configure(state="disabled")
+                self.nome_campoDeleteButton.configure(state="disabled")
 
         self.verifyAllButton.configure(command=partial(verifyFilesButton, 
                                                    gerar_campos, 
@@ -156,6 +154,20 @@ class createTabs(ctk.CTkTabview):
         linha_configs = 0
         self.generalLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_general_label"), font=font_big_bold) #TODO ADD TRANSLATION
         self.generalLabel.grid(row=linha_configs, column=0, columnspan=5, padx=padx_both, pady=2, sticky="we")
+        
+        linha_configs += 1
+        var_verif_files_startup = ctk.BooleanVar()
+        var_verif_files_startup.set(app_config["verify_files_startup"])
+        self.verifyCheckbox = ctk.CTkCheckBox(self.configScrollableFrame, variable=var_verif_files_startup, onvalue=True, offvalue=False)
+        self.verifyCheckbox.configure(command=partial(checkboxEvent, self.verifyCheckbox, "verify"), text=translateText("config_verify_files_startup"))
+        self.verifyCheckbox.grid(row=linha_configs, column=1, columnspan=2, padx=padx_both, pady=2, sticky="we")
+
+        linha_configs += 1
+        var_check_updates_startup = ctk.BooleanVar()
+        var_check_updates_startup.set(app_config["check_updates_startup"])
+        self.updateCheckbox = ctk.CTkCheckBox(self.configScrollableFrame, variable=var_check_updates_startup, onvalue=True, offvalue=False)
+        self.updateCheckbox.configure(command=partial(checkboxEvent, self.updateCheckbox, "update"), text=translateText("config_check_updates_startup"))
+        self.updateCheckbox.grid(row=linha_configs, column=1, columnspan=2, padx=padx_both, pady=2, sticky="we")
 
         linha_configs += 1
         theme_variable = ctk.StringVar(value="System")
@@ -178,24 +190,17 @@ class createTabs(ctk.CTkTabview):
         self.colorButton.grid(row=linha_configs, column=1, padx=padx_both, pady=pady_both, columnspan=4, sticky="ew")
 
         linha_configs += 1
-        self.eu_launcherLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_eu_launcher_label")+":", font=font_regular_bold)
+        self.eu_launcherLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_eu_launcher_label")+":", font=font_regular_bold, state="disabled")
         self.eu_launcherLabel.grid(row=linha_configs, column=0, padx=padx_both, pady=2, sticky="e")
-        self.eu_launcherPathEntry = ctk.CTkEntry(self.configScrollableFrame, placeholder_text=translateText("config_eu_launcher_folder"))
+        self.eu_launcherPathEntry = ctk.CTkEntry(self.configScrollableFrame, placeholder_text=translateText("config_eu_launcher_folder"), state="disabled")
         self.eu_launcherPathEntry.grid(row=linha_configs, column=1, columnspan=3, padx=padx_both, pady=pady_both, sticky="we")
-        self.eu_launcherPathButton = ctk.CTkButton(self.configScrollableFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.eu_launcherPathEntry), font=font_regular_bold, width=120)
+        self.eu_launcherPathButton = ctk.CTkButton(self.configScrollableFrame, text=translateText("config_select_folder_button"), command=partial(selectDirectory, self.eu_launcherPathEntry), font=font_regular_bold, width=120, state="disabled")
         self.eu_launcherPathButton.grid(row=linha_configs, column=4, padx=padx_both, pady=pady_both, sticky="w")
 
-        
-        def checkboxEvent(checkbox_get, checkbox_lang):
-            # TODO
-            # SAVE NEW CONFIGS
-            print(f"CHECKBOX > {checkbox_lang}>{checkbox_get.cget('text')}: {checkbox_get.get()}")
-            
-
         linha_configs += 1
-        self.regionLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_regions_label"), font=font_big_bold) #TODO ADD TRANSLATION
+        self.regionLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_regions_label"), font=font_big_bold)
         self.regionLabel.grid(row=linha_configs, column=0, columnspan=5, padx=padx_both, pady=2, sticky="we")
-        self.eu_launcherPathButton = ctk.CTkButton(self.configScrollableFrame, text=translateText("config_regions_button"), command=manageRegions, font=font_regular_bold, state="disabled", width=120)
+        self.eu_launcherPathButton = ctk.CTkButton(self.configScrollableFrame, text=translateText("config_regions_button"), command="#TODO", font=font_regular_bold, state="disabled", width=120)
         self.eu_launcherPathButton.grid(row=linha_configs, column=4, padx=padx_both, pady=pady_both, sticky="w")
 
         linha_configs += 1
@@ -209,38 +214,28 @@ class createTabs(ctk.CTkTabview):
                     linha_configs += 1
                 if lang[0] == region[0]:
                     if lang[2] == True:
-                        check_var = ctk.StringVar(value="on")
+                        check_var = ctk.BooleanVar(value=True)
                     else:
-                        check_var = ctk.StringVar(value="off")
-                    self.checkbox = ctk.CTkCheckBox(self.configScrollableFrame, variable=check_var, onvalue="on", offvalue="off")
+                        check_var = ctk.BooleanVar(value=False)
+                    self.checkbox = ctk.CTkCheckBox(self.configScrollableFrame, variable=check_var, onvalue=True, offvalue=False)
                     self.checkbox.configure(command=partial(checkboxEvent, self.checkbox, lang[0]), text=lang[1])
                     self.checkbox.grid(row=linha_configs, column=coluna, padx=padx_both, pady=2)
                     coluna += 1
             linha_configs += 1
 
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> Tabs populated.")
-
         # DEFAULT VALUES
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values -> "+
-                      f"theme: {app_config['theme']} | "+
-                      f"color: {app_config['color']}"+
-                      f"eu_launcher_path: {app_config['eu_launcher_path']}")
+        logging.debug(f"{sys._getframe().f_code.co_name}() :: Reading default values.")
         if app_config['theme']: self.themeButton.set(getLangTranslation(app_config['theme']))
         if app_config['color']: self.colorButton.set(getLangTranslation(app_config['color']))
         if app_config['eu_launcher_path']: self.eu_launcherPathEntry.insert(0, app_config['eu_launcher_path'][0])
-
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> Default values read.")
         ## END CONFIG SCROLLABLE FRAME
 
     def change_theme_event(self, value):
-
+        logging.debug(f"{sys._getframe().f_code.co_name}() :: Changing theme to '{value.capitalize()}'.")
         en_theme = getEnglishTranslation(value)
-
         global app_config
         app_config['theme'] = en_theme
         appConfigSave(app_config)
         ctk.set_appearance_mode(en_theme)
-        logging.debug(f"{sys._getframe().f_code.co_name}() -> Theme changed to '{value.capitalize()}'.")
-        
 
 app = App()
