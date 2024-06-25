@@ -2,7 +2,7 @@
     "voice": ["\\sounds\\voice\\attack\\attack_kr.pak",     "\\sounds\\voice\\cast\\cast_kr.pak",   "\\sounds\\voice\\damage\\damage_kr.pak",
               "\\sounds\\voice\\defence\\defence_kr.pak",   "\\sounds\\voice\\login\\login_kr.pak", "\\sounds\\voice\\motion\\motion_kr.pak"],
 
-    "filter": ["\\data\\Strings\\aionfilterchat_load.pak", "\\data\\Strings\\aionfilterline_load.pak"],
+    "filter": ["\\data\\Strings\\aionfilter_load.pak"],
     "filter_old": ["\\data\\Strings\\aionfilterchat.dat", "\\data\\Strings\\aionfilterline.dat"],
 
     "font": ["\\textures\\ui\\hit_number_jp.pak"],

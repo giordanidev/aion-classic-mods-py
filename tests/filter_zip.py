@@ -8,34 +8,27 @@ def main():
 
     dest_na_file = '.\\download\\aionfilterchat.dat'
     file_na = 'aionfilterchat.dat'
-    zip_na = 'aionfilterchat_load.zip'
-    pak_na = 'aionfilterchat_load.pak'
-
     dest_eu_file = '.\\download\\aionfilterline.dat'
     file_eu = 'aionfilterline.dat'
-    pak_eu = 'aionfilterline_load.pak'
-    zip_eu = 'aionfilterline_load.zip'
+
+    zip = 'aionfilter_load.zip'
+    pak = 'aionfilter_load.pak'
 
     shutil.copy2(dest_na_file, file_na)
     shutil.copy2(dest_eu_file, file_eu)
     shutil.copy2(dest_path, file_name)
 
-    # NA ZIP > PAK
-    with zipfile.ZipFile(zip_na, 'w') as file:
+    # ZIP > PAK
+    with zipfile.ZipFile(zip, 'w') as file:
         file.write(file_na)
-    os.rename(zip_na, pak_na)
-
-    # EU ZIP > PAK
-    with zipfile.ZipFile(zip_eu, 'w') as file:
         file.write(file_eu)
-    os.rename(zip_eu, pak_eu)
+    os.rename(zip, pak)
 
     # Opening the 'Zip' in writing mode
     with zipfile.ZipFile(file_name, 'w') as file:
         # write mode overrides all the existing files in the 'Zip.'
         # you have to create the file which you have to write to the 'Zip.'
-        file.write(pak_na)
-        file.write(pak_eu)
+        file.write(pak)
         print('Novo zip criado.')
 
     # opening the 'Zip' in reading mode to check
@@ -49,8 +42,7 @@ def main():
     os.remove(file_name)
     os.remove(file_na)
     os.remove(file_eu)
-    os.remove(pak_na)
-    os.remove(pak_eu)
+    os.remove(pak)
     print('Arquivos temporários removidos.')
 
 if __name__ == '__main__': main()
