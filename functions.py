@@ -815,18 +815,30 @@ def checkUpdate():
         global local_version
         cloud_json = urllib2.urlopen(update_url)
         cloud_version = json.loads(cloud_json.read())
-
-        with open("./config/version.json", encoding='utf-8') as f:
-            local_json = json.load(f)
-            f.close
-
-        file_types.append("disabled_fields_version")
-        for arquivo in file_types:
+        arquivos = []
+        arquivos.extend(file_types)
+        arquivos.append("disabled_fields_version")
+        pending_update = []
+        print(f"arquivos {arquivos}")
+        for arquivo in arquivos:
+            print(f"arquivo {arquivo}")
             for cloud in cloud_version:
+                print(f"cloud {cloud}")
                 if arquivo == cloud:
-                    for local in local_json:
+                    for local in local_version:
+                        print(f"local {local}")
                         if cloud == local:
                             print("teste")
+                            print(f">>>>>>>>>>> {arquivo} local: {local_version[arquivo]} cloud: {cloud_version[arquivo]}")
+                            if local_version[arquivo] < cloud_version[arquivo]:
+                                pending_update.append(arquivo)
+                            break
+        print(f"pending_update: {pending_update}")
+        if len(pending_update) > 0:
+            print(f"precisa atualizar {pending_update}")
+        else:
+            print("tudo atualizado")
+
         return cloud_version
     except Exception as e:
         getException(e)
