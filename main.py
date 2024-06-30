@@ -104,8 +104,7 @@ class createTabs(ctk.CTkTabview):
         all_buttons = []
         all_deleteButtons = []
         all_returnLabels = []
-        gerar_campos = ["translation", "translation_eu", "filter", "font", "voice", "asmo_skin"]
-        for campo in gerar_campos:
+        for campo in file_types:
             self.nome_campoLabel = ctk.CTkLabel(self.appMainFrame, text=translateText(f"app_{campo}_label")+":", height=30, font=font_regular_bold)
             self.nome_campoLabel.grid(row=linha_main, column=0, padx=padx_both, pady=pady_both, sticky="e")
             self.nome_campoReturnLabel = ctk.CTkLabel(self.appMainFrame, text=translateText("app_return_label_waiting"), justify="left")
@@ -131,14 +130,14 @@ class createTabs(ctk.CTkTabview):
             all_returnLabels.append(self.nome_campoReturnLabel)
             linha_main += 1
 
-            if campo in local_version["disable_fields"]:
+            if campo in local_version["disabled_fields"]:
                 self.nome_campoLabel.configure(state="disabled")
                 self.nome_campoReturnLabel.configure(state="disabled")
                 self.nome_campoButton.configure(state="disabled")
                 self.nome_campoDeleteButton.configure(state="disabled")
 
         self.verifyAllButton.configure(command=partial(verifyFilesButton, 
-                                                   gerar_campos, 
+                                                   file_types, 
                                                    all_buttons,
                                                    all_deleteButtons,
                                                    all_returnLabels,

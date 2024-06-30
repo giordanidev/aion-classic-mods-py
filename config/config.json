@@ -6,13 +6,13 @@
         [
             "NA",
             "Classic NA",
-            "E:/JOGOS/AION_CLASSIC",
+            "E:\\JOGOS\\AION_CLASSIC",
             true
         ],
         [
             "EU",
             "Classic EU",
-            "E:/JOGOS/aionclassic",
+            "E:\\JOGOS\\aionclassic",
             true
         ]
     ],
@@ -20,7 +20,7 @@
         [
             "NA",
             "ENU",
-            true
+            false
         ],
         [
             "EU",

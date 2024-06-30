@@ -6,12 +6,13 @@ import urllib.request as urllib2
 import urllib.parse as urlparse
 
 # GLOBAL VARIABLES
+file_types = ["translation", "translation_eu", "filter", "font", "voice", "asmo_skin"]
 copy_delete_files = ""
 config_path = "./config/config.json"
-version_path = "./download/version.json"
+version_path = "./config/version.json"
 logs_path = "./logs/logs.log"
 app_icon = "./config/img/AionClassicMods.ico"
-version_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/version.json"
+update_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/update.json"
 filter_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/aionfilter.zip"
 font_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/hit_number.zip"
 voice_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/voice.zip"
@@ -172,9 +173,6 @@ def centerApp(width, height, self):
         return False
 
 def checkboxEvent(checkbox_get, checkbox_lang):
-    # TODO
-    # SAVE NEW CONFIGS
-
     print(f"{sys._getframe().f_code.co_name}() Changing '{checkbox_get.cget('text')}' checkbox setting to '{checkbox_get.get()}'.")
 
     global app_config
@@ -187,13 +185,12 @@ def checkboxEvent(checkbox_get, checkbox_lang):
         for lang in app_config['langs']:
             if lang[0] == checkbox_lang:
                 if lang[1] == checkbox_get.cget('text'):
-                    print(app_config["langs"][count][2] )
                     app_config["langs"][count][2] = checkbox_get.get()
             count += 1
 
     appConfigSave(app_config)
 
-def selectDirectory(path_entry):
+def selectDirectory(path_entry, region): #TODO
     try:
         logging.debug(f"{sys._getframe().f_code.co_name}() :: Setting game folder.")
         game_directory = filedialog.askdirectory().replace("\\","/")
@@ -243,32 +240,33 @@ def verifyFilesButton(file_type_list,
                     install_buttons_list[type_count].configure(text=translateText("app_button_verifying"), state="disabled", font=font_regular)
 
                     # Sends the file type and verify
-                    verify_files_return = verifyFiles(file_type)
-                    if verify_files_return in ["both", "game"]:
-                        file_type_label_list[type_count].configure(text=translateText("app_return_label_update"), text_color=text_color_success)
-                        install_buttons_list[type_count].configure(text=translateText("app_button_update"), state="normal", font=font_regular_bold)
-                        delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
-                    elif verify_files_return in ["assets", True]:
-                        file_type_label_list[type_count].configure(text=translateText("app_return_label_install"), text_color=text_color_success)
-                        install_buttons_list[type_count].configure(text=translateText("app_button_install"), state="normal", font=font_regular_bold)
-                        delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
-                    elif verify_files_return == False:
-                        file_type_label_list[type_count].configure(text=translateText("app_return_label_download"), text_color=text_color_success)
-                        install_buttons_list[type_count].configure(text=translateText("app_button_download"), state="normal", font=font_regular_bold)
-                        delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
-                    else:
-                        file_type_label_list[type_count].configure(text=translateText("app_return_label_install"), text_color=text_color_success)
-                        install_buttons_list[type_count].configure(text=translateText("app_button_install"), state="disabled", font=font_regular)
-                        delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
+                    if file_type not in local_version["disabled_fields"]:
+                        verify_files_return = verifyFiles(file_type)
+                        if verify_files_return in ["both", "game"]:
+                            file_type_label_list[type_count].configure(text=translateText("app_return_label_update"), text_color=text_color_success)
+                            install_buttons_list[type_count].configure(text=translateText("app_button_update"), state="normal", font=font_regular_bold)
+                            delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
+                        elif verify_files_return in ["assets", True]:
+                            file_type_label_list[type_count].configure(text=translateText("app_return_label_install"), text_color=text_color_success)
+                            install_buttons_list[type_count].configure(text=translateText("app_button_install"), state="normal", font=font_regular_bold)
+                            delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
+                        elif verify_files_return == False:
+                            file_type_label_list[type_count].configure(text=translateText("app_return_label_download"), text_color=text_color_success)
+                            install_buttons_list[type_count].configure(text=translateText("app_button_download"), state="normal", font=font_regular_bold)
+                            delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
+                        else:
+                            file_type_label_list[type_count].configure(text=translateText("app_return_label_install"), text_color=text_color_success)
+                            install_buttons_list[type_count].configure(text=translateText("app_button_install"), state="disabled", font=font_regular)
+                            delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
 
-                    if file_type in local_version["disable_fields"]:
-                        file_type_label_list[type_count].configure(state="disabled", font=font_regular)
-                        install_buttons_list[type_count].configure(state="disabled", font=font_regular)
-                        
-                verifyFilesThreaded_func = threading.Thread(target=verifyFilesThreaded, args=(file_type, type_count))
-                verifyFilesThreaded_func.start()
-                #verifyFilesThreaded_func.join() # crashes the app =(
-                type_count += 1
+                        if file_type in local_version["disable_fields"]:
+                            file_type_label_list[type_count].configure(state="disabled", font=font_regular)
+                            install_buttons_list[type_count].configure(state="disabled", font=font_regular)
+                            
+                    verifyFilesThreaded_func = threading.Thread(target=verifyFilesThreaded, args=(file_type, type_count))
+                    verifyFilesThreaded_func.start()
+                    #verifyFilesThreaded_func.join() # crashes the app =(
+                    type_count += 1
         else:
             self.set("Config")
             print(f"verifyGamePath() == False")
@@ -358,9 +356,17 @@ def getClassicNaPath():
             if classic_na_path[len(classic_na_path)-1] == "\\":
                 classic_na_path = classic_na_path.rstrip(classic_na_path[-1])
             global app_config
-            region_index = getRegionIndex("NA")
-            app_config['regions'][region_index][2] = classic_na_path.replace("\\","/")
-            app_config['regions'][region_index][3] = True
+            return_index = getRegionIndex("NA")
+            region_index = return_index[0]
+            region_exists = return_index[1]
+            classic_na_path.replace("\\","/")
+            if region_exists == True:
+                app_config['regions'][region_index][2] = classic_na_path
+                app_config['regions'][region_index][3] = True
+            else:
+                na_settings = ["NA", "Classic NA", classic_na_path, True]
+                app_config['regions'].append(na_settings)
+            addGameLang(classic_na_path, "NA")
             appConfigSave(app_config)
             return True
         else:
@@ -394,17 +400,18 @@ def getClassicEuPath():
                 if found == True:
                     if classic_eu_path[len(classic_eu_path)-1] == "\\":
                         classic_eu_path = classic_eu_path.rstrip(classic_eu_path[-1])
+                        classic_eu_path.replace("\\","/")
                     global app_config
                     return_index = getRegionIndex("EU")
                     region_index = return_index[0]
                     region_exists = return_index[1]
-                    if region_exists == False:
-                        app_config['regions'][region_index][0] = "EU"
-                        app_config['regions'][region_index][1] = " Classic EU"
-                    app_config['regions'][region_index][2] = classic_eu_path.replace("\\","/")
-                    app_config['regions'][region_index][3] = True
+                    if region_exists == True:
+                        app_config['regions'][region_index][2] = classic_eu_path
+                        app_config['regions'][region_index][3] = True
+                    else:
+                        eu_settings = ["EU", "Classic EU", classic_eu_path, True]
+                        app_config['regions'].append(eu_settings)
                     appConfigSave(app_config)
-                    addGameRegion(classic_eu_path, "EU")
                     addGameLang(classic_eu_path, "EU")
                     return True
             except:
@@ -415,9 +422,9 @@ def getClassicEuPath():
         getException(e)
         return False
 
-def getRegionIndex(region): #TODO ADD FALSE BOOLEAN AS RETURN IF THERE IS NO EU/NA REGIONS IN SETTINGS
+def getRegionIndex(region):
     try:
-        logging.debug(f"{sys._getframe().f_code.co_name}() :: Getting region.")
+        logging.debug(f"{sys._getframe().f_code.co_name}() :: Getting region index.")
         global app_config
         count = 0
         bool_var = False
@@ -459,23 +466,21 @@ def getClassicEuLauncherPath():
         getException(e)
         return False
     
-def addGameRegion(game_path, game_short): #TODO
+def addGameLang(game_path, game_short):
     try:
+        global app_config
         dir_path = f"{game_path}\\l10n"
         if os.path.isdir(os.path.dirname(dir_path)):
-            dir_list = [
-                f for f in os.listdir(dir_path) if os.path.isdir(os.path.join(dir_path, f))
-            ]
-            print(dir_list)
-    except Exception as e:
-        getException(e)
-        return False
-    
-def addGameLang(game_path, game_short): #TODO
-    try:
-        
-        return
-    
+            dir_list = [ f for f in os.listdir(dir_path) if os.path.isdir(os.path.join(dir_path, f)) ]
+            for dir in dir_list:
+                dir = dir.upper()
+                found = False
+                for lang in app_config['langs']:
+                    if lang[0] == game_short and lang[1] == dir:
+                        found = True
+                if found == False:
+                    lang_settings = [game_short, dir, True]
+                    app_config['langs'].append(lang_settings)
     except Exception as e:
         getException(e)
         return False
@@ -526,8 +531,6 @@ def validateDirectory(game_directory, region):
         getException(e)
         return False
 
-# TODO change region/language config methods to JSON
-
 def verifyFiles(game_file_type):
     """
     Verifies if files exist in the game directory or not.
@@ -535,7 +538,7 @@ def verifyFiles(game_file_type):
     If they exist, both the Download and Remove buttons will be anabled.
     """
     try:
-        logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() :: Getting game langs.")
+        logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() :: Verifying files.")
         global app_config
         game_lang = []
         for lang in app_config['langs']:
@@ -810,13 +813,26 @@ def checkUpdate():
     try:
         logging.debug(f"{sys._getframe().f_code.co_name}() :: Checking for update.")
         global local_version
-        cloud_json = urllib2.urlopen(version_url)
+        cloud_json = urllib2.urlopen(update_url)
         cloud_version = json.loads(cloud_json.read())
+
+        with open("./config/version.json", encoding='utf-8') as f:
+            local_json = json.load(f)
+            f.close
+
+        file_types.append("disabled_fields_version")
+        for arquivo in file_types:
+            for cloud in cloud_version:
+                if arquivo == cloud:
+                    for local in local_json:
+                        if cloud == local:
+                            print("teste")
         return cloud_version
     except Exception as e:
         getException(e)
         return False
 #latest_version = checkUpdate() # GLOBAL VARIABLE
+update_test = checkUpdate()
 
 def getException(e):
     """

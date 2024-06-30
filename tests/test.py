@@ -22,3 +22,7 @@ if config_array != "":
 else:
     print("3 Está vazio!")
 
+if "1.2.3.0" > "1.2.0.0":
+    print ("yes")
+else:
+    print("no")
