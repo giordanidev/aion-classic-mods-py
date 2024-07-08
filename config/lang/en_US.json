@@ -1,7 +1,6 @@
 {
     "app_title": "Aion Classic Mods by Load",
     
-    "app_updater_title": " - Updater",
     "app_updater_on_start": "Verify at startup",
     "app_updater_always_update": "Always install updates",
     "app_updater_searching": "Searching for updates... please wait.",
@@ -27,6 +26,7 @@
     "app_return_label_launcher_closed": "Game launcher was closed.",
     "app_return_label_game_found": "The game is open.",
     "app_return_label_game_closed": "The game was closed.",
+    "app_return_label_maintenance": "Under maintenance.",
 
     "app_button_verify_all": "Verify All",
     "app_button_verifying": "Verifying...",
@@ -38,6 +38,7 @@
     "app_button_close_game": "Close Aion",
     "app_button_close_client": "Close Launcher",
     "app_button_updater_ignore": "Ignore",
+    "app_button_maintenance": "Maintenance",
 
     "config_general_label": "GENERAL SETTINGS",
     "config_check_updates_startup": "Check for updates on startup.",

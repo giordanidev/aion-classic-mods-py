@@ -5,10 +5,8 @@ from functools import partial
 logging.debug(f"{sys._getframe().f_code.co_name}() :: Reading main.py.")
 
 class App(ctk.CTk):
-    def __init__(self):
-        super().__init__()
-
-        global app_config
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         logging.debug(f"{sys._getframe().f_code.co_name}() :: App() class initialized.")
 
@@ -17,23 +15,28 @@ class App(ctk.CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        # System appearance
-        ctk.set_appearance_mode(app_config['theme'])
+        ctk.set_appearance_mode(app_config['theme']) # System appearance
         ctk.set_default_color_theme(app_config['color'].lower())
 
-        self.tabsView = createTabs(self, self.changeColorEvent)
+        self.tabsView = createTabs(self, self.changeColorEvent, self.checkUpdate)
         self.tabsView.grid(row=0, column=0, padx=padx_both, pady=pady_both, sticky="nsew")
         self.tabsView._segmented_button.grid(sticky="w")
 
         self.current_ui = []
         self.current_ui.append(self.tabsView)
         
-        # DEFINES APP SIZE AND POSITION ON MAIN SCREEN
-        centerApp(580, 305, self)
+        centerApp(580, 305, self) # DEFINES APP SIZE AND POSITION ON MAIN SCREEN
+
+        self.checkupdate_window = None
         
-        self.iconbitmap(app_icon)
-        self.resizable(0, 0)
-        self.mainloop()
+        if app_config["check_updates_startup"] == True:
+            self.checkUpdate()
+    
+    def checkUpdate(self):
+        if self.checkupdate_window is None or not self.checkupdate_window.winfo_exists():
+            self.checkupdate_window = checkUpdateWindow(self)  # create window if its None or destroyed
+        else:
+            self.checkupdate_window.focus()  # if window exists focus it
 
     def changeColorEvent(self, color):
         logging.debug(f"{sys._getframe().f_code.co_name}() :: Changing color to '{color.capitalize()}'.")
@@ -49,16 +52,17 @@ class App(ctk.CTk):
         global app_config
         for widget in self.current_ui:
             widget.destroy()
-        self.tabsView = createTabs(self, self.changeColorEvent)
+        self.tabsView = createTabs(self, self.changeColorEvent, self.checkUpdate)
         self.tabsView.grid(row=0, column=0, padx=padx_both, pady=pady_both, sticky="nsew")
         self.tabsView._segmented_button.grid(sticky="w")
         createTabs.set(self.tabsView, "Config")
 
 class createTabs(ctk.CTkTabview):
-    def __init__(self, master, changeColorEvent, **kwargs):
+    def __init__(self, master, changeColorEvent, checkUpdate, **kwargs):
         super().__init__(master=master, **kwargs)
 
         global app_config
+
         logging.debug(f"{sys._getframe().f_code.co_name}() :: createTabs() class initialized.")
 
         # START CREATE TABS
@@ -151,7 +155,7 @@ class createTabs(ctk.CTkTabview):
         self.configScrollableFrame.grid_columnconfigure(4, weight=1)
 
         linha_configs = 0
-        self.generalLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_general_label"), font=font_big_bold) #TODO ADD TRANSLATION
+        self.generalLabel = ctk.CTkLabel(self.configScrollableFrame, text=translateText("config_general_label"), font=font_big_bold)
         self.generalLabel.grid(row=linha_configs, column=0, columnspan=5, padx=padx_both, pady=2, sticky="we")
         
         linha_configs += 1
@@ -167,6 +171,9 @@ class createTabs(ctk.CTkTabview):
         self.updateCheckbox = ctk.CTkCheckBox(self.configScrollableFrame, variable=var_check_updates_startup, onvalue=True, offvalue=False)
         self.updateCheckbox.configure(command=partial(checkboxEvent, self.updateCheckbox, "update"), text=translateText("config_check_updates_startup"))
         self.updateCheckbox.grid(row=linha_configs, column=1, columnspan=2, padx=padx_both, pady=2, sticky="we")
+
+        self.checkUpdateButton = ctk.CTkButton(self.configScrollableFrame, text='Update', command=checkUpdate, font=font_regular_bold, width=120)
+        self.checkUpdateButton.grid(row=linha_configs, column=4, padx=padx_both, pady=pady_both, sticky="w")
 
         linha_configs += 1
         theme_variable = ctk.StringVar(value="System")
@@ -237,4 +244,29 @@ class createTabs(ctk.CTkTabview):
         appConfigSave(app_config)
         ctk.set_appearance_mode(en_theme)
 
+class checkUpdateWindow(ctk.CTkToplevel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print("creating")
+        self.after(210, lambda: self.iconbitmap(app_icon))
+        self.after(230, lambda: self.focus())
+        self.resizable(0, 0)
+        self.title("Updater")
+        
+        centerApp(280, 155, self)
+
+        linha_configs = 0
+        self.label = ctk.CTkLabel(self, text="Checking for updates...\nThe window will close automatically\nif no updates are found.")
+        self.label.grid(row=linha_configs, column=1, columnspan=2, padx=padx_both, pady=2, sticky="we")
+
+        linha_configs += 5
+        var_check_updates_startup = ctk.BooleanVar()
+        var_check_updates_startup.set(app_config["check_updates_startup"])
+        self.updateCheckbox = ctk.CTkCheckBox(self, variable=var_check_updates_startup, onvalue=True, offvalue=False)
+        self.updateCheckbox.configure(command=partial(checkboxEvent, self.updateCheckbox, "update"), text=translateText("config_check_updates_startup"))
+        self.updateCheckbox.grid(row=linha_configs, column=1, columnspan=2, padx=padx_both, pady=2, sticky="we")
+
 app = App()
+app.iconbitmap(app_icon)
+app.resizable(0, 0)
+app.mainloop()

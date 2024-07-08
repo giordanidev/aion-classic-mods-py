@@ -69,7 +69,7 @@ def appConfigSave(app_config):
         getException(e)
         return False
 
-def appVersion():
+def localVersion():
     try:
         logging.debug(f"{sys._getframe().f_code.co_name}() :: Reading local app version.")
         with open(version_path, encoding='utf-8') as f:
@@ -79,7 +79,25 @@ def appVersion():
     except Exception as e:
         getException(e)
         return False
-local_version = appVersion() # GLOBAL VARIABLE
+local_version = localVersion() # GLOBAL VARIABLE
+
+def cloudVersion():
+    cloud_json = urllib2.urlopen(update_url)
+    cloud_version = json.loads(cloud_json.read())
+    return cloud_version
+
+def checkVersion(file_type, cloud_version): #TODO
+    try:
+        logging.debug(f"{sys._getframe().f_code.co_name}() :: Checking for update.")
+        global local_version
+        if local_version[file_type] < cloud_version[file_type]:
+            pending_update = False # already up to date
+        else: pending_update = True # needs update
+        return pending_update
+    except Exception as e:
+        getException(e)
+        return False
+#latest_version = checkUpdate() # GLOBAL VARIABLE
 
 def getLang():
     """
@@ -234,22 +252,22 @@ def verifyFilesButton(file_type_list,
         verify_path = verifyGamePath()
         if verify_path is not False:
             type_count = 0
+            cloud_version = cloudVersion()
             for file_type in file_type_list:
                 def verifyFilesThreaded(file_type, type_count):
-                    file_type_label_list[type_count].configure(text=translateText("app_return_label_verifying"), text_color=text_color_verifying)
-                    install_buttons_list[type_count].configure(text=translateText("app_button_verifying"), state="disabled", font=font_regular)
+                    if not file_type in local_version["disabled_fields"]:
+                        file_type_label_list[type_count].configure(text=translateText("app_return_label_verifying"), text_color=text_color_verifying)
+                        install_buttons_list[type_count].configure(text=translateText("app_button_verifying"), state="disabled", font=font_regular)
 
-                    # Sends the file type and verify
-                    if file_type not in local_version["disabled_fields"]:
-                        verify_files_return = verifyFiles(file_type)
-                        if verify_files_return in ["both", "game"]:
+                        # Sends the file type and verify
+                        verify_files_return = verifyFiles(file_type, cloud_version)
+                        if file_type in local_version["disabled_fields"]:
+                            file_type_label_list[type_count].configure(state="disabled", font=font_regular)
+                            install_buttons_list[type_count].configure(state="disabled", font=font_regular)
+                        elif verify_files_return == True:
                             file_type_label_list[type_count].configure(text=translateText("app_return_label_update"), text_color=text_color_success)
                             install_buttons_list[type_count].configure(text=translateText("app_button_update"), state="normal", font=font_regular_bold)
                             delete_buttons_list[type_count].configure(state="normal", font=font_regular_bold)
-                        elif verify_files_return in ["assets", True]:
-                            file_type_label_list[type_count].configure(text=translateText("app_return_label_install"), text_color=text_color_success)
-                            install_buttons_list[type_count].configure(text=translateText("app_button_install"), state="normal", font=font_regular_bold)
-                            delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
                         elif verify_files_return == False:
                             file_type_label_list[type_count].configure(text=translateText("app_return_label_download"), text_color=text_color_success)
                             install_buttons_list[type_count].configure(text=translateText("app_button_download"), state="normal", font=font_regular_bold)
@@ -258,15 +276,15 @@ def verifyFilesButton(file_type_list,
                             file_type_label_list[type_count].configure(text=translateText("app_return_label_install"), text_color=text_color_success)
                             install_buttons_list[type_count].configure(text=translateText("app_button_install"), state="disabled", font=font_regular)
                             delete_buttons_list[type_count].configure(state="disabled", font=font_regular)
-
-                        if file_type in local_version["disable_fields"]:
-                            file_type_label_list[type_count].configure(state="disabled", font=font_regular)
-                            install_buttons_list[type_count].configure(state="disabled", font=font_regular)
+                    else:
+                        file_type_label_list[type_count].configure(text=translateText("app_return_label_maintenance"), text_color=text_color_verifying)
+                        install_buttons_list[type_count].configure(text=translateText("app_button_maintenance"), state="disabled", font=font_regular)
+                        delete_buttons_list[type_count].configure(text=translateText("app_button_maintenance"), state="disabled", font=font_regular)
                             
-                    verifyFilesThreaded_func = threading.Thread(target=verifyFilesThreaded, args=(file_type, type_count))
-                    verifyFilesThreaded_func.start()
-                    #verifyFilesThreaded_func.join() # crashes the app =(
-                    type_count += 1
+                verifyFilesThreaded_func = threading.Thread(target=verifyFilesThreaded, args=(file_type, type_count))
+                verifyFilesThreaded_func.start()
+                #verifyFilesThreaded_func.join() # crashes the app =(
+                type_count += 1
         else:
             self.set("Config")
             print(f"verifyGamePath() == False")
@@ -531,7 +549,7 @@ def validateDirectory(game_directory, region):
         getException(e)
         return False
 
-def verifyFiles(game_file_type):
+def verifyFiles(game_file_type, cloud_version):
     """
     Verifies if files exist in the game directory or not.
     If they do not exist, then the Remove button will not be anabled.
@@ -540,16 +558,21 @@ def verifyFiles(game_file_type):
     try:
         logging.debug(f"({game_file_type}) {sys._getframe().f_code.co_name}() :: Verifying files.")
         global app_config
+        global local_version
         game_lang = []
         for lang in app_config['langs']:
             if lang[2] == True:
                 game_lang.append(lang)
         if game_lang == []:
             logging.error(f"{sys._getframe().f_code.co_name}() :: Select at least one language to modify files.")
-            return False
+            return None
         
-        files_path = getFilePath(game_file_type)
+        needs_update = checkVersion(game_file_type, cloud_version)
         verifyGamePath()
+        return needs_update
+
+        """
+        files_path = getFilePath(game_file_type)
         game_paths = getGameFilePath(game_lang) # Returns [full_file_path]. It can be multiple paths depending on regions selected
         all_files = getFiles(files_path[0], files_path[1], game_paths) # assets path | game file | file names
         if not all_files:
@@ -564,9 +587,11 @@ def verifyFiles(game_file_type):
                         return "both"
                     else:
                         return "assets"
-                elif os.path.isfile(game_file):
+                elif os.path.isfile(game_file): 
                     return "game"
             return False
+        """
+
         
     except Exception as e:
         getException(e)
@@ -586,7 +611,7 @@ def getFilePath(game_file_type):
         getException(e)
         return False
 
-def verifyGamePath():
+def verifyGamePath(): #TODO
     """
     Verifies if the client path is correct before trying to
     copy files. If it cannot reach the game executable file
@@ -808,43 +833,6 @@ def extractFiles(filepath, dest):
     except Exception as e:
         getException(e)
         return False
-
-def checkUpdate():
-    try:
-        logging.debug(f"{sys._getframe().f_code.co_name}() :: Checking for update.")
-        global local_version
-        cloud_json = urllib2.urlopen(update_url)
-        cloud_version = json.loads(cloud_json.read())
-        arquivos = []
-        arquivos.extend(file_types)
-        arquivos.append("disabled_fields_version")
-        pending_update = []
-        print(f"arquivos {arquivos}")
-        for arquivo in arquivos:
-            print(f"arquivo {arquivo}")
-            for cloud in cloud_version:
-                print(f"cloud {cloud}")
-                if arquivo == cloud:
-                    for local in local_version:
-                        print(f"local {local}")
-                        if cloud == local:
-                            print("teste")
-                            print(f">>>>>>>>>>> {arquivo} local: {local_version[arquivo]} cloud: {cloud_version[arquivo]}")
-                            if local_version[arquivo] < cloud_version[arquivo]:
-                                pending_update.append(arquivo)
-                            break
-        print(f"pending_update: {pending_update}")
-        if len(pending_update) > 0:
-            print(f"precisa atualizar {pending_update}")
-        else:
-            print("tudo atualizado")
-
-        return cloud_version
-    except Exception as e:
-        getException(e)
-        return False
-#latest_version = checkUpdate() # GLOBAL VARIABLE
-update_test = checkUpdate()
 
 def getException(e):
     """

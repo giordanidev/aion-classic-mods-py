@@ -1,13 +1,12 @@
 {
     "app_version": "1.4.0.1", 
-    "updater_version": "1.0.0.0",
-    "translation": "1.0.0.0",
-    "translation_eu": "1.0.0.0",
-    "filter": "1.0.0.0",
-    "font": "1.0.0.0",
-    "voice": "1.0.0.0",
-    "asmo_skin": "1.0.0.0",
-    "disabled_fields_version": "0.0.0.0",
+    "translation": "",
+    "translation_eu": "",
+    "filter": "",
+    "font": "",
+    "voice": "",
+    "asmo_skin": "",
+    "disabled_fields_version": "1.0.0.0",
     "disabled_fields": [
         "translation",
         "translation_eu"
