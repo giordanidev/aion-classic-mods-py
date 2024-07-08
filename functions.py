@@ -18,7 +18,7 @@ font_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/downl
 voice_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/voice.zip"
 translation_url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/_arquivo/z_Data_na_ptBR.zip"
 translation_eu_url = "https://github.com/giordanidev/aion-classic-ptbr/raw/main/_arquivo/z_data_eu_ptBR.zip"
-asmo_skin_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/asmo_skin.zip"
+asmo_skin_url = "https://github.com/giordanidev/aion-classic-mods-py/raw/master/download/custompreset.zip"
 
 def setLogLevel():
     try:

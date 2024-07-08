@@ -42,6 +42,6 @@
         "C:/Program Files (x86)/GameforgeClient",
         true
     ],
-    "check_updates_startup": true,
+    "check_updates_startup": false,
     "verify_files_startup": true
 }
