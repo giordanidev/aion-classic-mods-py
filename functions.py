@@ -7,6 +7,7 @@ import urllib.parse as urlparse
 
 # GLOBAL VARIABLES
 file_types = ["translation", "translation_eu", "filter", "font", "voice", "asmo_skin"]
+executables = ["aion.bin", "aiononline.bin", "aionclassic.bin"]
 copy_delete_files = ""
 config_path = "./config/config.json"
 version_path = "./config/version.json"
@@ -570,28 +571,6 @@ def verifyFiles(game_file_type, cloud_version):
         needs_update = checkVersion(game_file_type, cloud_version)
         verifyGamePath()
         return needs_update
-
-        """
-        files_path = getFilePath(game_file_type)
-        game_paths = getGameFilePath(game_lang) # Returns [full_file_path]. It can be multiple paths depending on regions selected
-        all_files = getFiles(files_path[0], files_path[1], game_paths) # assets path | game file | file names
-        if not all_files:
-            logging.error(f"({game_file_type}) {sys._getframe().f_code.co_name}() :: Files not available.")
-            return False
-        elif len(all_files) >= 1:
-            for files in all_files:
-                assets_file = files[0]
-                game_file = files[1]
-                if os.path.isfile(assets_file):
-                    if os.path.isfile(game_file):
-                        return "both"
-                    else:
-                        return "assets"
-                elif os.path.isfile(game_file): 
-                    return "game"
-            return False
-        """
-
         
     except Exception as e:
         getException(e)
@@ -611,12 +590,12 @@ def getFilePath(game_file_type):
         getException(e)
         return False
 
-def verifyGamePath(): #TODO
+def verifyGamePath():
     """
     Verifies if the client path is correct before trying to
     copy files. If it cannot reach the game executable file
-    using the saved path it removes it from config and prompts
-    the user to select a new path.
+    using the saved path, the path is removed from config and
+    the user has to select a new path.
     """
     try:
         logging.debug(f"{sys._getframe().f_code.co_name}() :: Verifying game path.")
@@ -625,10 +604,11 @@ def verifyGamePath(): #TODO
         count = 0
         for region in app_config['regions']:
             found = False
-            for executable in ["aion.bin", "aiononline.bin", "aionclassic.bin"]:
+            for executable in executables:
                 if os.path.isfile(f"{region[2]}\\bin64\\{executable}"):
                     found = True
                     game_paths.append(region[1])
+                    continue
             if found == False:
                 app_config['regions'][count][2] = ""
                 app_config['regions'][count][3] = False
