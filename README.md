@@ -1,7 +1,7 @@
 # ENGLISH
 
-# Aion-Classic-Mods by LoadRPG
-Watch me on YouTube at [@LoadRPG](https://youtube.com/@LoadRPG) (PT-BR/EN) - If I ever start posting something there.
+# Aion-Classic-Mods by KonkersGG
+Watch me on YouTube at [@KonkersGG](https://youtube.com/@KonkersGG) (PT-BR/EN) - If I ever start posting something there.
 
 > TESTED ON WINDOWS 10 22H2 for Aion Classic NA and Aion Classic EU.
 
